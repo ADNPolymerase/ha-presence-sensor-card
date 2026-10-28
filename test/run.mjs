@@ -278,6 +278,7 @@ check('LD2410 : champs devinés', stub('binary_sensor.ld2410_presence'), JSON.st
   ['distance_entity', 'sensor.ld2410_detection_distance'],
   ['illuminance_entity', 'sensor.ld2410_light'],
   ['movement_entity', 'binary_sensor.ld2410_moving_target'],
+  ['range_entity', 'number.ld2410_max_move_distance_gate'],
 ]));
 check('carte ajoutée : un capteur de présence choisi', Card.getStubConfig(H).entity.startsWith('binary_sensor.'), true);
 check('sans registre : rien de deviné', JSON.stringify(Card.getStubConfig({ states: H.states })).includes('distance_entity'), false);
@@ -321,5 +322,143 @@ ed4._set('show_since', undefined);
 check('option remise par défaut : clé retirée', 'show_since' in ed4._config, false);
 contains('éditeur : champ portée sans entité', markup(ed4), 'data-field="detection_range"');
 contains('éditeur : langue de la carte', markup(ed4), 'data-field="language"');
+
+// ── Multi-brand: what the other integrations write ──────────────────────────
+// Field names and states read from the Zigbee2MQTT device pages and from the
+// ESPHome components (ld2410, ld2412, ld2450, seeed_mr24hpc1, seeed_mr60bha2).
+
+const MV = (state, cfgExtra = {}, mvId = 'sensor.p_mv') => stateLine(render(
+  { entity: 'binary_sensor.p', movement_entity: mvId, ...cfgExtra },
+  { 'binary_sensor.p': s('on', OCC), [mvId]: s(state) }));
+// Tuya ZG-204ZM motion_state
+check('Tuya motion_state large', MV('large'), 'Moving');
+check('Tuya motion_state small', MV('small'), 'Moving');
+check('Tuya motion_state static', MV('static'), 'Still');
+check('Tuya motion_state none → occupé', MV('none'), 'Occupied');
+// Aqara FP1 presence_event
+check('FP1 enter', MV('enter'), 'Moving');
+check('FP1 approach', MV('approach'), 'Moving');
+check('FP1 left_enter', MV('left_enter'), 'Moving');
+check('FP1 leave → occupé', MV('leave'), 'Occupied');
+// Seeed MR24HPC1 motion_status
+check('MR24HPC1 Motionless', MV('Motionless'), 'Still');
+check('MR24HPC1 Active', MV('Active'), 'Moving');
+check('MR24HPC1 None → occupé', MV('None'), 'Occupied');
+// LD2410 still target binary sensor: on is still, off is moving
+check('LD2410 still target on', MV('on', {}, 'binary_sensor.ld2410_still_target'), 'Still');
+check('LD2410 still target off', MV('off', {}, 'binary_sensor.ld2410_still_target'), 'Moving');
+
+// A count of people as the main entity, or as an entity of its own.
+const CNT = (n, extra = {}) => render({ entity: 'sensor.salon_target_count', ...extra },
+  { 'sensor.salon_target_count': s(n, { state_class: 'measurement' }) });
+check('compte 0 → libre', stateLine(CNT(0)), 'Clear');
+check('compte 2 → occupé', stateLine(CNT(2)), 'Occupied');
+check('compte 2 → deux silhouettes', (CNT(2).match(/class="pr-walker /g) || []).length, 2);
+check('compte 2 → ligne Personnes', line(CNT(2), 'People'), '2');
+check('compte 5 → trois silhouettes et +2', (CNT(5).match(/class="pr-walker /g) || []).length === 3 && CNT(5).includes('>+2<'), true);
+check('compte 1 → pas de ligne Personnes', line(CNT(1), 'People'), null);
+check('entité de compte séparée', (render({ entity: 'binary_sensor.p', target_count_entity: 'sensor.n' },
+  { 'binary_sensor.p': s('on', OCC), 'sensor.n': s(3) }).match(/class="pr-walker /g) || []).length, 3);
+
+// LD2410 range as a gate number, 0.75 m each: gate 4 is 3 m.
+const GATE = { entity: 'binary_sensor.p', distance_entity: 'sensor.d', range_entity: 'number.ld2410_max_move_distance_gate' };
+const gateStates = (g) => ({ 'binary_sensor.p': s('on'), 'sensor.d': s(150, { unit_of_measurement: 'cm' }), 'number.ld2410_max_move_distance_gate': s(g) });
+check('portée en gates (4 × 0,75 m)', feetY(render(GATE, gateStates(4))), 16 + 100 * 0.5);
+contains('portée en gates : arcs gradués à 3 m', render(GATE, gateStates(4)), `>3${NB}m<`);
+check('taille de gate réglable', feetY(render({ ...GATE, gate_size: 0.2 }, gateStates(10))), 16 + 100 * 0.75);
+
+// Sonoff SNZB-06P: light in words.
+const SNZB = (st) => render({ entity: 'binary_sensor.p', illuminance_entity: 'sensor.p_illumination' },
+  { 'binary_sensor.p': s('on', OCC), 'sensor.p_illumination': s(st) });
+check('SNZB-06P dim → Sombre', line(SNZB('dim'), 'Light'), 'Dim');
+check('SNZB-06P bright → Lumineux', line(SNZB('bright'), 'Light'), 'Bright');
+check('SNZB-06P en français', line(render({ entity: 'binary_sensor.p', illuminance_entity: 'sensor.l', language: 'fr' },
+  { 'binary_sensor.p': s('on'), 'sensor.l': s('dim') }), 'Lumière'), 'Sombre');
+
+// Philips Hue / Tuya ZG-204ZV: temperature and humidity.
+const HUE = render({ entity: 'binary_sensor.p', temperature_entity: 'sensor.t', humidity_entity: 'sensor.h' },
+  { 'binary_sensor.p': s('off', { device_class: 'motion' }), 'sensor.t': s(21.46, { unit_of_measurement: '°C' }), 'sensor.h': s(48, { unit_of_measurement: '%' }) });
+check('température', line(HUE, 'Temperature'), `21.5${NB}°C`);
+check('humidité', line(HUE, 'Humidity'), `48${NB}%`);
+
+// Seeed MR60BHA2: heart and breathing, only while someone is there; the
+// still silhouette breathes at the measured rate.
+const VITAL = { entity: 'binary_sensor.p', movement_entity: 'sensor.mv', heart_rate_entity: 'sensor.hr', breath_rate_entity: 'sensor.br' };
+const vital = (occ) => ({ 'binary_sensor.p': s(occ), 'sensor.mv': s('static'), 'sensor.hr': s(64, { unit_of_measurement: 'bpm' }), 'sensor.br': s(15, { unit_of_measurement: '/min' }) });
+check('rythme cardiaque', line(render(VITAL, vital('on')), 'Heart rate'), `64${NB}bpm`);
+check('respiration', line(render(VITAL, vital('on')), 'Breathing'), '15/min');
+contains('respiration : la silhouette respire à 15/min (4 s)', render(VITAL, vital('on')), '--pr-breath: 4s');
+check('pas de signes vitaux quand libre', line(render(VITAL, vital('off')), 'Heart rate'), null);
+
+// entities: anything else, as a line of its own.
+const EXTRA = render({ entity: 'binary_sensor.p', entities: ['sensor.keep', { entity: 'sensor.co2', name: 'CO2', icon: 'mdi:molecule-co2' }, 'sensor.missing'] },
+  { 'binary_sensor.p': s('on'), 'sensor.keep': s(51, { unit_of_measurement: 'min', friendly_name: 'Presence keep time' }), 'sensor.co2': s(612, { unit_of_measurement: 'ppm' }) });
+check('entités libres : nom de l’entité', line(EXTRA, 'Presence keep time'), `51${NB}min`);
+check('entités libres : nom choisi', line(EXTRA, 'CO2'), `612${NB}ppm`);
+check('entités libres : icône choisie', EXTRA.includes('mdi:molecule-co2'), true);
+check('entités libres : absente ignorée', EXTRA.includes('sensor.missing'), false);
+
+// Siblings of the other brands.
+const H2 = deviceHass({
+  hue: {
+    'binary_sensor.hall_motion': { device_class: 'motion' },
+    'sensor.hall_illuminance': { device_class: 'illuminance' },
+    'sensor.hall_temperature': { device_class: 'temperature' },
+    'sensor.hall_battery': { device_class: 'battery' },
+  },
+  zg204zm: {
+    'binary_sensor.office_presence': OCC,
+    'sensor.office_motion_state': {},
+    'number.office_static_detection_distance': {},
+    'sensor.office_illuminance': {},
+    'sensor.office_battery': {},
+    'number.office_fading_time': {},
+  },
+  zym100: {
+    'binary_sensor.den_presence': OCC,
+    'sensor.den_target_distance': {},
+    'number.den_minimum_range': {},
+    'number.den_maximum_range': {},
+    'sensor.den_illuminance': {},
+  },
+  ld2450: {
+    'binary_sensor.room_presence': OCC,
+    'sensor.room_target_count': {},
+    'sensor.room_target_1_distance': {},
+    'sensor.room_target_2_distance': {},
+  },
+  mr60: {
+    'binary_sensor.bed_has_target': OCC,
+    'sensor.bed_heart_rate': {},
+    'sensor.bed_breath_rate': {},
+    'sensor.bed_distance': {},
+    'sensor.bed_num_targets': {},
+  },
+  fp1e: {
+    'binary_sensor.lab_presence': OCC,
+    'sensor.lab_device_temperature': { device_class: 'temperature' },
+  },
+});
+const sib = (id) => JSON.stringify(Object.entries(Card.getStubConfig({ ...H2,
+  states: Object.fromEntries(Object.entries(H2.states).filter(([k]) => H2.entities[k].device_id === H2.entities[id].device_id)) }))
+  .filter(([k]) => k !== 'type' && k !== 'entity').sort());
+check('Hue : champs devinés', sib('binary_sensor.hall_motion'), JSON.stringify([
+  ['battery_entity', 'sensor.hall_battery'], ['illuminance_entity', 'sensor.hall_illuminance'], ['temperature_entity', 'sensor.hall_temperature']]));
+check('Tuya ZG-204ZM : champs devinés', sib('binary_sensor.office_presence'), JSON.stringify([
+  ['battery_entity', 'sensor.office_battery'], ['illuminance_entity', 'sensor.office_illuminance'],
+  ['movement_entity', 'sensor.office_motion_state'], ['range_entity', 'number.office_static_detection_distance']]));
+check('Tuya ZY-M100 : portée max, pas min', sib('binary_sensor.den_presence'), JSON.stringify([
+  ['distance_entity', 'sensor.den_target_distance'], ['illuminance_entity', 'sensor.den_illuminance'], ['range_entity', 'number.den_maximum_range']]));
+check('LD2450 : compte et cible 1', sib('binary_sensor.room_presence'), JSON.stringify([
+  ['distance_entity', 'sensor.room_target_1_distance'], ['target_count_entity', 'sensor.room_target_count']]));
+check('MR60BHA2 : signes vitaux', sib('binary_sensor.bed_has_target'), JSON.stringify([
+  ['breath_rate_entity', 'sensor.bed_breath_rate'], ['distance_entity', 'sensor.bed_distance'],
+  ['heart_rate_entity', 'sensor.bed_heart_rate'], ['target_count_entity', 'sensor.bed_num_targets']]));
+check('FP1E : la température de la puce n’est pas celle de la pièce', sib('binary_sensor.lab_presence'), '[]');
+{
+  const ld = deviceHass({ ld: { 'binary_sensor.ld_moving_target': { device_class: 'motion' }, 'binary_sensor.ld_has_target': OCC, 'binary_sensor.ld_still_target': OCC } });
+  check('LD2410 : la carte part sur has_target', Card.getStubConfig(ld).entity, 'binary_sensor.ld_has_target');
+}
+contains('éditeur : autres mesures', markup(ed4), 'data-picker="heart_rate_entity"');
 
 report();

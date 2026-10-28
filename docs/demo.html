@@ -26,7 +26,7 @@
 </head>
 <body>
 <h1>HA Presence Sensor Card</h1>
-<p>The same card on the four sensors of the first test bench, and a few states. No Home Assistant needed.
+<p>The same card on sensors of many brands: Linptech, Aqara, Hue, Sonoff, Tuya, ESPHome LD2410 / LD2450, Seeed. No Home Assistant needed.
   <label><input type="checkbox" id="dark"> dark</label></p>
 <div class="grid" id="grid"></div>
 <script>
@@ -72,6 +72,14 @@
       { "binary_sensor.kitchen": s("on", { device_class: "motion" }, 2), "sensor.kitchen_bat": s(12, { unit_of_measurement: "%" }) }],
     [{ entity: "binary_sensor.garage", name: "Garage", distance_entity: "sensor.garage_d" },
       { "binary_sensor.garage": s("unavailable"), "sensor.garage_d": s(0, { unit_of_measurement: "m" }) }],
+    [{ entity: "sensor.lounge_target_count", name: "Lounge (LD2450)", distance_entity: "sensor.lounge_d", range_entity: "number.lounge_gate", movement_entity: "binary_sensor.lounge_moving" },
+      { "sensor.lounge_target_count": s(2, {}, 9), "sensor.lounge_d": s(3400, { unit_of_measurement: "mm" }), "number.lounge_gate": s(8), "binary_sensor.lounge_moving": s("on") }],
+    [{ entity: "binary_sensor.nursery", name: "Nursery (MR60BHA2)", movement_entity: "sensor.nursery_mv", distance_entity: "sensor.nursery_d", heart_rate_entity: "sensor.nursery_hr", breath_rate_entity: "sensor.nursery_br" },
+      { "binary_sensor.nursery": s("on", OCC, 130), "sensor.nursery_mv": s("Motionless"), "sensor.nursery_d": s(1.6, { unit_of_measurement: "m" }), "sensor.nursery_hr": s(72, { unit_of_measurement: "bpm" }), "sensor.nursery_br": s(14, { unit_of_measurement: "/min" }) }],
+    [{ entity: "binary_sensor.stairs", name: "Stairs (Hue)", illuminance_entity: "sensor.stairs_lx", temperature_entity: "sensor.stairs_t", battery_entity: "sensor.stairs_bat" },
+      { "binary_sensor.stairs": s("on", { device_class: "motion" }, 1), "sensor.stairs_lx": s(240, { unit_of_measurement: "lx" }), "sensor.stairs_t": s(19.8, { unit_of_measurement: "\u00b0C" }), "sensor.stairs_bat": s(64, { unit_of_measurement: "%" }) }],
+    [{ entity: "binary_sensor.wc", name: "Toilet (Sonoff SNZB-06P)", illuminance_entity: "sensor.wc_illumination", compact: true },
+      { "binary_sensor.wc": s("on", OCC, 3), "sensor.wc_illumination": s("dim") }],
     [{ entity: "binary_sensor.bed", name: "Bedroom", compact: true, movement_entity: "sensor.bed_mv", illuminance_entity: "sensor.bed_lx" },
       { "binary_sensor.bed": s("on", OCC, 95), "sensor.bed_mv": s("no_movement"), "sensor.bed_lx": s(3, { unit_of_measurement: "lx" }) }],
     [{ entity: "binary_sensor.bath", name: "Bathroom", compact: true },

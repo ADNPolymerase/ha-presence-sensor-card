@@ -25,13 +25,33 @@ Les capteurs mmWave disent bien plus qu'*occupé* : à quelle distance est la ci
 
 - **L'éventail de détection** : le capteur au mur, son éventail au sol et trois arcs de portée gradués en mètres. Libre, l'éventail reste fixe et atténué ; occupé, un balayage le parcourt.
 - **La cible à sa distance** : la silhouette se tient là où le radar la voit, à l'échelle de la portée de détection (une entité, une valeur de votre choix, ou 6 m). Un PIR, qui n'a pas de distance, la place au milieu.
-- **En mouvement ou immobile** : d'après une entité de mouvement (Aqara FP1E `movement` / `no_movement`, Tuya `move` / `presence` / `peaceful`, le capteur binaire *moving target* d'un LD2410…) ou d'après l'état lui-même. La silhouette marche, ou respire lentement.
+- **En mouvement ou immobile** : d'après une entité de mouvement (Aqara FP1E `movement` / `no_movement`, Tuya `motion_state` ou `presence_state`, Seeed `Motionless` / `Active`, le capteur binaire *moving* ou *still target* d'un LD2410…) ou d'après l'état lui-même. La silhouette marche, ou respire lentement.
+- **Plusieurs personnes** : un nombre de personnes (LD2450, MR60BHA2, le compteur de personnes d'une caméra) place jusqu'à trois silhouettes dans l'éventail, et dit combien.
 - **Ligne d'état** : *Occupé*, *En mouvement*, *Immobile*, *Libre* ou *Hors ligne*, d'après un capteur binaire d'occupation, de présence ou de mouvement, ou un capteur texte.
-- **Lignes d'info** : distance, luminosité (une lune quand il fait noir), *Occupé depuis 25 min* ou *Libre depuis 1 h 10 min*, et la batterie, en rouge sous 15 %. Un appui sur une ligne ouvre le détail de son entité, un appui sur la carte celui du capteur.
-- **Toutes les unités** : les distances en m, cm, mm, ft ou in sont ramenées en mètres.
+- **Lignes d'info** : distance, personnes, luminosité (en lux, ou *Sombre* / *Lumineux* pour un Sonoff SNZB-06P), température, humidité, rythme cardiaque et respiration (la silhouette respire au rythme mesuré), *Occupé depuis 25 min* ou *Libre depuis 1 h 10 min*, et la batterie, en rouge sous 15 %. N'importe quelle autre entité s'ajoute avec `entities`. Un appui sur une ligne ouvre le détail de son entité, un appui sur la carte celui du capteur.
+- **Toutes les unités** : les distances en m, cm, mm, ft ou in sont ramenées en mètres, et une portée donnée en numéro de « gate » LD2410 aussi.
 - **Éditeur visuel** qui remplit distance, portée, mouvement, luminosité et batterie depuis le **même appareil** dès que l'entité de présence est choisie.
 - **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la carte.
 - **Mode compact** : une icône colorée à la place du dessin.
+
+## Capteurs pris en charge
+
+Tout capteur dont l'intégration donne à Home Assistant une entité d'occupation, de présence ou de mouvement fonctionne. Voici ceux que la carte connaît par leur nom, et qu'elle remplit toute seule depuis le même appareil :
+
+| Capteur | Intégration | Lu |
+|---|---|---|
+| Aqara FP1E, FP1 | Zigbee2MQTT, ZHA | présence, mouvement ou événement de présence, distance, portée |
+| Aqara FP2 | HomeKit, Aqara | présence (une carte par zone), luminosité |
+| Aqara P1, Philips Hue, IKEA Vallhorn | Zigbee2MQTT, ZHA, Hue | mouvement, luminosité, température, batterie |
+| Linptech ES1 | Zigbee2MQTT | occupation, distance, portée, luminosité |
+| Sonoff SNZB-06P | Zigbee2MQTT, ZHA | occupation, luminosité (sombre / lumineux) |
+| Tuya ZG-204ZM, ZG-204ZV, ZY-M100, MTG075 | Zigbee2MQTT, ZHA, Tuya | présence, état de mouvement, distance, portée, luminosité, température, humidité, batterie |
+| HLK-LD2410, LD2412 (Apollo, Screek, Everything Presence…) | ESPHome | cible, cible mobile / immobile, distance, portée en gates |
+| HLK-LD2450 | ESPHome | nombre de cibles, distance de la cible 1 |
+| Seeed MR24HPC1, MR60BHA2 | ESPHome | état de mouvement, distance, personnes, rythme cardiaque, respiration |
+| Capteurs d'occupation Matter, caméras (nombre de personnes) | Matter, Frigate, UniFi Protect… | occupation, ou un nombre de personnes |
+
+Un capteur manque ou est mal lu ? Ouvrez une issue avec les entités et les états qu'il remonte.
 
 ## Installation (HACS)
 
@@ -49,13 +69,18 @@ Copiez `dist/ha-presence-sensor-card.js` dans `config/www/`, puis ajoutez `/loca
 
 | Option | Description |
 |---|---|
-| `entity` | **Obligatoire.** L'occupation : un `binary_sensor` (occupancy, presence, motion), un `input_boolean`, ou un `sensor` texte (`none` / `presence` / `move`…). |
-| `movement_entity` | En mouvement ou immobile : un `sensor` ou `select` (`movement`, `no_movement`, `stationary`, `move`, `peaceful`…) ou un `binary_sensor` allumé quand la cible bouge. |
+| `entity` | **Obligatoire.** L'occupation : un `binary_sensor` (occupancy, presence, motion), un `input_boolean`, un `sensor` texte (`none` / `presence` / `move`…), ou un nombre de personnes (au-dessus de zéro, c'est occupé). |
+| `movement_entity` | En mouvement ou immobile : un `sensor` ou `select` (`movement`, `no_movement`, `static`, `large`, `Motionless`, `Active`…) ou un `binary_sensor`, allumé quand la cible bouge (ou quand elle reste immobile, si son nom dit *still*). |
+| `target_count_entity` | Combien de personnes le capteur voit. Jusqu'à trois silhouettes, et une ligne *Personnes* au-delà d'une. |
 | `distance_entity` | La distance de la cible, dans n'importe quelle unité. Place la silhouette dans l'éventail. |
 | `range_entity` | La portée de détection (`number` ou `sensor`), pour mettre la distance à l'échelle. |
 | `detection_range` | La portée en mètres quand aucune entité ne la donne. Par défaut `6`. |
-| `illuminance_entity` | Luminosité. |
+| `gate_size` | Mètres par gate quand l'entité de portée est un numéro de gate (LD2410). Par défaut `0.75`. |
+| `illuminance_entity` | Luminosité, en lux ou en mots (`dim`, `bright`). |
+| `temperature_entity` / `humidity_entity` | Température et humidité. |
+| `heart_rate_entity` / `breath_rate_entity` | Rythme cardiaque et respiration, affichés quand quelqu'un est là. Une silhouette immobile respire à ce rythme. |
 | `battery_entity` | Batterie en %. Affichée même quand le capteur est hors ligne. |
+| `entities` | N'importe quelle autre entité, une ligne chacune : un id, ou `{ entity, name, icon }`. |
 | `name` | Titre. Par défaut le nom de l'entité. |
 | `language` | Afficher la carte dans une autre langue que Home Assistant : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh` ou `cs`. L'éditeur garde votre langue. |
 | `compact` | Icône colorée au lieu du dessin. Par défaut `false`. |
@@ -84,6 +109,27 @@ entity: binary_sensor.salon_presence
 movement_entity: sensor.salon_movement
 distance_entity: sensor.salon_target_distance
 range_entity: number.salon_detection_range
+```
+
+HLK-LD2410 (ESPHome) : portée donnée en numéro de gate.
+
+```yaml
+type: custom:ha-presence-sensor-card
+entity: binary_sensor.bureau_radar_target
+movement_entity: binary_sensor.bureau_radar_moving_target
+distance_entity: sensor.bureau_radar_detection_distance
+range_entity: number.bureau_radar_max_move_distance_gate
+```
+
+Seeed MR60BHA2 (ESPHome) : respiration et rythme cardiaque.
+
+```yaml
+type: custom:ha-presence-sensor-card
+entity: binary_sensor.chambre_has_target
+distance_entity: sensor.chambre_distance
+heart_rate_entity: sensor.chambre_heart_rate
+breath_rate_entity: sensor.chambre_breath_rate
+target_count_entity: sensor.chambre_num_targets
 ```
 
 Aqara P1 (PIR simple) : mouvement, luminosité et batterie.

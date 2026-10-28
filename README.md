@@ -25,13 +25,33 @@ mmWave sensors report much more than *occupied*: how far the target is, whether 
 
 - **The detection fan**: the sensor on the wall, its fan across the floor and three range arcs graduated in metres. Clear, the fan stays still and dim; occupied, a sweep runs across it.
 - **The target at its distance**: the silhouette stands where the radar sees it, scaled on the detection range (an entity, a number of your own, or 6 m). A PIR, which has no distance, puts it in the middle.
-- **Moving or still**: from a movement entity (Aqara FP1E `movement` / `no_movement`, Tuya `move` / `presence` / `peaceful`, an LD2410 *moving target* binary sensor…) or from the state itself. The silhouette walks, or breathes slowly.
+- **Moving or still**: from a movement entity (Aqara FP1E `movement` / `no_movement`, Tuya `motion_state` or `presence_state`, Seeed `Motionless` / `Active`, an LD2410 *moving* or *still target* binary sensor…) or from the state itself. The silhouette walks, or breathes slowly.
+- **Several people**: a people count (LD2450, MR60BHA2, a camera's person count) puts up to three silhouettes in the fan, and says how many.
 - **State line**: *Occupied*, *Moving*, *Still*, *Clear* or *Offline*, from an occupancy, presence or motion binary sensor, or a text sensor.
-- **Info lines**: distance, light (a moon when it is dark), *Occupied for 25 min* or *Clear for 1 h 10 min*, and the battery, in red below 15 %. Tap a line for that entity's details, tap the card for the sensor's.
-- **Any unit**: distances in m, cm, mm, ft or in are all brought back to metres.
+- **Info lines**: distance, people, light (in lux, or *Dim* / *Bright* for a Sonoff SNZB-06P), temperature, humidity, heart rate and breathing (the silhouette breathes at the measured rate), *Occupied for 25 min* or *Clear for 1 h 10 min*, and the battery, in red below 15 %. Any other entity can be added with `entities`. Tap a line for that entity's details, tap the card for the sensor's.
+- **Any unit**: distances in m, cm, mm, ft or in are all brought back to metres, and a range given as an LD2410 gate number becomes metres too.
 - **Visual editor** that fills the distance, range, movement, light and battery from the **same device** as soon as the occupancy entity is picked.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
 - **Compact mode**: a coloured icon instead of the drawing.
+
+## Supported sensors
+
+Any sensor whose integration gives Home Assistant an occupancy, presence or motion entity works. These are the ones the card knows by name, and fills in on its own from the same device:
+
+| Sensor | Integration | Read |
+|---|---|---|
+| Aqara FP1E, FP1 | Zigbee2MQTT, ZHA | presence, movement or presence event, distance, range |
+| Aqara FP2 | HomeKit, Aqara | presence (one card per zone), light |
+| Aqara P1, Philips Hue, IKEA Vallhorn | Zigbee2MQTT, ZHA, Hue | motion, light, temperature, battery |
+| Linptech ES1 | Zigbee2MQTT | occupancy, distance, range, light |
+| Sonoff SNZB-06P | Zigbee2MQTT, ZHA | occupancy, light (dim / bright) |
+| Tuya ZG-204ZM, ZG-204ZV, ZY-M100, MTG075 | Zigbee2MQTT, ZHA, Tuya | presence, motion state, distance, range, light, temperature, humidity, battery |
+| HLK-LD2410, LD2412 (Apollo, Screek, Everything Presence…) | ESPHome | has target, moving / still target, distance, range in gates |
+| HLK-LD2450 | ESPHome | target count, target 1 distance |
+| Seeed MR24HPC1, MR60BHA2 | ESPHome | motion status, distance, people, heart rate, breathing |
+| Matter occupancy sensors, cameras (person count) | Matter, Frigate, UniFi Protect… | occupancy, or a count of people |
+
+Something missing or misread? Open an issue with the entities and the states your sensor reports.
 
 ## Installation (HACS)
 
@@ -49,13 +69,18 @@ Copy `dist/ha-presence-sensor-card.js` to `config/www/`, then add `/local/ha-pre
 
 | Option | Description |
 |---|---|
-| `entity` | **Required.** The occupancy: a `binary_sensor` (occupancy, presence, motion), an `input_boolean`, or a text `sensor` (`none` / `presence` / `move`…). |
-| `movement_entity` | Moving or still: a `sensor` or `select` (`movement`, `no_movement`, `stationary`, `move`, `peaceful`…) or a `binary_sensor` that is on while the target moves. |
+| `entity` | **Required.** The occupancy: a `binary_sensor` (occupancy, presence, motion), an `input_boolean`, a text `sensor` (`none` / `presence` / `move`…), or a count of people (above zero is occupied). |
+| `movement_entity` | Moving or still: a `sensor` or `select` (`movement`, `no_movement`, `static`, `large`, `Motionless`, `Active`…) or a `binary_sensor`, on while the target moves (or while it keeps still, when its name says *still*). |
+| `target_count_entity` | How many people the sensor sees. Up to three silhouettes, and a *People* line above one. |
 | `distance_entity` | The target's distance, in any length unit. Places the silhouette in the fan. |
 | `range_entity` | The detection range (`number` or `sensor`), to scale the distance. |
 | `detection_range` | The range in metres when no entity gives it. Default `6`. |
-| `illuminance_entity` | Light level. |
+| `gate_size` | Metres per gate when the range entity is a gate number (LD2410). Default `0.75`. |
+| `illuminance_entity` | Light level, in lux or in words (`dim`, `bright`). |
+| `temperature_entity` / `humidity_entity` | Temperature and humidity. |
+| `heart_rate_entity` / `breath_rate_entity` | Heart rate and breathing, shown while someone is there. A still silhouette breathes at that rate. |
 | `battery_entity` | Battery %. Shown even while the sensor is offline. |
+| `entities` | Any other entity, one line each: an id, or `{ entity, name, icon }`. |
 | `name` | Title. Defaults to the entity's name. |
 | `language` | Show the card in another language than Home Assistant: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh` or `cs`. The editor keeps your own language. |
 | `compact` | Coloured icon instead of the drawing. Default `false`. |
@@ -84,6 +109,27 @@ entity: binary_sensor.living_room_presence
 movement_entity: sensor.living_room_movement
 distance_entity: sensor.living_room_target_distance
 range_entity: number.living_room_detection_range
+```
+
+HLK-LD2410 (ESPHome): range given as a gate number.
+
+```yaml
+type: custom:ha-presence-sensor-card
+entity: binary_sensor.office_radar_target
+movement_entity: binary_sensor.office_radar_moving_target
+distance_entity: sensor.office_radar_detection_distance
+range_entity: number.office_radar_max_move_distance_gate
+```
+
+Seeed MR60BHA2 (ESPHome): breathing and heart rate.
+
+```yaml
+type: custom:ha-presence-sensor-card
+entity: binary_sensor.bedroom_has_target
+distance_entity: sensor.bedroom_distance
+heart_rate_entity: sensor.bedroom_heart_rate
+breath_rate_entity: sensor.bedroom_breath_rate
+target_count_entity: sensor.bedroom_num_targets
 ```
 
 Aqara P1 (plain PIR): motion, light and battery.

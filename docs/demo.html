@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ha-presence-sensor-card demo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+<style>
+  :root {
+    --primary-text-color: #20293a; --secondary-text-color: #6b7280; --divider-color: #e2e5ea;
+    --card-background-color: #ffffff; --disabled-text-color: #9aa1ab; --error-color: #f44336;
+    --page: #f2f4f7;
+  }
+  html.dark {
+    --primary-text-color: #e3e6ea; --secondary-text-color: #9aa3ad; --divider-color: #2f353c;
+    --card-background-color: #1c1f23; --disabled-text-color: #6b737c; --page: #111316;
+  }
+  html, body { margin: 0; background: var(--page); font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  body { padding: 24px; }
+  h1 { margin: 0 0 4px; font-size: 22px; font-weight: 500; color: var(--primary-text-color); }
+  p { margin: 0 0 16px; color: var(--secondary-text-color); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, 300px); gap: 20px; align-items: start; }
+  ha-card { display: block; background: var(--card-background-color); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.08); }
+  label { color: var(--secondary-text-color); font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>HA Presence Sensor Card</h1>
+<p>The same card on the four sensors of the first test bench, and a few states. No Home Assistant needed.
+  <label><input type="checkbox" id="dark"> dark</label></p>
+<div class="grid" id="grid"></div>
+<script>
+  const MDI_CSS = "https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css";
+  // ha-icon and ha-card stand-ins: the card itself is the real file.
+  customElements.define("ha-icon", class extends HTMLElement {
+    static get observedAttributes() { return ["icon"]; }
+    connectedCallback() { this.attributeChangedCallback(); }
+    // Inside the card's shadow DOM the page's stylesheet does not reach the
+    // icon, so each one links the font's stylesheet in its own shadow root.
+    attributeChangedCallback() {
+      const name = (this.getAttribute("icon") || "").replace("mdi:", "");
+      const root = this.shadowRoot || this.attachShadow({ mode: "open" });
+      root.innerHTML = `<link rel="stylesheet" href="${MDI_CSS}"><style>:host { display: inline-flex; align-items: center; justify-content: center;
+        width: var(--mdc-icon-size, 24px); height: var(--mdc-icon-size, 24px); } i { font-size: var(--mdc-icon-size, 24px); line-height: 1; }</style><i class="mdi mdi-${name}"></i>`;
+    }
+  });
+  // The real ha-card draws its own background: so does this one.
+  customElements.define("ha-card", class extends HTMLElement {
+    constructor() {
+      super();
+      this.attachShadow({ mode: "open" }).innerHTML = `<style>:host { background: var(--card-background-color); border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.08); color: var(--primary-text-color); }</style><slot></slot>`;
+    }
+  });
+</script>
+<script src="../dist/ha-presence-sensor-card.js"></script>
+<script>
+  const ago = (min) => new Date(Date.now() - min * 60000).toISOString();
+  const s = (state, attributes = {}, min = 25) => ({ state: String(state), attributes, last_changed: ago(min) });
+  const OCC = { device_class: "occupancy" };
+  const demoLang = new URLSearchParams(location.search).get("lang") || "en";
+  const cards = [
+    [{ entity: "binary_sensor.office", name: "Office (Linptech ES1)", distance_entity: "sensor.office_d", range_entity: "number.office_r", illuminance_entity: "sensor.office_lx" },
+      { "binary_sensor.office": s("on", OCC), "sensor.office_d": s(302, { unit_of_measurement: "cm" }), "number.office_r": s(450, { unit_of_measurement: "cm" }), "sensor.office_lx": s(116, { unit_of_measurement: "lx" }) }],
+    [{ entity: "binary_sensor.living", name: "Living room (Aqara FP1E)", movement_entity: "sensor.living_mv", distance_entity: "sensor.living_d", range_entity: "number.living_r" },
+      { "binary_sensor.living": s("on", OCC, 4), "sensor.living_mv": s("movement"), "sensor.living_d": s(2.4, { unit_of_measurement: "m" }), "number.living_r": s(6, { unit_of_measurement: "m" }) }],
+    [{ entity: "binary_sensor.desk", name: "Desk (Aqara FP1E)", movement_entity: "sensor.desk_mv", distance_entity: "sensor.desk_d", range_entity: "number.desk_r" },
+      { "binary_sensor.desk": s("on", OCC, 48), "sensor.desk_mv": s("no_movement"), "sensor.desk_d": s(1.2, { unit_of_measurement: "m" }), "number.desk_r": s(6, { unit_of_measurement: "m" }) }],
+    [{ entity: "binary_sensor.hall", name: "Hallway (Aqara P1)", illuminance_entity: "sensor.hall_lx", battery_entity: "sensor.hall_bat" },
+      { "binary_sensor.hall": s("off", OCC, 70), "sensor.hall_lx": s(0, { unit_of_measurement: "lx" }), "sensor.hall_bat": s(100, { unit_of_measurement: "%" }) }],
+    [{ entity: "binary_sensor.kitchen", name: "Kitchen (PIR)", battery_entity: "sensor.kitchen_bat" },
+      { "binary_sensor.kitchen": s("on", { device_class: "motion" }, 2), "sensor.kitchen_bat": s(12, { unit_of_measurement: "%" }) }],
+    [{ entity: "binary_sensor.garage", name: "Garage", distance_entity: "sensor.garage_d" },
+      { "binary_sensor.garage": s("unavailable"), "sensor.garage_d": s(0, { unit_of_measurement: "m" }) }],
+    [{ entity: "binary_sensor.bed", name: "Bedroom", compact: true, movement_entity: "sensor.bed_mv", illuminance_entity: "sensor.bed_lx" },
+      { "binary_sensor.bed": s("on", OCC, 95), "sensor.bed_mv": s("no_movement"), "sensor.bed_lx": s(3, { unit_of_measurement: "lx" }) }],
+    [{ entity: "binary_sensor.bath", name: "Bathroom", compact: true },
+      { "binary_sensor.bath": s("off", OCC, 12) }],
+  ];
+  const grid = document.getElementById("grid");
+  for (const [cfg, states] of cards) {
+    const el = document.createElement("ha-presence-sensor-card");
+    el.setConfig(cfg);
+    el.hass = { language: demoLang, states, callService() {} };
+    grid.appendChild(el);
+  }
+  document.getElementById("dark").addEventListener("change", (e) => document.documentElement.classList.toggle("dark", e.target.checked));
+  if (new URLSearchParams(location.search).get("dark")) { document.documentElement.classList.add("dark"); document.getElementById("dark").checked = true; }
+</script>
+</body>
+</html>

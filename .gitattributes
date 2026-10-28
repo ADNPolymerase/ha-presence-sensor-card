@@ -1,0 +1,5 @@
+* text=auto
+*.js text eol=lf
+dist/ha-presence-sensor-card.js linguist-vendored=false
+dist/ha-presence-sensor-card.js linguist-generated=false
+dist/ha-presence-sensor-card.js linguist-detectable=true

@@ -27,7 +27,8 @@ mmWave sensors report much more than *occupied*: how far the target is, whether 
 - **The target at its distance**: the silhouette stands where the radar sees it, scaled on the detection range (an entity, a number of your own, or 6 m). A PIR, which has no distance, puts it in the middle.
 - **Moving or still**: from a movement entity (Aqara FP1E `movement` / `no_movement`, Tuya `motion_state` or `presence_state`, Seeed `Motionless` / `Active`, an LD2410 *moving* or *still target* binary sensor…) or from the state itself. The silhouette walks, or breathes slowly.
 - **Several people**: a people count (LD2450, MR60BHA2, a camera's person count) puts up to three silhouettes in the fan, and says how many.
-- **State line**: *Occupied*, *Moving*, *Still*, *Clear* or *Offline*, from an occupancy, presence or motion binary sensor, or a text sensor.
+- **Plan view** for sensors that give each target's position (HLK-LD2450): everyone stands where they are, x and y, with an arrow when they come closer or walk away and a trail of their last steps. The sensor's zones are drawn on the floor, brighter while someone is in them, filter zones hatched, with one line per zone and one per target.
+- **State line**: *Occupied*, *Moving*, *Still*, *Clear* or *Offline*, from an occupancy, presence or motion binary sensor, or a text sensor. *Offline* is drawn in red, so a sensor that stopped answering never looks like an empty room.
 - **Info lines**: distance, people, light (in lux, or *Dim* / *Bright* for a Sonoff SNZB-06P), temperature, humidity, heart rate and breathing (the silhouette breathes at the measured rate), *Occupied for 25 min* or *Clear for 1 h 10 min*, and the battery, in red below 15 %. Any other entity can be added with `entities`. Tap a line for that entity's details, tap the card for the sensor's.
 - **Any unit**: distances in m, cm, mm, ft or in are all brought back to metres, and a range given as an LD2410 gate number becomes metres too.
 - **Visual editor** that fills the distance, range, movement, light and battery from the **same device** as soon as the occupancy entity is picked.
@@ -47,7 +48,7 @@ Any sensor whose integration gives Home Assistant an occupancy, presence or moti
 | Sonoff SNZB-06P | Zigbee2MQTT, ZHA | occupancy, light (dim / bright) |
 | Tuya ZG-204ZM, ZG-204ZV, ZY-M100, MTG075 | Zigbee2MQTT, ZHA, Tuya | presence, motion state, distance, range, light, temperature, humidity, battery |
 | HLK-LD2410, LD2412 (Apollo, Screek, Everything Presence…) | ESPHome | has target, moving / still target, distance, range in gates |
-| HLK-LD2450 | ESPHome | target count, target 1 distance |
+| HLK-LD2450 | ESPHome | target count, each target's x / y, direction and speed, the three zones and their counts (plan view) |
 | Seeed MR24HPC1, MR60BHA2 | ESPHome | motion status, distance, people, heart rate, breathing |
 | Matter occupancy sensors, cameras (person count) | Matter, Frigate, UniFi Protect… | occupancy, or a count of people |
 
@@ -86,8 +87,14 @@ Copy `dist/ha-presence-sensor-card.js` to `config/www/`, then add `/local/ha-pre
 | `compact` | Coloured icon instead of the drawing. Default `false`. |
 | `show_since` | *Occupied for* / *Clear for* line. Default `true`. |
 | `show_scale` | Distances on the range arcs. Default `true`. |
+| `targets` | Plan view: up to three targets, each `{ x, y, direction, speed }` (entity ids; x and y in any length unit). Filled in by the editor from the same device. |
+| `zones` | Plan view: up to three zones, each `{ x1, y1, x2, y2, count, name, type }`. `count` is the zone's people count, `type` is `detection` or `filter` when one zone differs from the others. |
+| `zone_type_entity` | The sensor's zone type select (`Disabled`, `Detection`, `Filter`). |
+| `show_plan` | Plan view when the targets are set. Default `true`; `false` keeps the drawing on the axis. |
+| `show_targets` | One line per target in the plan view. Default `true`. |
+| `flip_x` | Swap left and right in the plan view. Default `false`. |
 
-The colours follow your theme: `--pr-occupied-color` (default blue) and `--pr-still-color` (default indigo) can be set with card-mod or a theme.
+The colours follow your theme: `--pr-occupied-color` (default blue), `--pr-still-color` (default indigo), `--pr-offline-color` (default the theme's error colour) and `--pr-zone1-color` to `--pr-zone3-color` can be set with card-mod or a theme.
 
 ### Examples
 
@@ -130,6 +137,25 @@ distance_entity: sensor.bedroom_distance
 heart_rate_entity: sensor.bedroom_heart_rate
 breath_rate_entity: sensor.bedroom_breath_rate
 target_count_entity: sensor.bedroom_num_targets
+```
+
+HLK-LD2450 (ESPHome): plan view, each target at its position and the zones on the floor. Picking the occupancy entity in the editor fills all of this in.
+
+```yaml
+type: custom:ha-presence-sensor-card
+entity: binary_sensor.lounge_presence
+target_count_entity: sensor.lounge_target_count
+zone_type_entity: select.lounge_zone_type
+targets:
+  - x: sensor.lounge_target_1_x
+    y: sensor.lounge_target_1_y
+    direction: sensor.lounge_target_1_direction
+    speed: sensor.lounge_target_1_speed
+  - x: sensor.lounge_target_2_x
+    y: sensor.lounge_target_2_y
+zones:
+  - { x1: number.lounge_zone_1_x1, y1: number.lounge_zone_1_y1, x2: number.lounge_zone_1_x2, y2: number.lounge_zone_1_y2, count: sensor.lounge_zone_1_target_count, name: Desk }
+  - { x1: number.lounge_zone_2_x1, y1: number.lounge_zone_2_y1, x2: number.lounge_zone_2_x2, y2: number.lounge_zone_2_y2, name: Sofa }
 ```
 
 Aqara P1 (plain PIR): motion, light and battery.

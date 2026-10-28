@@ -88,6 +88,8 @@ const es1 = (occ, dist, range = 450, extra = {}) => ({
 check('ES1 : occupé', stateLine(render(ES1, es1('on', 180))), 'Occupied');
 check('ES1 : libre', stateLine(render(ES1, es1('off', 0))), 'Clear');
 check('ES1 : hors ligne', stateLine(render(ES1, es1('unavailable', 0))), 'Offline');
+check('hors ligne en rouge, pas gris comme une pièce vide', /--pr-color: var\(--pr-offline-color, var\(--error-color/.test(render(ES1, es1('unavailable', 0))), true);
+check('libre reste gris', /--pr-color: var\(--disabled-text-color/.test(render(ES1, es1('off', 0))), true);
 check('ES1 : dessin occupé', cardMode(render(ES1, es1('on', 180))), 'occupied');
 check('ES1 : silhouette à 302 cm sur 450', feetY(render(ES1, es1('on', 302))), 16 + 100 * 0.67);
 check('ES1 : au bout de la portée, pas au-delà', feetY(render(ES1, es1('on', 900))), 116);
@@ -460,5 +462,154 @@ check('FP1E : la température de la puce n’est pas celle de la pièce', sib('b
   check('LD2410 : la carte part sur has_target', Card.getStubConfig(ld).entity, 'binary_sensor.ld_has_target');
 }
 contains('éditeur : autres mesures', markup(ed4), 'data-picker="heart_rate_entity"');
+
+// ── HLK-LD2450 (ESPHome): plan view ──────────────────────────────────────────
+// Each target at its own x / y (mm), the zones on the floor, an arrow for who
+// comes closer or walks away. A slot at 0 / 0 has no target in it.
+
+const MM = { unit_of_measurement: 'mm' };
+const LD50 = {
+  entity: 'binary_sensor.salon_presence',
+  target_count_entity: 'sensor.salon_target_count',
+  targets: [1, 2, 3].map(n => ({
+    x: `sensor.salon_target_${n}_x`, y: `sensor.salon_target_${n}_y`,
+    direction: `sensor.salon_target_${n}_direction`, speed: `sensor.salon_target_${n}_speed` })),
+  zones: [1, 2, 3].map(n => ({
+    x1: `number.salon_zone_${n}_x1`, y1: `number.salon_zone_${n}_y1`,
+    x2: `number.salon_zone_${n}_x2`, y2: `number.salon_zone_${n}_y2`, count: `sensor.salon_zone_${n}_target_count`,
+    // One select types the LD2450's three zones; a zone may say its own.
+    ...(n === 3 ? { type: 'filter' } : {}) })),
+  zone_type_entity: 'select.salon_zone_type',
+};
+const ZONES = [[-2300, 900, -500, 2700], [500, 2300, 2700, 4500], [-700, 4500, 700, 5600]];
+function ld(targets, { type = 'Detection', occ, zones = ZONES, counts = true } = {}) {
+  const st = {
+    'binary_sensor.salon_presence': s(occ ?? (targets.length ? 'on' : 'off'), OCC),
+    'sensor.salon_target_count': s(targets.length),
+    'select.salon_zone_type': s(type),
+  };
+  for (let n = 1; n <= 3; n++) {
+    const tg = targets[n - 1] || { x: 0, y: 0 };
+    st[`sensor.salon_target_${n}_x`] = s(tg.x, MM);
+    st[`sensor.salon_target_${n}_y`] = s(tg.y, MM);
+    st[`sensor.salon_target_${n}_direction`] = s(tg.dir || 'NA');
+    st[`sensor.salon_target_${n}_speed`] = s(tg.speed || 0, { unit_of_measurement: 'mm/s' });
+    const z = zones[n - 1] || [0, 0, 0, 0];
+    ['x1', 'y1', 'x2', 'y2'].forEach((k, i) => { st[`number.salon_zone_${n}_${k}`] = s(z[i], MM); });
+    const inside = targets.filter(t => t.x >= Math.min(z[0], z[2]) && t.x <= Math.max(z[0], z[2]) && t.y >= Math.min(z[1], z[3]) && t.y <= Math.max(z[1], z[3]));
+    if (counts) st[`sensor.salon_zone_${n}_target_count`] = s(inside.length);
+  }
+  return st;
+}
+const pts = html => [...String(html).matchAll(/<g class="pr-pt t-([a-z]+) pr-p\d" data-n="(\d)" transform="translate\(([\d.-]+) ([\d.-]+)\)">/g)]
+  .map(m => ({ state: m[1], n: Number(m[2]), x: Number(m[3]), y: Number(m[4]) }));
+const zonesOf = html => [...String(html).matchAll(/<g class="pr-zone pr-zone-([a-z]+)( pr-zone-on)?"/g)].map(m => m[1] + (m[2] ? '+' : ''));
+const SITTING = { x: -1350, y: 1700, dir: 'Stationary' };
+const COMING = { x: 1200, y: 3100, dir: 'Approaching', speed: -700 };
+{
+  const html = render(LD50, ld([SITTING, COMING]));
+  check('LD2450 : deux cibles posées, la troisième (0 / 0) absente', pts(html).length, 2);
+  check('LD2450 : cible 1 à sa place (x, y en mm sur 6 m)', JSON.stringify(pts(html).find(p => p.n === 1)), JSON.stringify({ state: 'still', n: 1, x: 77.5, y: 44.3 }));
+  check('LD2450 : Stationary respire, Approaching marche', pts(html).map(p => p.state).join(','), 'still,moving');
+  check('LD2450 : flèche pour celle qui s’approche', (html.match(/class="pr-heading"/g) || []).length, 1);
+  {
+    // The arrow's tip is nearer the sensor (100, 16) than her feet when she
+    // comes closer, farther when she walks away.
+    const tip = h => { const m = String(h).match(/class="pr-heading" d="M[\d. -]+ L([\d.]+) ([\d.]+)/); return m ? Math.hypot(m[1] - 100, m[2] - 16) : null; };
+    const feet = h => { const p = pts(h)[0]; return Math.hypot(p.x - 100, p.y - 16); };
+    const near = render(LD50, ld([COMING]));
+    const far = render(LD50, ld([{ ...COMING, dir: 'Moving away', speed: 700 }]));
+    check('LD2450 : flèche vers le capteur quand elle s’approche', tip(near) < feet(near), true);
+    check('LD2450 : flèche vers le fond quand elle s’éloigne', tip(far) > feet(far), true);
+    check('LD2450 : Moving away', line(far, 'Target 1'), `3.3${NB}m · Moving away · 0.7${NB}m/s`);
+  }
+  check('LD2450 : ligne de la cible immobile', line(html, 'Target 1'), `2.2${NB}m · Still`);
+  check('LD2450 : ligne de la cible qui s’approche', line(html, 'Target 2'), `3.3${NB}m · Approaching · 0.7${NB}m/s`);
+  check('LD2450 : pas de troisième ligne de cible', line(html, 'Target 3'), null);
+  check('LD2450 : zones dessinées, filtre hachuré', zonesOf(html).join(','), 'detection+,detection+,filter');
+  check('LD2450 : compte de la zone 1', line(html, 'Zone 1'), '1');
+  check('LD2450 : pas de ligne pour la zone filtre', line(html, 'Zone 3'), null);
+  check('LD2450 : plus de ligne Distance seule', line(html, 'Distance'), null);
+  check('LD2450 : nombre de personnes', line(html, 'People'), '2');
+  check('LD2450 : vue en plan marquée', html.includes('class="pr-plan"'), true);
+  check('LD2450 : une cible marche, la pièce est en mouvement', stateLine(html), 'Moving');
+  check('LD2450 : personnes avant les cibles', html.indexOf('>People<') < html.indexOf('>Target 1<'), true);
+  check('LD2450 : plus de silhouette sur l’axe', feetY(html), null);
+}
+check('LD2450 : toutes immobiles, la pièce est immobile', stateLine(render(LD50, ld([SITTING, { ...COMING, dir: 'Stationary', speed: 0 }]))), 'Still');
+check('LD2450 : gauche et droite inversées', pts(render({ ...LD50, flip_x: true }, ld([SITTING]))).map(p => p.x).join(), '122.5');
+check('LD2450 : tout près du mur, la tête ne cache pas le capteur', pts(render(LD50, ld([{ x: 0, y: 300 }]))).map(p => p.y).join(), '42');
+check('LD2450 : zones désactivées', zonesOf(render(LD50, ld([SITTING], { type: 'Disabled' }))).length, 0);
+check('LD2450 : zone non réglée (0 partout) ignorée', zonesOf(render(LD50, ld([SITTING], { zones: [ZONES[0], [0, 0, 0, 0]] }))).join(), 'detection+');
+check('LD2450 : nom de zone choisi', line(render({ ...LD50, zones: [{ ...LD50.zones[0], name: 'Bureau' }] }, ld([SITTING])), 'Bureau'), '1');
+check('LD2450 : zone vide = libre', line(render(LD50, ld([SITTING])), 'Zone 2'), 'Clear');
+check('LD2450 : sans compteur de zone, compté sur les positions', line(render({ ...LD50, zones: LD50.zones.map(({ count, ...z }) => z) }, ld([SITTING, COMING], { counts: false })), 'Zone 2'), '1');
+{
+  const html = render(LD50, ld([]));
+  check('LD2450 : libre, personne dans le plan', pts(html).length, 0);
+  check('LD2450 : libre, les zones restent', zonesOf(html).join(','), 'detection,detection,filter');
+  check('LD2450 : libre, zone 1 libre', line(html, 'Zone 1'), 'Clear');
+}
+check('LD2450 : hors ligne, pas de lignes de cible', line(render(LD50, ld([SITTING], { occ: 'unavailable' })), 'Target 1'), null);
+check('LD2450 : hors ligne, personne dans le plan', pts(render(LD50, ld([SITTING], { occ: 'unavailable' }))).length, 0);
+{
+  const html = render({ ...LD50, show_plan: false }, ld([SITTING, COMING]));
+  check('LD2450 : vue en plan coupée, dessin d’origine', pts(html).length === 0 && feetY(html) !== null, true);
+  check('LD2450 : vue en plan coupée, pas de zones', zonesOf(html).length, 0);
+}
+check('LD2450 : lignes de cible masquables', line(render({ ...LD50, show_targets: false }, ld([SITTING])), 'Target 1'), null);
+check('LD2450 : en français', line(render(LD50, ld([COMING]), 'fr'), 'Cible 1'), `3,3${NB}m · S&#39;approche · 0,7${NB}m/s`);
+{
+  const noCount = { ...LD50 };
+  delete noCount.target_count_entity;
+  check('LD2450 : personnes comptées sur les positions', line(render(noCount, ld([SITTING, COMING])), 'People'), '2');
+}
+// The trail: same card, the target walks; without a direction sensor the
+// card reads it from where the target stood before.
+{
+  const c = new Card();
+  c.setConfig(Object.freeze(LD50));
+  const at = (x, y) => { c.hass = { language: 'en', states: ld([{ x, y }]), callService() {} }; return markup(c); };
+  at(800, 4200);
+  const html = at(600, 3500);
+  check('LD2450 : traînée derrière la cible', (html.match(/class="pr-trail"/g) || []).length, 1);
+  check('LD2450 : sans capteur de direction, lue sur la traînée', line(html, 'Target 1'), `3.6${NB}m · Approaching`);
+  check('LD2450 : elle marche', pts(html).map(p => p.state).join(), 'moving');
+  check('LD2450 : un pas trop petit ne laisse pas de trace', (at(620, 3510).match(/class="pr-trail"/g) || []).length, 1);
+  freezeClock('2026-10-28T12:00:30Z');
+  check('LD2450 : la traînée s’efface', (at(620, 3510).match(/class="pr-trail"/g) || []).length, 0);
+  freezeClock('2026-10-28T12:00:00Z');
+  at(0, 0);
+  check('LD2450 : cible partie, traînée oubliée', (at(600, 3500).match(/class="pr-trail"/g) || []).length, 0);
+}
+// The editor fills the positions and zones from the same device.
+{
+  const dev = {};
+  dev['binary_sensor.ld_has_target'] = OCC;
+  dev['sensor.ld_target_count'] = {};
+  for (const n of [1, 2, 3]) {
+    for (const k of ['x', 'y', 'speed', 'angle', 'distance', 'resolution', 'direction']) dev[`sensor.ld_target_${n}_${k}`] = {};
+    for (const k of ['x1', 'y1', 'x2', 'y2']) dev[`number.ld_zone_${n}_${k}`] = {};
+    dev[`sensor.ld_zone_${n}_target_count`] = {};
+    dev[`sensor.ld_zone_${n}_moving_target_count`] = {};
+  }
+  dev['select.ld_zone_type'] = {};
+  const stub = Card.getStubConfig(deviceHass({ ld: dev }));
+  check('LD2450 : cibles devinées', JSON.stringify(stub.targets[1]), JSON.stringify({
+    x: 'sensor.ld_target_2_x', y: 'sensor.ld_target_2_y', direction: 'sensor.ld_target_2_direction', speed: 'sensor.ld_target_2_speed' }));
+  check('LD2450 : trois cibles', stub.targets.length, 3);
+  check('LD2450 : zones devinées, compte total et pas mobile', JSON.stringify(stub.zones[2]), JSON.stringify({
+    x1: 'number.ld_zone_3_x1', y1: 'number.ld_zone_3_y1', x2: 'number.ld_zone_3_x2', y2: 'number.ld_zone_3_y2', count: 'sensor.ld_zone_3_target_count' }));
+  check('LD2450 : type de zone deviné', stub.zone_type_entity, 'select.ld_zone_type');
+  check('LD2410 : pas de vue en plan sans x / y', 'targets' in Card.getStubConfig(deviceHass({ ld: { 'binary_sensor.ld_has_target': OCC, 'sensor.ld_detection_distance': {} } })), false);
+  const edp = new Editor();
+  edp.setConfig(LD50);
+  edp.hass = { language: 'en', states: {} };
+  contains('éditeur : section vue en plan', markup(edp), 'Targets: 3 · Zones: 3');
+  contains('éditeur : type de zone', markup(edp), 'data-picker="zone_type_entity"');
+  contains('éditeur : nom des zones', markup(edp), 'data-zone="2"');
+  contains('éditeur : inverser gauche et droite', markup(edp), 'data-field="flip_x"');
+  check('éditeur : pas de section vue en plan sans cibles', markup(ed4).includes('data-field="flip_x"'), false);
+}
 
 report();

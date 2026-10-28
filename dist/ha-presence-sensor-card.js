@@ -1,4 +1,4 @@
-const CARD_VERSION = "0.1.0";
+const CARD_VERSION = "0.2.0";
 
 console.info(
   "%c HA-PRESENCE-SENSOR-CARD %c v" + CARD_VERSION + " ",
@@ -25,6 +25,7 @@ const T = {
     show_scale: "Show the distances on the range arcs", section_readings: "Readings",
     autofill_hint: "The other fields are filled in from the same device when the occupancy entity is picked.",
     people: "People", temperature: "Temperature", humidity: "Humidity", heart_rate: "Heart rate", breath_rate: "Breathing", dim: "Dim", bright: "Bright", target_count_entity: "People count entity", temperature_entity: "Temperature entity", humidity_entity: "Humidity entity", heart_rate_entity: "Heart rate entity", breath_rate_entity: "Breathing rate entity", section_more: "More readings",
+    target: "Target", approaching: "Approaching", moving_away: "Moving away", zone: "Zone", filter: "filter", section_plan: "Plan view", show_plan: "Show each target where it stands (plan view)", show_targets: "One line per target", flip_x: "Swap left and right", zone_type_entity: "Zone type entity", zone_name: "Name of zone {n}", plan_targets: "Targets", plan_zones: "Zones", plan_hint: "Positions and zones come from the sensor's own entities (HLK-LD2450 in ESPHome), filled in when the occupancy entity is picked. Targets and zones are edited in YAML.",
   },
   fr: {
     occupied: "Occup\u00e9", moving: "En mouvement", still: "Immobile", clear: "Libre", offline: "Hors ligne",
@@ -37,6 +38,7 @@ const T = {
     show_scale: "Afficher les distances sur les arcs de port\u00e9e", section_readings: "Mesures",
     autofill_hint: "Les autres champs se remplissent depuis le m\u00eame appareil quand l'entit\u00e9 de pr\u00e9sence est choisie.",
     people: "Personnes", temperature: "Temp\u00e9rature", humidity: "Humidit\u00e9", heart_rate: "Rythme cardiaque", breath_rate: "Respiration", dim: "Sombre", bright: "Lumineux", target_count_entity: "Entit\u00e9 nombre de personnes", temperature_entity: "Entit\u00e9 temp\u00e9rature", humidity_entity: "Entit\u00e9 humidit\u00e9", heart_rate_entity: "Entit\u00e9 rythme cardiaque", breath_rate_entity: "Entit\u00e9 rythme respiratoire", section_more: "Autres mesures",
+    target: "Cible", approaching: "S'approche", moving_away: "S'\u00e9loigne", zone: "Zone", filter: "filtre", section_plan: "Vue en plan", show_plan: "Montrer chaque cible \u00e0 sa position (vue en plan)", show_targets: "Une ligne par cible", flip_x: "Inverser gauche et droite", zone_type_entity: "Entit\u00e9 type de zone", zone_name: "Nom de la zone {n}", plan_targets: "Cibles", plan_zones: "Zones", plan_hint: "Les positions et les zones viennent des entit\u00e9s du capteur (HLK-LD2450 sous ESPHome), remplies au choix de l'entit\u00e9 d'occupation. Cibles et zones se modifient en YAML.",
   },
   de: {
     occupied: "Belegt", moving: "In Bewegung", still: "Ruhig", clear: "Frei", offline: "Offline",
@@ -49,6 +51,7 @@ const T = {
     show_scale: "Abst\u00e4nde an den Reichweitenb\u00f6gen anzeigen", section_readings: "Messwerte",
     autofill_hint: "Die \u00fcbrigen Felder werden vom selben Ger\u00e4t ausgef\u00fcllt, sobald die Belegungs-Entit\u00e4t gew\u00e4hlt ist.",
     people: "Personen", temperature: "Temperatur", humidity: "Luftfeuchtigkeit", heart_rate: "Herzfrequenz", breath_rate: "Atmung", dim: "Dunkel", bright: "Hell", target_count_entity: "Entit\u00e4t Personenzahl", temperature_entity: "Temperatur-Entit\u00e4t", humidity_entity: "Luftfeuchtigkeits-Entit\u00e4t", heart_rate_entity: "Entit\u00e4t Herzfrequenz", breath_rate_entity: "Entit\u00e4t Atemfrequenz", section_more: "Weitere Messwerte",
+    target: "Ziel", approaching: "N\u00e4hert sich", moving_away: "Entfernt sich", zone: "Zone", filter: "Filter", section_plan: "Grundriss", show_plan: "Jedes Ziel an seiner Position zeigen (Grundriss)", show_targets: "Eine Zeile pro Ziel", flip_x: "Links und rechts tauschen", zone_type_entity: "Entit\u00e4t Zonentyp", zone_name: "Name der Zone {n}", plan_targets: "Ziele", plan_zones: "Zonen", plan_hint: "Positionen und Zonen stammen aus den Entit\u00e4ten des Sensors (HLK-LD2450 in ESPHome) und werden bei der Wahl der Belegungsentit\u00e4t ausgef\u00fcllt. Ziele und Zonen werden in YAML bearbeitet.",
   },
   es: {
     occupied: "Ocupado", moving: "En movimiento", still: "Quieto", clear: "Libre", offline: "Sin conexi\u00f3n",
@@ -61,6 +64,7 @@ const T = {
     show_scale: "Mostrar las distancias en los arcos de alcance", section_readings: "Mediciones",
     autofill_hint: "Los dem\u00e1s campos se rellenan desde el mismo dispositivo al elegir la entidad de ocupaci\u00f3n.",
     people: "Personas", temperature: "Temperatura", humidity: "Humedad", heart_rate: "Ritmo card\u00edaco", breath_rate: "Respiraci\u00f3n", dim: "Oscuro", bright: "Luminoso", target_count_entity: "Entidad n\u00famero de personas", temperature_entity: "Entidad de temperatura", humidity_entity: "Entidad de humedad", heart_rate_entity: "Entidad ritmo card\u00edaco", breath_rate_entity: "Entidad ritmo respiratorio", section_more: "Otras mediciones",
+    target: "Objetivo", approaching: "Se acerca", moving_away: "Se aleja", zone: "Zona", filter: "filtro", section_plan: "Vista en planta", show_plan: "Mostrar cada objetivo en su posici\u00f3n (vista en planta)", show_targets: "Una l\u00ednea por objetivo", flip_x: "Invertir izquierda y derecha", zone_type_entity: "Entidad del tipo de zona", zone_name: "Nombre de la zona {n}", plan_targets: "Objetivos", plan_zones: "Zonas", plan_hint: "Las posiciones y las zonas vienen de las entidades del sensor (HLK-LD2450 en ESPHome) y se rellenan al elegir la entidad de ocupaci\u00f3n. Objetivos y zonas se editan en YAML.",
   },
   it: {
     occupied: "Occupato", moving: "In movimento", still: "Fermo", clear: "Libero", offline: "Non in linea",
@@ -73,6 +77,7 @@ const T = {
     show_scale: "Mostra le distanze sugli archi di portata", section_readings: "Misure",
     autofill_hint: "Gli altri campi si compilano dallo stesso dispositivo quando si sceglie l'entit\u00e0 di occupazione.",
     people: "Persone", temperature: "Temperatura", humidity: "Umidit\u00e0", heart_rate: "Frequenza cardiaca", breath_rate: "Respirazione", dim: "Buio", bright: "Luminoso", target_count_entity: "Entit\u00e0 numero di persone", temperature_entity: "Entit\u00e0 temperatura", humidity_entity: "Entit\u00e0 umidit\u00e0", heart_rate_entity: "Entit\u00e0 frequenza cardiaca", breath_rate_entity: "Entit\u00e0 frequenza respiratoria", section_more: "Altre misure",
+    target: "Bersaglio", approaching: "Si avvicina", moving_away: "Si allontana", zone: "Zona", filter: "filtro", section_plan: "Vista in pianta", show_plan: "Mostra ogni bersaglio nella sua posizione (vista in pianta)", show_targets: "Una riga per bersaglio", flip_x: "Inverti sinistra e destra", zone_type_entity: "Entit\u00e0 tipo di zona", zone_name: "Nome della zona {n}", plan_targets: "Bersagli", plan_zones: "Zone", plan_hint: "Posizioni e zone provengono dalle entit\u00e0 del sensore (HLK-LD2450 in ESPHome) e vengono compilate alla scelta dell'entit\u00e0 di occupazione. Bersagli e zone si modificano in YAML.",
   },
   nl: {
     occupied: "Bezet", moving: "In beweging", still: "Stil", clear: "Vrij", offline: "Offline",
@@ -85,6 +90,7 @@ const T = {
     show_scale: "Afstanden op de bereikbogen tonen", section_readings: "Metingen",
     autofill_hint: "De overige velden worden vanuit hetzelfde apparaat ingevuld zodra de bezettingsentiteit gekozen is.",
     people: "Personen", temperature: "Temperatuur", humidity: "Luchtvochtigheid", heart_rate: "Hartslag", breath_rate: "Ademhaling", dim: "Donker", bright: "Licht", target_count_entity: "Entiteit aantal personen", temperature_entity: "Temperatuurentiteit", humidity_entity: "Vochtigheidsentiteit", heart_rate_entity: "Entiteit hartslag", breath_rate_entity: "Entiteit ademhalingsfrequentie", section_more: "Meer metingen",
+    target: "Doel", approaching: "Komt dichterbij", moving_away: "Gaat weg", zone: "Zone", filter: "filter", section_plan: "Plattegrond", show_plan: "Elk doel op zijn positie tonen (plattegrond)", show_targets: "E\u00e9n regel per doel", flip_x: "Links en rechts omwisselen", zone_type_entity: "Entiteit zonetype", zone_name: "Naam van zone {n}", plan_targets: "Doelen", plan_zones: "Zones", plan_hint: "Posities en zones komen uit de entiteiten van de sensor (HLK-LD2450 in ESPHome) en worden ingevuld bij het kiezen van de bezettingsentiteit. Doelen en zones bewerk je in YAML.",
   },
   pt: {
     occupied: "Ocupado", moving: "Em movimento", still: "Parado", clear: "Livre", offline: "Offline",
@@ -97,6 +103,7 @@ const T = {
     show_scale: "Mostrar as dist\u00e2ncias nos arcos de alcance", section_readings: "Medi\u00e7\u00f5es",
     autofill_hint: "Os outros campos s\u00e3o preenchidos a partir do mesmo dispositivo ao escolher a entidade de ocupa\u00e7\u00e3o.",
     people: "Pessoas", temperature: "Temperatura", humidity: "Humidade", heart_rate: "Frequ\u00eancia card\u00edaca", breath_rate: "Respira\u00e7\u00e3o", dim: "Escuro", bright: "Claro", target_count_entity: "Entidade n\u00famero de pessoas", temperature_entity: "Entidade de temperatura", humidity_entity: "Entidade de humidade", heart_rate_entity: "Entidade frequ\u00eancia card\u00edaca", breath_rate_entity: "Entidade frequ\u00eancia respirat\u00f3ria", section_more: "Outras medi\u00e7\u00f5es",
+    target: "Alvo", approaching: "Aproxima-se", moving_away: "Afasta-se", zone: "Zona", filter: "filtro", section_plan: "Vista em planta", show_plan: "Mostrar cada alvo na sua posi\u00e7\u00e3o (vista em planta)", show_targets: "Uma linha por alvo", flip_x: "Trocar esquerda e direita", zone_type_entity: "Entidade do tipo de zona", zone_name: "Nome da zona {n}", plan_targets: "Alvos", plan_zones: "Zonas", plan_hint: "As posi\u00e7\u00f5es e as zonas v\u00eam das entidades do sensor (HLK-LD2450 no ESPHome), preenchidas ao escolher a entidade de ocupa\u00e7\u00e3o. Alvos e zonas editam-se em YAML.",
   },
   sv: {
     occupied: "Upptaget", moving: "I r\u00f6relse", still: "Stilla", clear: "Ledigt", offline: "Fr\u00e5nkopplad",
@@ -109,6 +116,7 @@ const T = {
     show_scale: "Visa avst\u00e5nden p\u00e5 r\u00e4ckviddsb\u00e5garna", section_readings: "M\u00e4tv\u00e4rden",
     autofill_hint: "\u00d6vriga f\u00e4lt fylls i fr\u00e5n samma enhet n\u00e4r n\u00e4rvaroentiteten v\u00e4ljs.",
     people: "Personer", temperature: "Temperatur", humidity: "Luftfuktighet", heart_rate: "Puls", breath_rate: "Andning", dim: "M\u00f6rkt", bright: "Ljust", target_count_entity: "Entitet antal personer", temperature_entity: "Temperaturentitet", humidity_entity: "Fuktighetsentitet", heart_rate_entity: "Entitet puls", breath_rate_entity: "Entitet andningsfrekvens", section_more: "Fler m\u00e4tv\u00e4rden",
+    target: "M\u00e5l", approaching: "N\u00e4rmar sig", moving_away: "Avl\u00e4gsnar sig", zone: "Zon", filter: "filter", section_plan: "Planvy", show_plan: "Visa varje m\u00e5l p\u00e5 sin plats (planvy)", show_targets: "En rad per m\u00e5l", flip_x: "Byt v\u00e4nster och h\u00f6ger", zone_type_entity: "Entitet zontyp", zone_name: "Namn p\u00e5 zon {n}", plan_targets: "M\u00e5l", plan_zones: "Zoner", plan_hint: "Positioner och zoner kommer fr\u00e5n sensorns egna entiteter (HLK-LD2450 i ESPHome) och fylls i n\u00e4r n\u00e4rvaroentiteten v\u00e4ljs. M\u00e5l och zoner redigeras i YAML.",
   },
   no: {
     occupied: "Opptatt", moving: "I bevegelse", still: "Stille", clear: "Ledig", offline: "Frakoblet",
@@ -121,6 +129,7 @@ const T = {
     show_scale: "Vis avstandene p\u00e5 rekkeviddebuene", section_readings: "M\u00e5linger",
     autofill_hint: "De andre feltene fylles ut fra samme enhet n\u00e5r tilstedev\u00e6relsesentiteten velges.",
     people: "Personer", temperature: "Temperatur", humidity: "Luftfuktighet", heart_rate: "Puls", breath_rate: "Pust", dim: "M\u00f8rkt", bright: "Lyst", target_count_entity: "Entitet antall personer", temperature_entity: "Temperaturentitet", humidity_entity: "Fuktighetsentitet", heart_rate_entity: "Entitet puls", breath_rate_entity: "Entitet pustefrekvens", section_more: "Flere m\u00e5linger",
+    target: "M\u00e5l", approaching: "N\u00e6rmer seg", moving_away: "Fjerner seg", zone: "Sone", filter: "filter", section_plan: "Planvisning", show_plan: "Vis hvert m\u00e5l p\u00e5 sin plass (planvisning)", show_targets: "\u00c9n linje per m\u00e5l", flip_x: "Bytt venstre og h\u00f8yre", zone_type_entity: "Entitet sonetype", zone_name: "Navn p\u00e5 sone {n}", plan_targets: "M\u00e5l", plan_zones: "Soner", plan_hint: "Posisjoner og soner kommer fra sensorens egne entiteter (HLK-LD2450 i ESPHome) og fylles inn n\u00e5r tilstedev\u00e6relsesentiteten velges. M\u00e5l og soner redigeres i YAML.",
   },
   da: {
     occupied: "Optaget", moving: "I bev\u00e6gelse", still: "Stille", clear: "Ledig", offline: "Offline",
@@ -133,6 +142,7 @@ const T = {
     show_scale: "Vis afstandene p\u00e5 r\u00e6kkeviddebuerne", section_readings: "M\u00e5linger",
     autofill_hint: "De \u00f8vrige felter udfyldes fra samme enhed, n\u00e5r tilstedev\u00e6relsesentiteten v\u00e6lges.",
     people: "Personer", temperature: "Temperatur", humidity: "Luftfugtighed", heart_rate: "Puls", breath_rate: "Vejrtr\u00e6kning", dim: "M\u00f8rkt", bright: "Lyst", target_count_entity: "Entitet antal personer", temperature_entity: "Temperaturentitet", humidity_entity: "Fugtighedsentitet", heart_rate_entity: "Entitet puls", breath_rate_entity: "Entitet vejrtr\u00e6kningsfrekvens", section_more: "Flere m\u00e5linger",
+    target: "M\u00e5l", approaching: "N\u00e6rmer sig", moving_away: "Fjerner sig", zone: "Zone", filter: "filter", section_plan: "Planvisning", show_plan: "Vis hvert m\u00e5l p\u00e5 sin plads (planvisning)", show_targets: "\u00c9n linje pr. m\u00e5l", flip_x: "Byt venstre og h\u00f8jre", zone_type_entity: "Entitet zonetype", zone_name: "Navn p\u00e5 zone {n}", plan_targets: "M\u00e5l", plan_zones: "Zoner", plan_hint: "Positioner og zoner kommer fra sensorens egne entiteter (HLK-LD2450 i ESPHome) og udfyldes, n\u00e5r tilstedev\u00e6relsesentiteten v\u00e6lges. M\u00e5l og zoner redigeres i YAML.",
   },
   pl: {
     occupied: "Zaj\u0119te", moving: "W ruchu", still: "Bez ruchu", clear: "Wolne", offline: "Offline",
@@ -145,6 +155,7 @@ const T = {
     show_scale: "Poka\u017c odleg\u0142o\u015bci na \u0142ukach zasi\u0119gu", section_readings: "Pomiary",
     autofill_hint: "Pozosta\u0142e pola wype\u0142niaj\u0105 si\u0119 z tego samego urz\u0105dzenia po wybraniu encji obecno\u015bci.",
     people: "Osoby", temperature: "Temperatura", humidity: "Wilgotno\u015b\u0107", heart_rate: "T\u0119tno", breath_rate: "Oddech", dim: "Ciemno", bright: "Jasno", target_count_entity: "Encja liczby os\u00f3b", temperature_entity: "Encja temperatury", humidity_entity: "Encja wilgotno\u015bci", heart_rate_entity: "Encja t\u0119tna", breath_rate_entity: "Encja cz\u0119sto\u015bci oddechu", section_more: "Inne pomiary",
+    target: "Cel", approaching: "Zbli\u017ca si\u0119", moving_away: "Oddala si\u0119", zone: "Strefa", filter: "filtr", section_plan: "Widok z g\u00f3ry", show_plan: "Poka\u017c ka\u017cdy cel w jego po\u0142o\u017ceniu (widok z g\u00f3ry)", show_targets: "Jeden wiersz na cel", flip_x: "Zamie\u0144 lewo i prawo", zone_type_entity: "Encja typu strefy", zone_name: "Nazwa strefy {n}", plan_targets: "Cele", plan_zones: "Strefy", plan_hint: "Po\u0142o\u017cenia i strefy pochodz\u0105 z encji czujnika (HLK-LD2450 w ESPHome) i s\u0105 uzupe\u0142niane po wybraniu encji obecno\u015bci. Cele i strefy edytuje si\u0119 w YAML.",
   },
   ru: {
     occupied: "\u0417\u0430\u043d\u044f\u0442\u043e", moving: "\u0414\u0432\u0438\u0436\u0435\u043d\u0438\u0435", still: "\u041d\u0435\u043f\u043e\u0434\u0432\u0438\u0436\u043d\u043e", clear: "\u0421\u0432\u043e\u0431\u043e\u0434\u043d\u043e", offline: "\u041d\u0435 \u0432 \u0441\u0435\u0442\u0438",
@@ -157,6 +168,7 @@ const T = {
     show_scale: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0440\u0430\u0441\u0441\u0442\u043e\u044f\u043d\u0438\u044f \u043d\u0430 \u0434\u0443\u0433\u0430\u0445 \u0434\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u0438", section_readings: "\u0418\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f",
     autofill_hint: "\u041e\u0441\u0442\u0430\u043b\u044c\u043d\u044b\u0435 \u043f\u043e\u043b\u044f \u0437\u0430\u043f\u043e\u043b\u043d\u044f\u044e\u0442\u0441\u044f \u0441 \u0442\u043e\u0433\u043e \u0436\u0435 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430 \u043f\u0440\u0438 \u0432\u044b\u0431\u043e\u0440\u0435 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u043f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044f.",
     people: "\u041b\u044e\u0434\u0438", temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430", humidity: "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c", heart_rate: "\u041f\u0443\u043b\u044c\u0441", breath_rate: "\u0414\u044b\u0445\u0430\u043d\u0438\u0435", dim: "\u0422\u0435\u043c\u043d\u043e", bright: "\u0421\u0432\u0435\u0442\u043b\u043e", target_count_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0447\u0438\u0441\u043b\u0430 \u043b\u044e\u0434\u0435\u0439", temperature_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b", humidity_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u0438", heart_rate_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u043f\u0443\u043b\u044c\u0441\u0430", breath_rate_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0447\u0430\u0441\u0442\u043e\u0442\u044b \u0434\u044b\u0445\u0430\u043d\u0438\u044f", section_more: "\u0414\u0440\u0443\u0433\u0438\u0435 \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f",
+    target: "\u0426\u0435\u043b\u044c", approaching: "\u041f\u0440\u0438\u0431\u043b\u0438\u0436\u0430\u0435\u0442\u0441\u044f", moving_away: "\u0423\u0434\u0430\u043b\u044f\u0435\u0442\u0441\u044f", zone: "\u0417\u043e\u043d\u0430", filter: "\u0444\u0438\u043b\u044c\u0442\u0440", section_plan: "\u0412\u0438\u0434 \u0441\u0432\u0435\u0440\u0445\u0443", show_plan: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043a\u0430\u0436\u0434\u0443\u044e \u0446\u0435\u043b\u044c \u043d\u0430 \u0435\u0451 \u043c\u0435\u0441\u0442\u0435 (\u0432\u0438\u0434 \u0441\u0432\u0435\u0440\u0445\u0443)", show_targets: "\u041e\u0434\u043d\u0430 \u0441\u0442\u0440\u043e\u043a\u0430 \u043d\u0430 \u0446\u0435\u043b\u044c", flip_x: "\u041f\u043e\u043c\u0435\u043d\u044f\u0442\u044c \u043b\u0435\u0432\u043e\u0435 \u0438 \u043f\u0440\u0430\u0432\u043e\u0435", zone_type_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0442\u0438\u043f\u0430 \u0437\u043e\u043d\u044b", zone_name: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0437\u043e\u043d\u044b {n}", plan_targets: "\u0426\u0435\u043b\u0438", plan_zones: "\u0417\u043e\u043d\u044b", plan_hint: "\u041f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u0438 \u0437\u043e\u043d\u044b \u0431\u0435\u0440\u0443\u0442\u0441\u044f \u0438\u0437 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439 \u0434\u0430\u0442\u0447\u0438\u043a\u0430 (HLK-LD2450 \u0432 ESPHome) \u0438 \u0437\u0430\u043f\u043e\u043b\u043d\u044f\u044e\u0442\u0441\u044f \u043f\u0440\u0438 \u0432\u044b\u0431\u043e\u0440\u0435 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u043f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044f. \u0426\u0435\u043b\u0438 \u0438 \u0437\u043e\u043d\u044b \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u0443\u044e\u0442\u0441\u044f \u0432 YAML.",
   },
   zh: {
     occupied: "\u6709\u4eba", moving: "\u79fb\u52a8\u4e2d", still: "\u9759\u6b62", clear: "\u65e0\u4eba", offline: "\u79bb\u7ebf",
@@ -169,6 +181,7 @@ const T = {
     show_scale: "\u5728\u8303\u56f4\u5f27\u4e0a\u663e\u793a\u8ddd\u79bb", section_readings: "\u8bfb\u6570",
     autofill_hint: "\u9009\u62e9\u5b58\u5728\u5b9e\u4f53\u540e\uff0c\u5176\u4ed6\u5b57\u6bb5\u4f1a\u4ece\u540c\u4e00\u8bbe\u5907\u81ea\u52a8\u586b\u5199\u3002",
     people: "\u4eba\u6570", temperature: "\u6e29\u5ea6", humidity: "\u6e7f\u5ea6", heart_rate: "\u5fc3\u7387", breath_rate: "\u547c\u5438", dim: "\u6697", bright: "\u4eae", target_count_entity: "\u4eba\u6570\u5b9e\u4f53", temperature_entity: "\u6e29\u5ea6\u5b9e\u4f53", humidity_entity: "\u6e7f\u5ea6\u5b9e\u4f53", heart_rate_entity: "\u5fc3\u7387\u5b9e\u4f53", breath_rate_entity: "\u547c\u5438\u9891\u7387\u5b9e\u4f53", section_more: "\u66f4\u591a\u8bfb\u6570",
+    target: "\u76ee\u6807", approaching: "\u9760\u8fd1", moving_away: "\u8fdc\u79bb", zone: "\u533a\u57df", filter: "\u8fc7\u6ee4", section_plan: "\u5e73\u9762\u89c6\u56fe", show_plan: "\u5728\u5404\u81ea\u4f4d\u7f6e\u663e\u793a\u6bcf\u4e2a\u76ee\u6807\uff08\u5e73\u9762\u89c6\u56fe\uff09", show_targets: "\u6bcf\u4e2a\u76ee\u6807\u4e00\u884c", flip_x: "\u5de6\u53f3\u4e92\u6362", zone_type_entity: "\u533a\u57df\u7c7b\u578b\u5b9e\u4f53", zone_name: "\u533a\u57df {n} \u540d\u79f0", plan_targets: "\u76ee\u6807", plan_zones: "\u533a\u57df", plan_hint: "\u4f4d\u7f6e\u548c\u533a\u57df\u6765\u81ea\u4f20\u611f\u5668\u81ea\u8eab\u7684\u5b9e\u4f53\uff08ESPHome \u4e2d\u7684 HLK-LD2450\uff09\uff0c\u9009\u62e9\u5360\u7528\u5b9e\u4f53\u65f6\u81ea\u52a8\u586b\u5199\u3002\u76ee\u6807\u548c\u533a\u57df\u5728 YAML \u4e2d\u7f16\u8f91\u3002",
   },
   cs: {
     occupied: "Obsazeno", moving: "V pohybu", still: "Bez pohybu", clear: "Volno", offline: "Offline",
@@ -181,6 +194,7 @@ const T = {
     show_scale: "Zobrazit vzd\u00e1lenosti na oblouc\u00edch dosahu", section_readings: "M\u011b\u0159en\u00ed",
     autofill_hint: "Ostatn\u00ed pole se vypln\u00ed ze stejn\u00e9ho za\u0159\u00edzen\u00ed po v\u00fdb\u011bru entity p\u0159\u00edtomnosti.",
     people: "Osoby", temperature: "Teplota", humidity: "Vlhkost", heart_rate: "Tep", breath_rate: "Dech", dim: "Tma", bright: "Sv\u011btlo", target_count_entity: "Entita po\u010dtu osob", temperature_entity: "Entita teploty", humidity_entity: "Entita vlhkosti", heart_rate_entity: "Entita tepu", breath_rate_entity: "Entita dechov\u00e9 frekvence", section_more: "Dal\u0161\u00ed m\u011b\u0159en\u00ed",
+    target: "C\u00edl", approaching: "P\u0159ibli\u017euje se", moving_away: "Vzdaluje se", zone: "Z\u00f3na", filter: "filtr", section_plan: "P\u016fdorys", show_plan: "Zobrazit ka\u017ed\u00fd c\u00edl na jeho m\u00edst\u011b (p\u016fdorys)", show_targets: "Jeden \u0159\u00e1dek na c\u00edl", flip_x: "Prohodit levou a pravou stranu", zone_type_entity: "Entita typu z\u00f3ny", zone_name: "N\u00e1zev z\u00f3ny {n}", plan_targets: "C\u00edle", plan_zones: "Z\u00f3ny", plan_hint: "Polohy a z\u00f3ny poch\u00e1zej\u00ed z entit senzoru (HLK-LD2450 v ESPHome) a vypln\u00ed se p\u0159i v\u00fdb\u011bru entity obsazenosti. C\u00edle a z\u00f3ny se upravuj\u00ed v YAML.",
   },
 };
 
@@ -352,7 +366,9 @@ const MODE_COLORS = {
   moving: "var(--pr-occupied-color, #1e88e5)",
   still: "var(--pr-still-color, #5c6bc0)",
   clear: "var(--disabled-text-color, #9e9e9e)",
-  offline: "var(--disabled-text-color, #9e9e9e)",
+  // Red, so that a sensor that stopped answering never looks like an
+  // empty room.
+  offline: "var(--pr-offline-color, var(--error-color, #db4437))",
 };
 
 const MODE_ICONS = {
@@ -364,6 +380,14 @@ const MODE_ICONS = {
 };
 
 const PRESENT = ["occupied", "moving", "still"];
+
+// The line of a target in the plan view: which way it goes.
+const TARGET_ICONS = {
+  approaching: "mdi:arrow-up-bold-outline",
+  moving_away: "mdi:arrow-down-bold-outline",
+  moving: "mdi:walk",
+  still: "mdi:human-handsdown",
+};
 
 // ---------------------------------------------------------------------------
 // Formatting
@@ -439,7 +463,135 @@ const PERSON = `
 // Up to three silhouettes side by side; more are told by a number.
 const PEOPLE_X = { 1: [0], 2: [-13, 13], 3: [-24, 0, 24] };
 
-function presenceSvg(hass, mode, ratio, range, showScale, people = 1) {
+// ---------------------------------------------------------------------------
+// Plan view -- a sensor that gives each target's position (the HLK-LD2450 in
+// ESPHome: target_N_x and target_N_y, in mm) puts everyone where they stand
+// in the fan instead of on its axis at their distance. Its zones
+// (zone_N_x1 / y1 / x2 / y2) are drawn on the floor: a detection zone in its
+// own colour, brighter while someone is in it, a filter zone hatched, since
+// the sensor ignores whoever stands there. An arrow on the floor says whether
+// a moving target comes closer or walks away, and its last positions leave a
+// trail. x runs across the fan, y away from the wall; flip_x mirrors the
+// drawing when left and right come out swapped.
+// ---------------------------------------------------------------------------
+
+const MAX_TARGETS = 3;
+const TRAIL_LEN = 3;
+const TRAIL_MS = 20 * 1000;
+const TRAIL_STEP_M = 0.15;
+// Feet closer to the wall than this would put the head on the sensor.
+const PLAN_NEAR = 26;
+const PLAN_SCALE = 0.8;
+const ZONE_COLORS = ["var(--pr-zone1-color, #26a69a)", "var(--pr-zone2-color, #ef8f2f)", "var(--pr-zone3-color, #8e7cc3)"];
+
+function planTargets(cfg) {
+  return (Array.isArray(cfg.targets) ? cfg.targets : []).slice(0, MAX_TARGETS)
+    .filter((tg) => tg && typeof tg.x === "string" && typeof tg.y === "string");
+}
+
+function planZones(cfg) {
+  return (Array.isArray(cfg.zones) ? cfg.zones : []).slice(0, ZONE_COLORS.length)
+    .filter((z) => z && ["x1", "y1", "x2", "y2"].every((k) => typeof z[k] === "string"));
+}
+
+// Where a target stands, in metres, or null when the sensor has none there:
+// the LD2450 writes 0 / 0 for a slot without a target.
+function planPosition(hass, tg) {
+  const x = meters(hass, tg.x);
+  const y = meters(hass, tg.y);
+  if (x === null || y === null) return null;
+  if (Math.abs(x) < 0.01 && Math.abs(y) < 0.01) return null;
+  return { x: Math.round(x * 100) / 100, y: Math.round(y * 100) / 100 };
+}
+
+// A speed in m/s, whatever unit the integration writes it in (mm/s for the
+// LD2450).
+function speedMs(hass, entityId) {
+  const v = numericState(hass, entityId);
+  if (v === null) return null;
+  const u = String(stateObj(hass, entityId).attributes.unit_of_measurement || "m/s").trim().toLowerCase();
+  return u.startsWith("mm") ? v / 1000 : u.startsWith("cm") ? v / 100 : u === "km/h" ? v / 3.6 : v;
+}
+
+// Approaching, moving away or still, from the target's direction sensor
+// (LD2450: Approaching, Moving away, Stationary, NA).
+function directionOf(hass, entityId) {
+  const st = stateObj(hass, entityId);
+  if (!st || isMeaningless(st.state)) return null;
+  const raw = stripAccents(String(st.state).trim().toLowerCase());
+  if (/approach|closer|toward/.test(raw)) return "approaching";
+  if (/away|leav|reced/.test(raw)) return "moving_away";
+  if (/stationar|static|still|motionless/.test(raw)) return "still";
+  return null;
+}
+
+// Detection, filter, or null when the sensor's zones are switched off: then
+// none is drawn, whatever a zone says. A zone may give its own type; the
+// LD2450 has one select for all three.
+function zoneTypeOf(hass, cfg, zone) {
+  const st = stateObj(hass, cfg.zone_type_entity);
+  const raw = st && !isMeaningless(st.state) ? stripAccents(String(st.state).toLowerCase()) : "";
+  if (/disab|^off$|^none$/.test(raw)) return null;
+  const own = zone.type ? String(zone.type).toLowerCase() : null;
+  if (own === "filter" || own === "detection") return own;
+  return /filter|exclu|ignor/.test(raw) ? "filter" : "detection";
+}
+
+function planPoint(plan, range, x, y) {
+  const k = FAN_R / range;
+  return [Math.round((SENSOR.x + (plan.flip ? -x : x) * k) * 10) / 10, Math.round((SENSOR.y + y * k) * 10) / 10];
+}
+
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const round1 = (v) => Math.round(v * 10) / 10;
+
+function planZonesSvg(hass, plan, range) {
+  return plan.zones.map((z) => {
+    const [ax, ay] = planPoint(plan, range, z.x1, z.y1);
+    const [bx, by] = planPoint(plan, range, z.x2, z.y2);
+    const x = clamp(Math.min(ax, bx), 2, 198);
+    const y = clamp(Math.min(ay, by), SENSOR.y, SENSOR.y + FAN_R);
+    const w = round1(clamp(Math.max(ax, bx), 2, 198) - x);
+    const h = round1(clamp(Math.max(ay, by), SENSOR.y, SENSOR.y + FAN_R) - y);
+    if (w <= 0 || h <= 0) return "";
+    const name = z.name || `${t(hass, "zone")} ${z.n}`;
+    const label = z.type === "filter" ? `${name} \u00b7 ${t(hass, "filter")}` : name;
+    return `<g class="pr-zone pr-zone-${z.type}${z.occupied ? " pr-zone-on" : ""}" style="--pr-zc:${ZONE_COLORS[z.n - 1]}">`
+      + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3"/>`
+      + `<text x="${round1(x + 2.5)}" y="${round1(y + h - 2.5)}">${escapeHtml(label)}</text></g>`;
+  }).join("");
+}
+
+function planPeopleSvg(plan, range) {
+  const near = SENSOR.y + PLAN_NEAR;
+  const far = SENSOR.y + FAN_R;
+  return plan.targets.slice().sort((a, b) => a.y - b.y).map((tg) => {
+    const [rx, ry] = planPoint(plan, range, tg.x, tg.y);
+    const px = clamp(rx, 8, 192);
+    const py = clamp(ry, near, far);
+    const trail = tg.trail.map((p, i) => {
+      const [tx, ty] = planPoint(plan, range, p.x, p.y);
+      return `<circle class="pr-trail" cx="${clamp(tx, 8, 192)}" cy="${clamp(ty, near, far)}" r="${round1(1.6 - i * 0.35)}" opacity="${round1(0.5 - i * 0.14)}"/>`;
+    }).join("");
+    let arrow = "";
+    if (tg.dir === "approaching" || tg.dir === "moving_away") {
+      // Along the line from the sensor: towards it, or away from it.
+      const len = Math.hypot(px - SENSOR.x, py - SENSOR.y) || 1;
+      const s = tg.dir === "approaching" ? -1 : 1;
+      const ux = ((px - SENSOR.x) / len) * s;
+      const uy = ((py - SENSOR.y) / len) * s;
+      const hx = px + ux * 8;
+      const hy = py + uy * 8;
+      arrow = `<path class="pr-heading" d="M${round1(hx - ux * 3 - uy * 2.4)} ${round1(hy - uy * 3 + ux * 2.4)} L${round1(hx)} ${round1(hy)} L${round1(hx - ux * 3 + uy * 2.4)} ${round1(hy - uy * 3 - ux * 2.4)}"/>`;
+    }
+    return `${trail}${arrow}<g class="pr-pt t-${tg.state} pr-p${tg.n - 1}" data-n="${tg.n}" transform="translate(${px} ${py})">`
+      + `<g transform="scale(${PLAN_SCALE})"><ellipse class="pr-shadow" cx="0" cy="0.5" rx="6" ry="1.6"/><g class="pr-person">${PERSON}</g></g></g>`;
+  }).join("");
+}
+
+const HATCH = `<pattern id="pr-hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" class="pr-hatch-line"/></pattern>`;
+
+function presenceSvg(hass, mode, ratio, range, showScale, people = 1, plan = null) {
   const [x1, y1] = fanPoint(FAN_R, FAN_FROM);
   const [x2, y2] = fanPoint(FAN_R, FAN_TO);
   const arcs = [1 / 3, 2 / 3, 1].map((k) => {
@@ -453,16 +605,16 @@ function presenceSvg(hass, mode, ratio, range, showScale, people = 1) {
   const present = PRESENT.includes(mode);
   const feetY = Math.round((SENSOR.y + FAN_R * ratio) * 10) / 10;
   const n = Math.max(1, Math.min(3, Math.round(people) || 1));
-  const person = present
+  const person = plan && plan.targets.length ? planPeopleSvg(plan, range) : present
     ? `<g class="pr-target" transform="translate(${SENSOR.x} ${feetY})">${PEOPLE_X[n].map((dx, i) =>
       `<g transform="translate(${dx} 0)"><g class="pr-walker pr-p${i}"><ellipse class="pr-shadow" cx="0" cy="0.5" rx="6" ry="1.6"/><g class="pr-person">${PERSON}</g></g></g>`).join("")}${
       people > 3 ? `<text class="pr-more" x="34" y="-10">+${Math.round(people) - 3}</text>` : ""}</g>`
     : "";
-  return `<svg viewBox="0 0 200 122" role="img" aria-hidden="true">
-<defs><radialGradient id="pr-fan-g" cx="${SENSOR.x}" cy="${SENSOR.y}" r="${FAN_R}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="var(--pr-color)" stop-opacity=".42"/><stop offset="1" stop-color="var(--pr-color)" stop-opacity=".05"/></radialGradient></defs>
+  return `<svg viewBox="0 0 200 122" role="img" aria-hidden="true"${plan ? ' class="pr-plan"' : ""}>
+<defs><radialGradient id="pr-fan-g" cx="${SENSOR.x}" cy="${SENSOR.y}" r="${FAN_R}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="var(--pr-color)" stop-opacity=".42"/><stop offset="1" stop-color="var(--pr-color)" stop-opacity=".05"/></radialGradient>${plan ? HATCH : ""}</defs>
 <path class="pr-wall" d="M22 ${SENSOR.y - 6} H178"/>
 <path class="pr-fan" d="M${SENSOR.x} ${SENSOR.y} L${x1} ${y1} A${FAN_R} ${FAN_R} 0 0 1 ${x2} ${y2} Z"/>
-${arcs}
+${arcs}${plan ? planZonesSvg(hass, plan, range) : ""}
 <line class="pr-sweep" x1="${SENSOR.x}" y1="${SENSOR.y}" x2="${SENSOR.x}" y2="${SENSOR.y + FAN_R}"/>
 ${person}
 <rect class="pr-box" x="${SENSOR.x - 11}" y="${SENSOR.y - 9}" width="22" height="12" rx="4"/>
@@ -598,21 +750,48 @@ class PresenceSensorCard extends HTMLElement {
   _model(hass) {
     const cfg = this._config;
     const st = stateObj(hass, cfg.entity);
-    const mode = presenceMode(hass, cfg);
+    let mode = presenceMode(hass, cfg);
+    const plan = this._plan(hass, mode);
+    // Without a movement entity of its own, the room moves when one of the
+    // targets does, and keeps still when they all do.
+    if (mode === "occupied" && plan && plan.targets.length) {
+      if (plan.targets.some((tg) => tg.state === "moving")) mode = "moving";
+      else if (plan.targets.every((tg) => tg.state === "still")) mode = "still";
+    }
     const present = PRESENT.includes(mode);
     const dist = meters(hass, cfg.distance_entity);
     const hasDistance = !!cfg.distance_entity;
     const range = detectionRange(hass, cfg);
-    const people = peopleCount(hass, cfg);
+    const people = plan && !cfg.target_count_entity && plan.targets.length ? plan.targets.length : peopleCount(hass, cfg);
     const lines = [];
     if (mode !== "offline") {
-      if (present && dist !== null && dist > 0) {
-        lines.push({ key: "distance", icon: "mdi:map-marker-distance", entity: cfg.distance_entity,
-          value: `${formatNumber(hass, dist, dist >= 10 ? 0 : 1)}${NBSP}m` });
-      }
       if (present && people > 1) {
         lines.push({ key: "people", icon: "mdi:account-multiple", entity: cfg.target_count_entity || cfg.entity,
           value: formatNumber(hass, people, 0) });
+      }
+      if (plan && present && cfg.show_targets !== false) {
+        for (const tg of plan.targets) {
+          const d = Math.hypot(tg.x, tg.y);
+          const how = tg.dir || (tg.state === "occupied" ? null : tg.state);
+          const parts = [`${formatNumber(hass, d, d >= 10 ? 0 : 1)}${NBSP}m`];
+          if (how) parts.push(t(hass, how));
+          if (tg.speed !== null && Math.abs(tg.speed) >= 0.05 && how !== "still") {
+            parts.push(`${formatNumber(hass, Math.abs(tg.speed), 1)}${NBSP}m/s`);
+          }
+          lines.push({ label: `${t(hass, "target")} ${tg.n}`, icon: TARGET_ICONS[how] || "mdi:account", entity: tg.entity,
+            value: parts.join(" \u00b7 ") });
+        }
+      }
+      if (plan) {
+        for (const z of plan.zones) {
+          if (z.type !== "detection") continue;
+          lines.push({ label: z.name || `${t(hass, "zone")} ${z.n}`, icon: "mdi:selection-ellipse", entity: z.countEntity || cfg.entity,
+            color: ZONE_COLORS[z.n - 1], ...(z.count > 0 ? { value: formatNumber(hass, z.count, 0) } : { valueKey: "clear", value: "" }) });
+        }
+      }
+      if (!plan && present && dist !== null && dist > 0) {
+        lines.push({ key: "distance", icon: "mdi:map-marker-distance", entity: cfg.distance_entity,
+          value: `${formatNumber(hass, dist, dist >= 10 ? 0 : 1)}${NBSP}m` });
       }
       const light = lightLine(hass, cfg.illuminance_entity);
       if (light) lines.push(light);
@@ -647,13 +826,82 @@ class PresenceSensorCard extends HTMLElement {
       name: cfg.name || (st && st.attributes.friendly_name) || cfg.entity,
       ratio: present ? targetRatio(hasDistance ? dist : null, range) : 0.55,
       // The arcs only carry distances when the card knows the sensor reads
-      // one: a PIR has a range but no target to place on it.
-      range: hasDistance || cfg.range_entity || cfg.detection_range ? range : null,
+      // one: a PIR has a range but no target to place on it. The plan view
+      // always needs it, to place the targets and the zones.
+      range: plan || hasDistance || cfg.range_entity || cfg.detection_range ? range : null,
       people: present ? people : 0,
       // A breathing silhouette breathes at the rate the radar reads.
       breath: mode === "still" && rate !== null && rate > 0 ? Math.round(Math.max(1.5, Math.min(8, 60 / rate)) * 10) / 10 : null,
+      plan: plan && { flip: plan.flip, zones: plan.zones,
+        targets: present ? plan.targets.map(({ n, x, y, state, dir, trail }) => ({ n, x, y, state, dir, trail })) : [] },
       lines,
     };
+  }
+
+  // The targets where they stand and the zones on the floor, when the
+  // sensor gives positions and the plan view is on. Each target moves or
+  // keeps still on its own: from its direction sensor, its speed, or the
+  // trail it leaves; otherwise as the room does.
+  _plan(hass, mode) {
+    const cfg = this._config;
+    const slots = planTargets(cfg);
+    if (!slots.length || cfg.show_plan === false) return null;
+    const targets = [];
+    slots.forEach((slot, i) => {
+      const n = i + 1;
+      const pos = mode === "offline" ? null : planPosition(hass, slot);
+      const trail = this._track(n, pos);
+      if (!pos) return;
+      const speed = speedMs(hass, slot.speed);
+      let dir = directionOf(hass, slot.direction);
+      if (!dir && trail.length) {
+        const was = Math.hypot(trail[0].x, trail[0].y);
+        const now = Math.hypot(pos.x, pos.y);
+        dir = now < was - 0.1 ? "approaching" : now > was + 0.1 ? "moving_away" : null;
+      }
+      let state = dir === "still" ? "still" : dir ? "moving" : null;
+      if (!state && speed !== null) state = Math.abs(speed) >= 0.05 ? "moving" : "still";
+      if (!state) state = mode === "moving" || mode === "still" ? mode : "occupied";
+      targets.push({ n, ...pos, state, dir: dir === "still" ? null : dir, speed, trail, entity: slot.x });
+    });
+    const zones = [];
+    planZones(cfg).forEach((z, i) => {
+      const type = zoneTypeOf(hass, cfg, z);
+      if (!type) return;
+      const c = ["x1", "y1", "x2", "y2"].map((k) => meters(hass, z[k]));
+      if (c.some((v) => v === null) || c.every((v) => Math.abs(v) < 0.01)) return;
+      const box = { x1: c[0], y1: c[1], x2: c[2], y2: c[3] };
+      const inside = (tg) => tg.x >= Math.min(box.x1, box.x2) && tg.x <= Math.max(box.x1, box.x2)
+        && tg.y >= Math.min(box.y1, box.y2) && tg.y <= Math.max(box.y1, box.y2);
+      const own = numericState(hass, z.count);
+      zones.push({ n: i + 1, type, name: z.name ? String(z.name) : null, ...box,
+        count: own !== null ? Math.max(0, Math.round(own)) : targets.filter(inside).length,
+        countEntity: z.count || null,
+        occupied: type === "detection" && (own !== null ? own > 0 : targets.some(inside)) });
+    });
+    return { flip: !!cfg.flip_x, targets, zones };
+  }
+
+  // The last few places a target stood, newest first: a point is added once
+  // the target has moved far enough, and forgotten after a while.
+  _track(n, pos) {
+    this._trails = this._trails || {};
+    const now = Date.now();
+    let tr = this._trails[n];
+    if (!pos) {
+      delete this._trails[n];
+      return [];
+    }
+    if (!tr) {
+      this._trails[n] = { last: pos, points: [] };
+      return [];
+    }
+    if (Math.hypot(pos.x - tr.last.x, pos.y - tr.last.y) >= TRAIL_STEP_M) {
+      tr.points = [{ x: tr.last.x, y: tr.last.y, at: now }, ...tr.points].slice(0, TRAIL_LEN);
+      tr.last = pos;
+    }
+    tr.points = tr.points.filter((p) => now - p.at <= TRAIL_MS);
+    return tr.points.map(({ x, y }) => ({ x, y }));
   }
 
   _render() {
@@ -668,7 +916,7 @@ class PresenceSensorCard extends HTMLElement {
 
     const lines = m.lines.map((l) => `
           <div class="line${l.caution ? " caution" : ""}" data-entity="${escapeHtml(l.entity)}">
-            <ha-icon icon="${escapeHtml(l.icon)}"></ha-icon><span class="label">${l.label ? escapeHtml(l.label) : t(hass, l.key)}</span><span class="value">${l.valueKey ? t(hass, l.valueKey) : escapeHtml(l.value)}</span>
+            <ha-icon icon="${escapeHtml(l.icon)}"${l.color ? ` style="color:${l.color}"` : ""}></ha-icon><span class="label">${l.label ? escapeHtml(l.label) : t(hass, l.key)}</span><span class="value">${l.valueKey ? t(hass, l.valueKey) : escapeHtml(l.value)}</span>
           </div>`).join("");
 
     this._root.innerHTML = `
@@ -707,7 +955,24 @@ ha-card.compact { flex-direction:row; flex-wrap:wrap; align-items:center; gap:12
 .pr-more { font:600 9px sans-serif; fill:var(--pr-color); }
 @keyframes pr-breathe { 0%, 100% { transform:scale(1, 1); } 50% { transform:scale(1.04, 1.06); } }
 .m-clear .pr-fan { opacity:.55; }
-.m-offline .illu { opacity:.45; filter:grayscale(1); }
+.pr-plan .pr-person, .pr-plan .pr-leg, .pr-plan .pr-arm, .pr-plan .pr-walker { animation:none !important; }
+.pr-plan .t-moving .pr-person { animation:pr-bob .45s ease-in-out infinite alternate !important; }
+.pr-plan .t-moving .pr-leg-l, .pr-plan .t-moving .pr-arm-r { animation:pr-swing .45s ease-in-out infinite alternate !important; }
+.pr-plan .t-moving .pr-leg-r, .pr-plan .t-moving .pr-arm-l { animation:pr-swing .45s ease-in-out infinite alternate-reverse !important; }
+.pr-plan .t-still .pr-person { animation:pr-breathe var(--pr-breath) ease-in-out infinite !important; }
+.pr-zone rect { fill:var(--pr-zc); fill-opacity:.13; stroke:var(--pr-zc); stroke-width:.9; stroke-opacity:.75; }
+.pr-zone text { font:600 6px sans-serif; fill:var(--pr-zc); }
+.pr-zone-on rect { fill-opacity:.26; stroke-opacity:1; }
+.pr-zone-filter rect { fill:url(#pr-hatch); fill-opacity:1; stroke:var(--secondary-text-color); stroke-dasharray:2 2; stroke-opacity:.7; }
+.pr-zone-filter text { fill:var(--secondary-text-color); font-weight:500; }
+.pr-hatch-line { stroke:var(--secondary-text-color); stroke-width:1; stroke-opacity:.35; }
+.m-clear .pr-zone rect, .m-offline .pr-zone rect { fill-opacity:.07; stroke-opacity:.45; }
+.pr-trail { fill:var(--pr-color); }
+.pr-heading { fill:none; stroke:var(--pr-color); stroke-width:1.3; stroke-linecap:round; stroke-linejoin:round; opacity:.85; }
+.m-offline .illu { opacity:.7; }
+.m-offline .pr-fan { opacity:.35; }
+.m-offline .pr-led { fill:var(--pr-color); }
+.m-offline .pr-box { stroke:var(--pr-color); }
 @media (prefers-reduced-motion: reduce) { .illu * { animation:none !important; } }
 .badge { flex:none; width:44px; height:44px; border-radius:50%; background:var(--pr-color); color:#fff; display:flex; align-items:center; justify-content:center; }
 .badge ha-icon { --mdc-icon-size:26px; }
@@ -715,7 +980,7 @@ ha-card.compact { flex-direction:row; flex-wrap:wrap; align-items:center; gap:12
 ha-card.compact .head { flex:1 1 120px; }
 .name { font-size:15px; font-weight:500; color:var(--primary-text-color); }
 .state { font-size:13.5px; font-weight:500; color:var(--pr-color); }
-.m-clear .state, .m-offline .state { color:var(--secondary-text-color); }
+.m-clear .state { color:var(--secondary-text-color); }
 .lines { display:flex; flex-direction:column; gap:2px; }
 ha-card.compact .lines { flex:1 1 100%; }
 .line { display:flex; align-items:center; gap:8px; padding:3px 0; font-size:13px; color:var(--secondary-text-color); }
@@ -727,7 +992,7 @@ ha-card.compact .lines { flex:1 1 100%; }
       <ha-card class="m-${m.mode}${cfg.compact ? " compact" : ""}">
         ${cfg.compact
           ? `<div class="badge"><ha-icon icon="${MODE_ICONS[m.mode]}"></ha-icon></div>`
-          : `<div class="illu">${presenceSvg(hass, m.mode, m.ratio, m.range, showScale, m.people)}</div>`}
+          : `<div class="illu">${presenceSvg(hass, m.mode, m.ratio, m.range, showScale, m.people, m.plan)}</div>`}
         <div class="head">
           <div class="name">${escapeHtml(m.name)}</div>
           <div class="state">${t(hass, m.mode)}</div>
@@ -791,7 +1056,50 @@ function guessSiblings(hass, entityId) {
     }
     if (match) found[rule.field] = match;
   }
-  return found;
+  return { ...found, ...guessPlan(hass, siblings) };
+}
+
+// The LD2450's positions and zones, as ESPHome names them: target_1_x,
+// target_1_y, target_1_direction, target_1_speed, zone_1_x1 ... zone_1_y2,
+// zone_1_target_count, and one zone_type select for the three zones.
+const PLAN_RULES = {
+  x: { domains: ["sensor"], re: /target_?([1-3])_?x$/i },
+  y: { domains: ["sensor"], re: /target_?([1-3])_?y$/i },
+  direction: { domains: ["sensor"], re: /target_?([1-3])_?(direction|dir)$/i },
+  speed: { domains: ["sensor"], re: /target_?([1-3])_?speed$/i },
+};
+const ZONE_RULES = {
+  x1: { domains: ["number", "input_number"], re: /zone_?([1-3])_?x_?1$/i },
+  y1: { domains: ["number", "input_number"], re: /zone_?([1-3])_?y_?1$/i },
+  x2: { domains: ["number", "input_number"], re: /zone_?([1-3])_?x_?2$/i },
+  y2: { domains: ["number", "input_number"], re: /zone_?([1-3])_?y_?2$/i },
+  count: { domains: ["sensor"], re: /zone_?([1-3])_?(all_?)?target_?count$/i },
+};
+
+function slotsFrom(siblings, rules) {
+  const slots = {};
+  for (const [key, rule] of Object.entries(rules)) {
+    for (const e of siblings) {
+      if (!rule.domains.includes(domainOf(e))) continue;
+      const m = e.split(".")[1].match(rule.re);
+      if (!m) continue;
+      const n = Number(m[1]);
+      slots[n] = slots[n] || {};
+      if (!slots[n][key]) slots[n][key] = e;
+    }
+  }
+  return Object.keys(slots).map(Number).sort((a, b) => a - b).map((n) => slots[n]);
+}
+
+function guessPlan(hass, siblings) {
+  const targets = slotsFrom(siblings, PLAN_RULES).filter((tg) => tg.x && tg.y).slice(0, MAX_TARGETS);
+  if (!targets.length) return {};
+  const out = { targets };
+  const zones = slotsFrom(siblings, ZONE_RULES).filter((z) => z.x1 && z.y1 && z.x2 && z.y2).slice(0, ZONE_COLORS.length);
+  if (zones.length) out.zones = zones;
+  const zoneType = siblings.find((e) => domainOf(e) === "select" && /zone_?type$/i.test(e.split(".")[1]));
+  if (zoneType) out.zone_type_entity = zoneType;
+  return out;
 }
 
 // ---------------------------------------------------------------------------
@@ -813,7 +1121,7 @@ const EDITOR_PICKERS = [
 ];
 
 // Toggles that default to true: the key is only stored when switched off.
-const DEFAULT_ON = ["show_since", "show_scale"];
+const DEFAULT_ON = ["show_since", "show_scale", "show_plan", "show_targets"];
 
 class PresenceSensorCardEditor extends HTMLElement {
   setConfig(config) {
@@ -906,6 +1214,7 @@ class PresenceSensorCardEditor extends HTMLElement {
 .row input[type="text"], .row input[type="number"], .row select { width:100%; box-sizing:border-box; padding:8px; border-radius:6px; border:1px solid var(--divider-color); background:var(--card-background-color); color:var(--primary-text-color); font:inherit; }
 .row-inline label { display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--primary-text-color); }
 .hint { font-size:12px; color:var(--secondary-text-color); margin-top:-8px; }
+.note { font-size:12px; color:var(--secondary-text-color); }
 details { border:1px solid var(--divider-color); border-radius:8px; padding:8px 12px; }
 summary { cursor:pointer; font-size:13.5px; color:var(--secondary-text-color); }
 details .form { padding-top:10px; }
@@ -929,6 +1238,21 @@ details .form { padding-top:10px; }
             ${EDITOR_PICKERS.filter((p) => p.more).map((p) => `<div class="row" data-picker="${p.field}"></div>`).join("")}
           </div>
         </details>
+        ${planTargets(cfg).length ? `<details open>
+          <summary>${t(hass, "section_plan")}</summary>
+          <div class="form">
+            <div class="note">${t(hass, "plan_targets")}: ${planTargets(cfg).length} \u00b7 ${t(hass, "plan_zones")}: ${planZones(cfg).length}</div>
+            <div class="note">${t(hass, "plan_hint")}</div>
+            ${check("show_plan")}
+            ${check("show_targets")}
+            ${check("flip_x")}
+            <div class="row" data-picker="zone_type_entity"></div>
+            ${planZones(cfg).map((z, i) => `<div class="row">
+              <label>${t(hass, "zone_name").replace("{n}", i + 1)}</label>
+              <input type="text" data-zone="${i}" placeholder="${t(hass, "zone")} ${i + 1}" value="${escapeHtml(z.name || "")}" />
+            </div>`).join("")}
+          </div>
+        </details>` : ""}
         <div class="row">
           <label>${t(hass, "name")}</label>
           <input type="text" data-field="name" value="${escapeHtml(cfg.name || "")}" />
@@ -948,6 +1272,20 @@ details .form { padding-top:10px; }
     for (const { field, domains } of EDITOR_PICKERS) {
       this._mountPicker(this._root.querySelector(`[data-picker="${field}"]`), field, domains);
     }
+    const zoneTypeSlot = this._root.querySelector('[data-picker="zone_type_entity"]');
+    if (zoneTypeSlot) this._mountPicker(zoneTypeSlot, "zone_type_entity", ["select", "input_select"]);
+    this._root.querySelectorAll("input[data-zone]").forEach((input) => {
+      input.addEventListener("change", (ev) => {
+        const i = Number(input.dataset.zone);
+        const zones = (Array.isArray(this._config.zones) ? this._config.zones : []).map((z) => ({ ...z }));
+        if (!zones[i]) return;
+        const v = ev.target.value.trim();
+        if (v) zones[i].name = v;
+        else delete zones[i].name;
+        this._set("zones", zones);
+        this._emit();
+      });
+    });
     const nameIn = this._root.querySelector('input[data-field="name"]');
     if (nameIn) nameIn.addEventListener("change", (ev) => {
       this._set("name", ev.target.value);

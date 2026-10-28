@@ -59,6 +59,31 @@
   const s = (state, attributes = {}, min = 25) => ({ state: String(state), attributes, last_changed: ago(min) });
   const OCC = { device_class: "occupancy" };
   const demoLang = new URLSearchParams(location.search).get("lang") || "en";
+  // An HLK-LD2450 in ESPHome: each target's x / y in mm, three zones and one
+  // zone type select. Returns the card's config with its states attached.
+  const ZONES = [[-2300, 900, -500, 2700, "Desk"], [500, 2300, 2700, 4500, "Sofa"], [-700, 4500, 700, 5600, "Fan"]];
+  function ldStates(id, targets, ago = 9, type = "Detection") {
+    const mm = { unit_of_measurement: "mm" };
+    const st = { [`binary_sensor.${id}_presence`]: s(targets.length ? "on" : "off", OCC, ago), [`select.${id}_zone_type`]: s(type) };
+    for (let n = 1; n <= 3; n++) {
+      const tg = targets[n - 1] || { x: 0, y: 0 };
+      st[`sensor.${id}_target_${n}_x`] = s(tg.x, mm);
+      st[`sensor.${id}_target_${n}_y`] = s(tg.y, mm);
+      st[`sensor.${id}_target_${n}_direction`] = s(tg.dir || "NA");
+      st[`sensor.${id}_target_${n}_speed`] = s(tg.speed || 0, { unit_of_measurement: "mm/s" });
+      ZONES[n - 1].slice(0, 4).forEach((v, i) => { st[`number.${id}_zone_${n}_${["x1", "y1", "x2", "y2"][i]}`] = s(v, mm); });
+    }
+    return st;
+  }
+  function ld2450(id, name, targets, ago, type) {
+    const cfg = { entity: `binary_sensor.${id}_presence`, name, zone_type_entity: `select.${id}_zone_type`,
+      targets: [1, 2, 3].map((n) => ({ x: `sensor.${id}_target_${n}_x`, y: `sensor.${id}_target_${n}_y`,
+        direction: `sensor.${id}_target_${n}_direction`, speed: `sensor.${id}_target_${n}_speed` })),
+      zones: ZONES.map(([, , , , zname], i) => ({ x1: `number.${id}_zone_${i + 1}_x1`, y1: `number.${id}_zone_${i + 1}_y1`,
+        x2: `number.${id}_zone_${i + 1}_x2`, y2: `number.${id}_zone_${i + 1}_y2`, name: zname, ...(i === 2 ? { type: "filter" } : {}) })) };
+    cfg.__states = ldStates(id, targets, ago, type);
+    return cfg;
+  }
   const cards = [
     [{ entity: "binary_sensor.office", name: "Office (Linptech ES1)", distance_entity: "sensor.office_d", range_entity: "number.office_r", illuminance_entity: "sensor.office_lx" },
       { "binary_sensor.office": s("on", OCC), "sensor.office_d": s(302, { unit_of_measurement: "cm" }), "number.office_r": s(450, { unit_of_measurement: "cm" }), "sensor.office_lx": s(116, { unit_of_measurement: "lx" }) }],
@@ -72,8 +97,8 @@
       { "binary_sensor.kitchen": s("on", { device_class: "motion" }, 2), "sensor.kitchen_bat": s(12, { unit_of_measurement: "%" }) }],
     [{ entity: "binary_sensor.garage", name: "Garage", distance_entity: "sensor.garage_d" },
       { "binary_sensor.garage": s("unavailable"), "sensor.garage_d": s(0, { unit_of_measurement: "m" }) }],
-    [{ entity: "sensor.lounge_target_count", name: "Lounge (LD2450)", distance_entity: "sensor.lounge_d", range_entity: "number.lounge_gate", movement_entity: "binary_sensor.lounge_moving" },
-      { "sensor.lounge_target_count": s(2, {}, 9), "sensor.lounge_d": s(3400, { unit_of_measurement: "mm" }), "number.lounge_gate": s(8), "binary_sensor.lounge_moving": s("on") }],
+    [ld2450("lounge", "Lounge (LD2450)", [{ x: -1350, y: 1700, dir: "Stationary" }, { x: 1200, y: 3100, dir: "Approaching", speed: -700 }], 9), {}],
+    [ld2450("study", "Study (LD2450, no zones)", [{ x: -900, y: 1600, dir: "Stationary" }, { x: 600, y: 2400, dir: "Stationary" }, { x: 1900, y: 4400, dir: "Moving away", speed: 500 }], 70, "Disabled"), {}],
     [{ entity: "binary_sensor.nursery", name: "Nursery (MR60BHA2)", movement_entity: "sensor.nursery_mv", distance_entity: "sensor.nursery_d", heart_rate_entity: "sensor.nursery_hr", breath_rate_entity: "sensor.nursery_br" },
       { "binary_sensor.nursery": s("on", OCC, 130), "sensor.nursery_mv": s("Motionless"), "sensor.nursery_d": s(1.6, { unit_of_measurement: "m" }), "sensor.nursery_hr": s(72, { unit_of_measurement: "bpm" }), "sensor.nursery_br": s(14, { unit_of_measurement: "/min" }) }],
     [{ entity: "binary_sensor.stairs", name: "Stairs (Hue)", illuminance_entity: "sensor.stairs_lx", temperature_entity: "sensor.stairs_t", battery_entity: "sensor.stairs_bat" },
@@ -88,9 +113,31 @@
   const grid = document.getElementById("grid");
   for (const [cfg, states] of cards) {
     const el = document.createElement("ha-presence-sensor-card");
-    el.setConfig(cfg);
-    el.hass = { language: demoLang, states, callService() {} };
+    const { __states, ...config } = cfg;
+    el.setConfig(config);
+    el.hass = { language: demoLang, states: __states || states, callService() {} };
     grid.appendChild(el);
+  }
+  // A third LD2450 card where someone walks around the room: the trail, the
+  // arrow and the zone counts follow her, one reading a second.
+  {
+    const cfg = ld2450("hall", "Hall (LD2450, walking)", [], 3);
+    const { __states, ...config } = cfg;
+    const el = document.createElement("ha-presence-sensor-card");
+    el.setConfig(config);
+    grid.insertBefore(el, grid.children[8] || null);
+    let step = 0, last = null;
+    const walk = () => {
+      const a = (step++ % 24) / 24 * 2 * Math.PI;
+      const pos = { x: Math.round(1700 * Math.cos(a)), y: Math.round(3200 + 1500 * Math.sin(a)) };
+      const d = Math.hypot(pos.x, pos.y), was = last ? Math.hypot(last.x, last.y) : d;
+      pos.dir = d < was - 80 ? "Approaching" : d > was + 80 ? "Moving away" : "Stationary";
+      pos.speed = Math.round((d - was));
+      last = pos;
+      el.hass = { language: demoLang, states: ldStates("hall", [pos], 3), callService() {} };
+    };
+    walk();
+    setInterval(walk, 1000);
   }
   document.getElementById("dark").addEventListener("change", (e) => document.documentElement.classList.toggle("dark", e.target.checked));
   if (new URLSearchParams(location.search).get("dark")) { document.documentElement.classList.add("dark"); document.getElementById("dark").checked = true; }

@@ -612,4 +612,59 @@ check('LD2450 : en français', line(render(LD50, ld([COMING]), 'fr'), 'Cible 1')
   check('éditeur : pas de section vue en plan sans cibles', markup(ed4).includes('data-field="flip_x"'), false);
 }
 
+// ── Appearance (the same settings as ha-appliance-card) ──────────────────────
+
+{
+  const on = es1('on', 180);
+  const cls = html => (String(html).match(/<ha-card class="([^"]*)"/) || [])[1];
+  const illuW = html => Number((String(html).match(/\.illu \{ width:(\d+)px/) || [])[1]);
+  const sideW = html => Number((String(html).match(/\.top \.illu \{ flex:none; width:(\d+)px/) || [])[1]);
+  const fontPx = html => Number((String(html).match(/:host \{[^}]*font-size:([\d.]+)px/) || [])[1]);
+  check('apparence : rien par défaut', cls(render(ES1, on)), 'm-occupied');
+  check('compact true : icône au lieu du dessin', cls(render({ ...ES1, compact: true }, on)), 'm-occupied compact');
+  check('compact hide = compact true', cls(render({ ...ES1, compact: 'hide' }, on)), 'm-occupied compact');
+  contains('compact : la pastille', render({ ...ES1, compact: true }, on), 'class="badge"');
+  {
+    const html = render({ ...ES1, compact: 'side' }, on);
+    check('side : classe', cls(html), 'm-occupied side');
+    contains('side : dessin et texte côte à côte', html, '<div class="top"><div class="illu">');
+    check('side : pas de pastille', html.includes('class="badge"'), false);
+    check('side : pas de graduations, illisibles en petit', html.includes('<text class="pr-scale"'), false);
+    check('side : dessin de 96 px', sideW(html), 96);
+    check('side : les lignes restent', line(html, 'Distance'), `1.8${NB}m`);
+  }
+  check('taille du dessin 0,5', illuW(render({ ...ES1, illustration_size: 0.5 }, on)), 120);
+  check('taille du dessin bornée à 1,2', illuW(render({ ...ES1, illustration_size: 5 }, on)), 288);
+  check('taille du dessin bornée à 0,3', illuW(render({ ...ES1, illustration_size: 0.1 }, on)), 72);
+  check('taille du dessin sur le côté', sideW(render({ ...ES1, compact: 'side', illustration_size: 0.5 }, on)), 48);
+  check('taille du dessin invalide = 1', illuW(render({ ...ES1, illustration_size: 'abc' }, on)), 240);
+  check('taille du texte par défaut', fontPx(render(ES1, on)), 16);
+  check('taille du texte 1,25', fontPx(render({ ...ES1, font_scale: 1.25 }, on)), 20);
+  check('taille du texte bornée à 1,4', fontPx(render({ ...ES1, font_scale: 3 }, on)), 22.4);
+  check('le texte suit sa taille (em, pas px)', /\.name \{ font-size:[\d.]+em/.test(render(ES1, on)), true);
+  check('nom masqué', render({ ...ES1, show_name: false }, on).includes('class="name"'), false);
+  check('nom masqué, état gardé', stateLine(render({ ...ES1, show_name: false }, on)), 'Occupied');
+  check('état masqué', stateLine(render({ ...ES1, show_state: false }, on)), undefined);
+  check('nom et état masqués : plus de bloc', render({ ...ES1, show_name: false, show_state: false }, on).includes('class="head"'), false);
+  check('fond transparent', cls(render({ ...ES1, transparent: true }, on)), 'm-occupied clear');
+  check('pleine hauteur', cls(render({ ...ES1, fill_height: true }, on)), 'm-occupied fill');
+  check('side + transparent + pleine hauteur', cls(render({ ...ES1, compact: 'side', transparent: true, fill_height: true }, on)), 'm-occupied side clear fill');
+  const size = cfg => { const c = new Card(); c.setConfig(cfg); return c.getCardSize(); };
+  check('taille de carte : normale 4, side 3, compact 2', [size(ES1), size({ ...ES1, compact: 'side' }), size({ ...ES1, compact: true })].join(), '4,3,2');
+  check('vue en plan sur le côté', pts(render({ ...LD50, compact: 'side' }, ld([SITTING]))).length, 1);
+  const eda = new Editor();
+  eda.setConfig({ ...ES1, compact: 'side', font_scale: 1.2 });
+  eda.hass = { language: 'en', states: {} };
+  const em = markup(eda);
+  contains('éditeur : mode compact en liste', em, '<option value="side" selected>Drawing on the side</option>');
+  contains('éditeur : curseur du dessin', em, 'data-range="illustration_size"');
+  contains('éditeur : curseur du texte à sa valeur', em, 'data-range="font_scale" value="1.2"');
+  contains('éditeur : transparent', em, 'data-field="transparent"');
+  contains('éditeur : pleine hauteur', em, 'data-field="fill_height"');
+  check('éditeur : plus de case compact', em.includes('type="checkbox" data-field="compact"'), false);
+  check('éditeur : Apparence ouverte quand un réglage est posé', /<details open>\s*<summary>Appearance/.test(em), true);
+  check('éditeur : Apparence fermée sinon', /<details open>\s*<summary>Appearance/.test(markup(ed4)), false);
+  check('éditeur : nom affiché par défaut', /data-field="show_name" checked/.test(markup(ed4)), true);
+}
+
 report();

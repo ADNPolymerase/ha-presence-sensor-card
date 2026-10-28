@@ -33,7 +33,7 @@ mmWave sensors report much more than *occupied*: how far the target is, whether 
 - **Any unit**: distances in m, cm, mm, ft or in are all brought back to metres, and a range given as an LD2410 gate number becomes metres too.
 - **Visual editor** that fills the distance, range, movement, light and battery from the **same device** as soon as the occupancy entity is picked.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
-- **Compact mode**: a coloured icon instead of the drawing.
+- **Appearance**: compact mode (a coloured icon instead of the drawing, or the drawing small on the side), the drawing's size and the text's size on their own, the name or the state hidden, a transparent background for a wall tablet, and the full height of its slot. The same settings as ha-appliance-card.
 
 ## Supported sensors
 
@@ -84,7 +84,12 @@ Copy `dist/ha-presence-sensor-card.js` to `config/www/`, then add `/local/ha-pre
 | `entities` | Any other entity, one line each: an id, or `{ entity, name, icon }`. |
 | `name` | Title. Defaults to the entity's name. |
 | `language` | Show the card in another language than Home Assistant: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh` or `cs`. The editor keeps your own language. |
-| `compact` | Coloured icon instead of the drawing. Default `false`. |
+| `compact` | `true` (or `hide`) shows a coloured icon instead of the drawing. `side` draws it small (96 px) on the left, with the name and the state beside it and the lines under them across the card. Default `false`. |
+| `illustration_size` | The drawing's size, from `0.3` to `1.2` times its own (default `1`), in every mode. The text keeps its size. A slider in the editor. |
+| `font_scale` | The text's size, from `0.7` to `1.4` times its own (default `1`). The drawing keeps its size. A slider in the editor. |
+| `show_name` / `show_state` | `false` hides the name, or the state line. Both shown by default. |
+| `transparent` | `true` removes the card's background, border and shadow, for a card laid on a wall tablet's background. |
+| `fill_height` | `true` makes the card take the full height of its slot, so two cards side by side have the same height. |
 | `show_since` | *Occupied for* / *Clear for* line. Default `true`. |
 | `show_scale` | Distances on the range arcs. Default `true`. |
 | `targets` | Plan view: up to three targets, each `{ x, y, direction, speed }` (entity ids; x and y in any length unit). Filled in by the editor from the same device. |

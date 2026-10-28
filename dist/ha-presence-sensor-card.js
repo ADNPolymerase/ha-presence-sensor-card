@@ -1,4 +1,4 @@
-const CARD_VERSION = "0.2.0";
+const CARD_VERSION = "0.3.0";
 
 console.info(
   "%c HA-PRESENCE-SENSOR-CARD %c v" + CARD_VERSION + " ",
@@ -21,11 +21,12 @@ const T = {
     distance_entity: "Target distance entity", range_entity: "Detection range entity",
     detection_range: "Detection range without an entity (m)", illuminance_entity: "Illuminance entity",
     battery_entity: "Battery entity", name: "Name", card_language: "Card language", lang_auto: "Same as Home Assistant",
-    compact: "Compact mode (icon instead of illustration)", show_since: "Show how long it has been occupied or clear",
+    show_since: "Show how long it has been occupied or clear",
     show_scale: "Show the distances on the range arcs", section_readings: "Readings",
     autofill_hint: "The other fields are filled in from the same device when the occupancy entity is picked.",
     people: "People", temperature: "Temperature", humidity: "Humidity", heart_rate: "Heart rate", breath_rate: "Breathing", dim: "Dim", bright: "Bright", target_count_entity: "People count entity", temperature_entity: "Temperature entity", humidity_entity: "Humidity entity", heart_rate_entity: "Heart rate entity", breath_rate_entity: "Breathing rate entity", section_more: "More readings",
     target: "Target", approaching: "Approaching", moving_away: "Moving away", zone: "Zone", filter: "filter", section_plan: "Plan view", show_plan: "Show each target where it stands (plan view)", show_targets: "One line per target", flip_x: "Swap left and right", zone_type_entity: "Zone type entity", zone_name: "Name of zone {n}", plan_targets: "Targets", plan_zones: "Zones", plan_hint: "Positions and zones come from the sensor's own entities (HLK-LD2450 in ESPHome), filled in when the occupancy entity is picked. Targets and zones are edited in YAML.",
+    group_appearance: "Appearance", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", illustration_size: "Drawing size", font_scale: "Text size", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", fill_height: "Fill the height of its slot",
   },
   fr: {
     occupied: "Occup\u00e9", moving: "En mouvement", still: "Immobile", clear: "Libre", offline: "Hors ligne",
@@ -34,11 +35,12 @@ const T = {
     distance_entity: "Entit\u00e9 distance de la cible", range_entity: "Entit\u00e9 port\u00e9e de d\u00e9tection",
     detection_range: "Port\u00e9e de d\u00e9tection sans entit\u00e9 (m)", illuminance_entity: "Entit\u00e9 luminosit\u00e9",
     battery_entity: "Entit\u00e9 batterie", name: "Nom", card_language: "Langue de la carte", lang_auto: "Comme Home Assistant",
-    compact: "Mode compact (ic\u00f4ne au lieu de l'illustration)", show_since: "Afficher depuis quand c'est occup\u00e9 ou libre",
+    show_since: "Afficher depuis quand c'est occup\u00e9 ou libre",
     show_scale: "Afficher les distances sur les arcs de port\u00e9e", section_readings: "Mesures",
     autofill_hint: "Les autres champs se remplissent depuis le m\u00eame appareil quand l'entit\u00e9 de pr\u00e9sence est choisie.",
     people: "Personnes", temperature: "Temp\u00e9rature", humidity: "Humidit\u00e9", heart_rate: "Rythme cardiaque", breath_rate: "Respiration", dim: "Sombre", bright: "Lumineux", target_count_entity: "Entit\u00e9 nombre de personnes", temperature_entity: "Entit\u00e9 temp\u00e9rature", humidity_entity: "Entit\u00e9 humidit\u00e9", heart_rate_entity: "Entit\u00e9 rythme cardiaque", breath_rate_entity: "Entit\u00e9 rythme respiratoire", section_more: "Autres mesures",
     target: "Cible", approaching: "S'approche", moving_away: "S'\u00e9loigne", zone: "Zone", filter: "filtre", section_plan: "Vue en plan", show_plan: "Montrer chaque cible \u00e0 sa position (vue en plan)", show_targets: "Une ligne par cible", flip_x: "Inverser gauche et droite", zone_type_entity: "Entit\u00e9 type de zone", zone_name: "Nom de la zone {n}", plan_targets: "Cibles", plan_zones: "Zones", plan_hint: "Les positions et les zones viennent des entit\u00e9s du capteur (HLK-LD2450 sous ESPHome), remplies au choix de l'entit\u00e9 d'occupation. Cibles et zones se modifient en YAML.",
+    group_appearance: "Apparence", compact_mode: "Mode compact", compact_off: "D\u00e9sactiv\u00e9", compact_hide: "Sans dessin", compact_side: "Dessin sur le c\u00f4t\u00e9", illustration_size: "Taille du dessin", font_scale: "Taille du texte", show_name: "Afficher le nom", show_state: "Afficher l'\u00e9tat", transparent: "Fond transparent", fill_height: "Occuper toute la hauteur de sa case",
   },
   de: {
     occupied: "Belegt", moving: "In Bewegung", still: "Ruhig", clear: "Frei", offline: "Offline",
@@ -47,11 +49,12 @@ const T = {
     distance_entity: "Entit\u00e4t Zielabstand", range_entity: "Entit\u00e4t Erfassungsbereich",
     detection_range: "Erfassungsbereich ohne Entit\u00e4t (m)", illuminance_entity: "Helligkeits-Entit\u00e4t",
     battery_entity: "Batterie-Entit\u00e4t", name: "Name", card_language: "Kartensprache", lang_auto: "Wie Home Assistant",
-    compact: "Kompaktmodus (Symbol statt Illustration)", show_since: "Anzeigen, wie lange belegt oder frei",
+    show_since: "Anzeigen, wie lange belegt oder frei",
     show_scale: "Abst\u00e4nde an den Reichweitenb\u00f6gen anzeigen", section_readings: "Messwerte",
     autofill_hint: "Die \u00fcbrigen Felder werden vom selben Ger\u00e4t ausgef\u00fcllt, sobald die Belegungs-Entit\u00e4t gew\u00e4hlt ist.",
     people: "Personen", temperature: "Temperatur", humidity: "Luftfeuchtigkeit", heart_rate: "Herzfrequenz", breath_rate: "Atmung", dim: "Dunkel", bright: "Hell", target_count_entity: "Entit\u00e4t Personenzahl", temperature_entity: "Temperatur-Entit\u00e4t", humidity_entity: "Luftfeuchtigkeits-Entit\u00e4t", heart_rate_entity: "Entit\u00e4t Herzfrequenz", breath_rate_entity: "Entit\u00e4t Atemfrequenz", section_more: "Weitere Messwerte",
     target: "Ziel", approaching: "N\u00e4hert sich", moving_away: "Entfernt sich", zone: "Zone", filter: "Filter", section_plan: "Grundriss", show_plan: "Jedes Ziel an seiner Position zeigen (Grundriss)", show_targets: "Eine Zeile pro Ziel", flip_x: "Links und rechts tauschen", zone_type_entity: "Entit\u00e4t Zonentyp", zone_name: "Name der Zone {n}", plan_targets: "Ziele", plan_zones: "Zonen", plan_hint: "Positionen und Zonen stammen aus den Entit\u00e4ten des Sensors (HLK-LD2450 in ESPHome) und werden bei der Wahl der Belegungsentit\u00e4t ausgef\u00fcllt. Ziele und Zonen werden in YAML bearbeitet.",
+    group_appearance: "Darstellung", compact_mode: "Kompaktmodus", compact_off: "Aus", compact_hide: "Ohne Zeichnung", compact_side: "Zeichnung seitlich", illustration_size: "Zeichnungsgr\u00f6\u00dfe", font_scale: "Textgr\u00f6\u00dfe", show_name: "Namen anzeigen", show_state: "Status anzeigen", transparent: "Transparenter Hintergrund", fill_height: "Ganze H\u00f6he des Platzes f\u00fcllen",
   },
   es: {
     occupied: "Ocupado", moving: "En movimiento", still: "Quieto", clear: "Libre", offline: "Sin conexi\u00f3n",
@@ -60,11 +63,12 @@ const T = {
     distance_entity: "Entidad distancia del objetivo", range_entity: "Entidad alcance de detecci\u00f3n",
     detection_range: "Alcance de detecci\u00f3n sin entidad (m)", illuminance_entity: "Entidad de iluminancia",
     battery_entity: "Entidad de bater\u00eda", name: "Nombre", card_language: "Idioma de la tarjeta", lang_auto: "Igual que Home Assistant",
-    compact: "Modo compacto (icono en lugar de ilustraci\u00f3n)", show_since: "Mostrar desde cu\u00e1ndo est\u00e1 ocupado o libre",
+    show_since: "Mostrar desde cu\u00e1ndo est\u00e1 ocupado o libre",
     show_scale: "Mostrar las distancias en los arcos de alcance", section_readings: "Mediciones",
     autofill_hint: "Los dem\u00e1s campos se rellenan desde el mismo dispositivo al elegir la entidad de ocupaci\u00f3n.",
     people: "Personas", temperature: "Temperatura", humidity: "Humedad", heart_rate: "Ritmo card\u00edaco", breath_rate: "Respiraci\u00f3n", dim: "Oscuro", bright: "Luminoso", target_count_entity: "Entidad n\u00famero de personas", temperature_entity: "Entidad de temperatura", humidity_entity: "Entidad de humedad", heart_rate_entity: "Entidad ritmo card\u00edaco", breath_rate_entity: "Entidad ritmo respiratorio", section_more: "Otras mediciones",
     target: "Objetivo", approaching: "Se acerca", moving_away: "Se aleja", zone: "Zona", filter: "filtro", section_plan: "Vista en planta", show_plan: "Mostrar cada objetivo en su posici\u00f3n (vista en planta)", show_targets: "Una l\u00ednea por objetivo", flip_x: "Invertir izquierda y derecha", zone_type_entity: "Entidad del tipo de zona", zone_name: "Nombre de la zona {n}", plan_targets: "Objetivos", plan_zones: "Zonas", plan_hint: "Las posiciones y las zonas vienen de las entidades del sensor (HLK-LD2450 en ESPHome) y se rellenan al elegir la entidad de ocupaci\u00f3n. Objetivos y zonas se editan en YAML.",
+    group_appearance: "Apariencia", compact_mode: "Modo compacto", compact_off: "Desactivado", compact_hide: "Sin dibujo", compact_side: "Dibujo al lado", illustration_size: "Tama\u00f1o del dibujo", font_scale: "Tama\u00f1o del texto", show_name: "Mostrar el nombre", show_state: "Mostrar el estado", transparent: "Fondo transparente", fill_height: "Ocupar toda la altura de su hueco",
   },
   it: {
     occupied: "Occupato", moving: "In movimento", still: "Fermo", clear: "Libero", offline: "Non in linea",
@@ -73,11 +77,12 @@ const T = {
     distance_entity: "Entit\u00e0 distanza del bersaglio", range_entity: "Entit\u00e0 portata di rilevamento",
     detection_range: "Portata di rilevamento senza entit\u00e0 (m)", illuminance_entity: "Entit\u00e0 illuminamento",
     battery_entity: "Entit\u00e0 batteria", name: "Nome", card_language: "Lingua della scheda", lang_auto: "Come Home Assistant",
-    compact: "Modalit\u00e0 compatta (icona invece dell'illustrazione)", show_since: "Mostra da quanto \u00e8 occupato o libero",
+    show_since: "Mostra da quanto \u00e8 occupato o libero",
     show_scale: "Mostra le distanze sugli archi di portata", section_readings: "Misure",
     autofill_hint: "Gli altri campi si compilano dallo stesso dispositivo quando si sceglie l'entit\u00e0 di occupazione.",
     people: "Persone", temperature: "Temperatura", humidity: "Umidit\u00e0", heart_rate: "Frequenza cardiaca", breath_rate: "Respirazione", dim: "Buio", bright: "Luminoso", target_count_entity: "Entit\u00e0 numero di persone", temperature_entity: "Entit\u00e0 temperatura", humidity_entity: "Entit\u00e0 umidit\u00e0", heart_rate_entity: "Entit\u00e0 frequenza cardiaca", breath_rate_entity: "Entit\u00e0 frequenza respiratoria", section_more: "Altre misure",
     target: "Bersaglio", approaching: "Si avvicina", moving_away: "Si allontana", zone: "Zona", filter: "filtro", section_plan: "Vista in pianta", show_plan: "Mostra ogni bersaglio nella sua posizione (vista in pianta)", show_targets: "Una riga per bersaglio", flip_x: "Inverti sinistra e destra", zone_type_entity: "Entit\u00e0 tipo di zona", zone_name: "Nome della zona {n}", plan_targets: "Bersagli", plan_zones: "Zone", plan_hint: "Posizioni e zone provengono dalle entit\u00e0 del sensore (HLK-LD2450 in ESPHome) e vengono compilate alla scelta dell'entit\u00e0 di occupazione. Bersagli e zone si modificano in YAML.",
+    group_appearance: "Aspetto", compact_mode: "Modalit\u00e0 compatta", compact_off: "Disattivata", compact_hide: "Senza disegno", compact_side: "Disegno di lato", illustration_size: "Dimensione del disegno", font_scale: "Dimensione del testo", show_name: "Mostra il nome", show_state: "Mostra lo stato", transparent: "Sfondo trasparente", fill_height: "Occupare tutta l'altezza dello spazio",
   },
   nl: {
     occupied: "Bezet", moving: "In beweging", still: "Stil", clear: "Vrij", offline: "Offline",
@@ -86,11 +91,12 @@ const T = {
     distance_entity: "Entiteit afstand tot doel", range_entity: "Entiteit detectiebereik",
     detection_range: "Detectiebereik zonder entiteit (m)", illuminance_entity: "Entiteit verlichtingssterkte",
     battery_entity: "Batterij-entiteit", name: "Naam", card_language: "Taal van de kaart", lang_auto: "Zoals Home Assistant",
-    compact: "Compacte modus (pictogram i.p.v. illustratie)", show_since: "Tonen hoe lang bezet of vrij",
+    show_since: "Tonen hoe lang bezet of vrij",
     show_scale: "Afstanden op de bereikbogen tonen", section_readings: "Metingen",
     autofill_hint: "De overige velden worden vanuit hetzelfde apparaat ingevuld zodra de bezettingsentiteit gekozen is.",
     people: "Personen", temperature: "Temperatuur", humidity: "Luchtvochtigheid", heart_rate: "Hartslag", breath_rate: "Ademhaling", dim: "Donker", bright: "Licht", target_count_entity: "Entiteit aantal personen", temperature_entity: "Temperatuurentiteit", humidity_entity: "Vochtigheidsentiteit", heart_rate_entity: "Entiteit hartslag", breath_rate_entity: "Entiteit ademhalingsfrequentie", section_more: "Meer metingen",
     target: "Doel", approaching: "Komt dichterbij", moving_away: "Gaat weg", zone: "Zone", filter: "filter", section_plan: "Plattegrond", show_plan: "Elk doel op zijn positie tonen (plattegrond)", show_targets: "E\u00e9n regel per doel", flip_x: "Links en rechts omwisselen", zone_type_entity: "Entiteit zonetype", zone_name: "Naam van zone {n}", plan_targets: "Doelen", plan_zones: "Zones", plan_hint: "Posities en zones komen uit de entiteiten van de sensor (HLK-LD2450 in ESPHome) en worden ingevuld bij het kiezen van de bezettingsentiteit. Doelen en zones bewerk je in YAML.",
+    group_appearance: "Weergave", compact_mode: "Compacte modus", compact_off: "Uit", compact_hide: "Zonder tekening", compact_side: "Tekening opzij", illustration_size: "Grootte van de tekening", font_scale: "Tekstgrootte", show_name: "Naam tonen", show_state: "Status tonen", transparent: "Transparante achtergrond", fill_height: "De volledige hoogte van het vak vullen",
   },
   pt: {
     occupied: "Ocupado", moving: "Em movimento", still: "Parado", clear: "Livre", offline: "Offline",
@@ -99,11 +105,12 @@ const T = {
     distance_entity: "Entidade dist\u00e2ncia do alvo", range_entity: "Entidade alcance de dete\u00e7\u00e3o",
     detection_range: "Alcance de dete\u00e7\u00e3o sem entidade (m)", illuminance_entity: "Entidade de ilumin\u00e2ncia",
     battery_entity: "Entidade de bateria", name: "Nome", card_language: "Idioma do cart\u00e3o", lang_auto: "Igual ao Home Assistant",
-    compact: "Modo compacto (\u00edcone em vez da ilustra\u00e7\u00e3o)", show_since: "Mostrar h\u00e1 quanto tempo est\u00e1 ocupado ou livre",
+    show_since: "Mostrar h\u00e1 quanto tempo est\u00e1 ocupado ou livre",
     show_scale: "Mostrar as dist\u00e2ncias nos arcos de alcance", section_readings: "Medi\u00e7\u00f5es",
     autofill_hint: "Os outros campos s\u00e3o preenchidos a partir do mesmo dispositivo ao escolher a entidade de ocupa\u00e7\u00e3o.",
     people: "Pessoas", temperature: "Temperatura", humidity: "Humidade", heart_rate: "Frequ\u00eancia card\u00edaca", breath_rate: "Respira\u00e7\u00e3o", dim: "Escuro", bright: "Claro", target_count_entity: "Entidade n\u00famero de pessoas", temperature_entity: "Entidade de temperatura", humidity_entity: "Entidade de humidade", heart_rate_entity: "Entidade frequ\u00eancia card\u00edaca", breath_rate_entity: "Entidade frequ\u00eancia respirat\u00f3ria", section_more: "Outras medi\u00e7\u00f5es",
     target: "Alvo", approaching: "Aproxima-se", moving_away: "Afasta-se", zone: "Zona", filter: "filtro", section_plan: "Vista em planta", show_plan: "Mostrar cada alvo na sua posi\u00e7\u00e3o (vista em planta)", show_targets: "Uma linha por alvo", flip_x: "Trocar esquerda e direita", zone_type_entity: "Entidade do tipo de zona", zone_name: "Nome da zona {n}", plan_targets: "Alvos", plan_zones: "Zonas", plan_hint: "As posi\u00e7\u00f5es e as zonas v\u00eam das entidades do sensor (HLK-LD2450 no ESPHome), preenchidas ao escolher a entidade de ocupa\u00e7\u00e3o. Alvos e zonas editam-se em YAML.",
+    group_appearance: "Apar\u00eancia", compact_mode: "Modo compacto", compact_off: "Desligado", compact_hide: "Sem desenho", compact_side: "Desenho ao lado", illustration_size: "Tamanho do desenho", font_scale: "Tamanho do texto", show_name: "Mostrar o nome", show_state: "Mostrar o estado", transparent: "Fundo transparente", fill_height: "Ocupar toda a altura do espa\u00e7o",
   },
   sv: {
     occupied: "Upptaget", moving: "I r\u00f6relse", still: "Stilla", clear: "Ledigt", offline: "Fr\u00e5nkopplad",
@@ -112,11 +119,12 @@ const T = {
     distance_entity: "Entitet avst\u00e5nd till m\u00e5let", range_entity: "Entitet detekteringsomr\u00e5de",
     detection_range: "Detekteringsomr\u00e5de utan entitet (m)", illuminance_entity: "Entitet belysningsstyrka",
     battery_entity: "Batterientitet", name: "Namn", card_language: "Kortets spr\u00e5k", lang_auto: "Som Home Assistant",
-    compact: "Kompakt l\u00e4ge (ikon i st\u00e4llet f\u00f6r illustration)", show_since: "Visa hur l\u00e4nge det varit upptaget eller ledigt",
+    show_since: "Visa hur l\u00e4nge det varit upptaget eller ledigt",
     show_scale: "Visa avst\u00e5nden p\u00e5 r\u00e4ckviddsb\u00e5garna", section_readings: "M\u00e4tv\u00e4rden",
     autofill_hint: "\u00d6vriga f\u00e4lt fylls i fr\u00e5n samma enhet n\u00e4r n\u00e4rvaroentiteten v\u00e4ljs.",
     people: "Personer", temperature: "Temperatur", humidity: "Luftfuktighet", heart_rate: "Puls", breath_rate: "Andning", dim: "M\u00f6rkt", bright: "Ljust", target_count_entity: "Entitet antal personer", temperature_entity: "Temperaturentitet", humidity_entity: "Fuktighetsentitet", heart_rate_entity: "Entitet puls", breath_rate_entity: "Entitet andningsfrekvens", section_more: "Fler m\u00e4tv\u00e4rden",
     target: "M\u00e5l", approaching: "N\u00e4rmar sig", moving_away: "Avl\u00e4gsnar sig", zone: "Zon", filter: "filter", section_plan: "Planvy", show_plan: "Visa varje m\u00e5l p\u00e5 sin plats (planvy)", show_targets: "En rad per m\u00e5l", flip_x: "Byt v\u00e4nster och h\u00f6ger", zone_type_entity: "Entitet zontyp", zone_name: "Namn p\u00e5 zon {n}", plan_targets: "M\u00e5l", plan_zones: "Zoner", plan_hint: "Positioner och zoner kommer fr\u00e5n sensorns egna entiteter (HLK-LD2450 i ESPHome) och fylls i n\u00e4r n\u00e4rvaroentiteten v\u00e4ljs. M\u00e5l och zoner redigeras i YAML.",
+    group_appearance: "Utseende", compact_mode: "Kompakt l\u00e4ge", compact_off: "Av", compact_hide: "Utan teckning", compact_side: "Teckning vid sidan", illustration_size: "Teckningens storlek", font_scale: "Textstorlek", show_name: "Visa namnet", show_state: "Visa status", transparent: "Genomskinlig bakgrund", fill_height: "Fyll hela platsens h\u00f6jd",
   },
   no: {
     occupied: "Opptatt", moving: "I bevegelse", still: "Stille", clear: "Ledig", offline: "Frakoblet",
@@ -125,11 +133,12 @@ const T = {
     distance_entity: "Entitet avstand til m\u00e5let", range_entity: "Entitet deteksjonsomr\u00e5de",
     detection_range: "Deteksjonsomr\u00e5de uten entitet (m)", illuminance_entity: "Entitet belysningsstyrke",
     battery_entity: "Batterientitet", name: "Navn", card_language: "Kortets spr\u00e5k", lang_auto: "Som Home Assistant",
-    compact: "Kompakt modus (ikon i stedet for illustrasjon)", show_since: "Vis hvor lenge det har v\u00e6rt opptatt eller ledig",
+    show_since: "Vis hvor lenge det har v\u00e6rt opptatt eller ledig",
     show_scale: "Vis avstandene p\u00e5 rekkeviddebuene", section_readings: "M\u00e5linger",
     autofill_hint: "De andre feltene fylles ut fra samme enhet n\u00e5r tilstedev\u00e6relsesentiteten velges.",
     people: "Personer", temperature: "Temperatur", humidity: "Luftfuktighet", heart_rate: "Puls", breath_rate: "Pust", dim: "M\u00f8rkt", bright: "Lyst", target_count_entity: "Entitet antall personer", temperature_entity: "Temperaturentitet", humidity_entity: "Fuktighetsentitet", heart_rate_entity: "Entitet puls", breath_rate_entity: "Entitet pustefrekvens", section_more: "Flere m\u00e5linger",
     target: "M\u00e5l", approaching: "N\u00e6rmer seg", moving_away: "Fjerner seg", zone: "Sone", filter: "filter", section_plan: "Planvisning", show_plan: "Vis hvert m\u00e5l p\u00e5 sin plass (planvisning)", show_targets: "\u00c9n linje per m\u00e5l", flip_x: "Bytt venstre og h\u00f8yre", zone_type_entity: "Entitet sonetype", zone_name: "Navn p\u00e5 sone {n}", plan_targets: "M\u00e5l", plan_zones: "Soner", plan_hint: "Posisjoner og soner kommer fra sensorens egne entiteter (HLK-LD2450 i ESPHome) og fylles inn n\u00e5r tilstedev\u00e6relsesentiteten velges. M\u00e5l og soner redigeres i YAML.",
+    group_appearance: "Utseende", compact_mode: "Kompakt modus", compact_off: "Av", compact_hide: "Uten tegning", compact_side: "Tegning p\u00e5 siden", illustration_size: "Tegningens st\u00f8rrelse", font_scale: "Tekstst\u00f8rrelse", show_name: "Vis navnet", show_state: "Vis status", transparent: "Gjennomsiktig bakgrunn", fill_height: "Fyll hele h\u00f8yden p\u00e5 plassen",
   },
   da: {
     occupied: "Optaget", moving: "I bev\u00e6gelse", still: "Stille", clear: "Ledig", offline: "Offline",
@@ -138,11 +147,12 @@ const T = {
     distance_entity: "Entitet afstand til m\u00e5let", range_entity: "Entitet detektionsomr\u00e5de",
     detection_range: "Detektionsomr\u00e5de uden entitet (m)", illuminance_entity: "Entitet belysningsstyrke",
     battery_entity: "Batterientitet", name: "Navn", card_language: "Kortets sprog", lang_auto: "Som Home Assistant",
-    compact: "Kompakt tilstand (ikon i stedet for illustration)", show_since: "Vis hvor l\u00e6nge det har v\u00e6ret optaget eller ledigt",
+    show_since: "Vis hvor l\u00e6nge det har v\u00e6ret optaget eller ledigt",
     show_scale: "Vis afstandene p\u00e5 r\u00e6kkeviddebuerne", section_readings: "M\u00e5linger",
     autofill_hint: "De \u00f8vrige felter udfyldes fra samme enhed, n\u00e5r tilstedev\u00e6relsesentiteten v\u00e6lges.",
     people: "Personer", temperature: "Temperatur", humidity: "Luftfugtighed", heart_rate: "Puls", breath_rate: "Vejrtr\u00e6kning", dim: "M\u00f8rkt", bright: "Lyst", target_count_entity: "Entitet antal personer", temperature_entity: "Temperaturentitet", humidity_entity: "Fugtighedsentitet", heart_rate_entity: "Entitet puls", breath_rate_entity: "Entitet vejrtr\u00e6kningsfrekvens", section_more: "Flere m\u00e5linger",
     target: "M\u00e5l", approaching: "N\u00e6rmer sig", moving_away: "Fjerner sig", zone: "Zone", filter: "filter", section_plan: "Planvisning", show_plan: "Vis hvert m\u00e5l p\u00e5 sin plads (planvisning)", show_targets: "\u00c9n linje pr. m\u00e5l", flip_x: "Byt venstre og h\u00f8jre", zone_type_entity: "Entitet zonetype", zone_name: "Navn p\u00e5 zone {n}", plan_targets: "M\u00e5l", plan_zones: "Zoner", plan_hint: "Positioner og zoner kommer fra sensorens egne entiteter (HLK-LD2450 i ESPHome) og udfyldes, n\u00e5r tilstedev\u00e6relsesentiteten v\u00e6lges. M\u00e5l og zoner redigeres i YAML.",
+    group_appearance: "Udseende", compact_mode: "Kompakt tilstand", compact_off: "Fra", compact_hide: "Uden tegning", compact_side: "Tegning i siden", illustration_size: "Tegningens st\u00f8rrelse", font_scale: "Tekstst\u00f8rrelse", show_name: "Vis navnet", show_state: "Vis status", transparent: "Gennemsigtig baggrund", fill_height: "Fyld hele pladsens h\u00f8jde",
   },
   pl: {
     occupied: "Zaj\u0119te", moving: "W ruchu", still: "Bez ruchu", clear: "Wolne", offline: "Offline",
@@ -151,11 +161,12 @@ const T = {
     distance_entity: "Encja odleg\u0142o\u015bci od celu", range_entity: "Encja zasi\u0119gu wykrywania",
     detection_range: "Zasi\u0119g wykrywania bez encji (m)", illuminance_entity: "Encja nat\u0119\u017cenia o\u015bwietlenia",
     battery_entity: "Encja baterii", name: "Nazwa", card_language: "J\u0119zyk karty", lang_auto: "Jak Home Assistant",
-    compact: "Tryb kompaktowy (ikona zamiast ilustracji)", show_since: "Poka\u017c, jak d\u0142ugo jest zaj\u0119te lub wolne",
+    show_since: "Poka\u017c, jak d\u0142ugo jest zaj\u0119te lub wolne",
     show_scale: "Poka\u017c odleg\u0142o\u015bci na \u0142ukach zasi\u0119gu", section_readings: "Pomiary",
     autofill_hint: "Pozosta\u0142e pola wype\u0142niaj\u0105 si\u0119 z tego samego urz\u0105dzenia po wybraniu encji obecno\u015bci.",
     people: "Osoby", temperature: "Temperatura", humidity: "Wilgotno\u015b\u0107", heart_rate: "T\u0119tno", breath_rate: "Oddech", dim: "Ciemno", bright: "Jasno", target_count_entity: "Encja liczby os\u00f3b", temperature_entity: "Encja temperatury", humidity_entity: "Encja wilgotno\u015bci", heart_rate_entity: "Encja t\u0119tna", breath_rate_entity: "Encja cz\u0119sto\u015bci oddechu", section_more: "Inne pomiary",
     target: "Cel", approaching: "Zbli\u017ca si\u0119", moving_away: "Oddala si\u0119", zone: "Strefa", filter: "filtr", section_plan: "Widok z g\u00f3ry", show_plan: "Poka\u017c ka\u017cdy cel w jego po\u0142o\u017ceniu (widok z g\u00f3ry)", show_targets: "Jeden wiersz na cel", flip_x: "Zamie\u0144 lewo i prawo", zone_type_entity: "Encja typu strefy", zone_name: "Nazwa strefy {n}", plan_targets: "Cele", plan_zones: "Strefy", plan_hint: "Po\u0142o\u017cenia i strefy pochodz\u0105 z encji czujnika (HLK-LD2450 w ESPHome) i s\u0105 uzupe\u0142niane po wybraniu encji obecno\u015bci. Cele i strefy edytuje si\u0119 w YAML.",
+    group_appearance: "Wygl\u0105d", compact_mode: "Tryb kompaktowy", compact_off: "Wy\u0142\u0105czony", compact_hide: "Bez rysunku", compact_side: "Rysunek z boku", illustration_size: "Rozmiar rysunku", font_scale: "Rozmiar tekstu", show_name: "Poka\u017c nazw\u0119", show_state: "Poka\u017c stan", transparent: "Przezroczyste t\u0142o", fill_height: "Wype\u0142nij ca\u0142\u0105 wysoko\u015b\u0107 miejsca",
   },
   ru: {
     occupied: "\u0417\u0430\u043d\u044f\u0442\u043e", moving: "\u0414\u0432\u0438\u0436\u0435\u043d\u0438\u0435", still: "\u041d\u0435\u043f\u043e\u0434\u0432\u0438\u0436\u043d\u043e", clear: "\u0421\u0432\u043e\u0431\u043e\u0434\u043d\u043e", offline: "\u041d\u0435 \u0432 \u0441\u0435\u0442\u0438",
@@ -164,11 +175,12 @@ const T = {
     distance_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0440\u0430\u0441\u0441\u0442\u043e\u044f\u043d\u0438\u044f \u0434\u043e \u0446\u0435\u043b\u0438", range_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0434\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u043e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u0438\u044f",
     detection_range: "\u0414\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u0438\u044f \u0431\u0435\u0437 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 (\u043c)", illuminance_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u043e\u0441\u0432\u0435\u0449\u0451\u043d\u043d\u043e\u0441\u0442\u0438",
     battery_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0431\u0430\u0442\u0430\u0440\u0435\u0438", name: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", card_language: "\u042f\u0437\u044b\u043a \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438", lang_auto: "\u041a\u0430\u043a \u0432 Home Assistant",
-    compact: "\u041a\u043e\u043c\u043f\u0430\u043a\u0442\u043d\u044b\u0439 \u0440\u0435\u0436\u0438\u043c (\u0437\u043d\u0430\u0447\u043e\u043a \u0432\u043c\u0435\u0441\u0442\u043e \u0438\u043b\u043b\u044e\u0441\u0442\u0440\u0430\u0446\u0438\u0438)", show_since: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c, \u043a\u0430\u043a \u0434\u043e\u043b\u0433\u043e \u0437\u0430\u043d\u044f\u0442\u043e \u0438\u043b\u0438 \u0441\u0432\u043e\u0431\u043e\u0434\u043d\u043e",
+    show_since: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c, \u043a\u0430\u043a \u0434\u043e\u043b\u0433\u043e \u0437\u0430\u043d\u044f\u0442\u043e \u0438\u043b\u0438 \u0441\u0432\u043e\u0431\u043e\u0434\u043d\u043e",
     show_scale: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0440\u0430\u0441\u0441\u0442\u043e\u044f\u043d\u0438\u044f \u043d\u0430 \u0434\u0443\u0433\u0430\u0445 \u0434\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u0438", section_readings: "\u0418\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f",
     autofill_hint: "\u041e\u0441\u0442\u0430\u043b\u044c\u043d\u044b\u0435 \u043f\u043e\u043b\u044f \u0437\u0430\u043f\u043e\u043b\u043d\u044f\u044e\u0442\u0441\u044f \u0441 \u0442\u043e\u0433\u043e \u0436\u0435 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430 \u043f\u0440\u0438 \u0432\u044b\u0431\u043e\u0440\u0435 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u043f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044f.",
     people: "\u041b\u044e\u0434\u0438", temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430", humidity: "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c", heart_rate: "\u041f\u0443\u043b\u044c\u0441", breath_rate: "\u0414\u044b\u0445\u0430\u043d\u0438\u0435", dim: "\u0422\u0435\u043c\u043d\u043e", bright: "\u0421\u0432\u0435\u0442\u043b\u043e", target_count_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0447\u0438\u0441\u043b\u0430 \u043b\u044e\u0434\u0435\u0439", temperature_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b", humidity_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u0438", heart_rate_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u043f\u0443\u043b\u044c\u0441\u0430", breath_rate_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0447\u0430\u0441\u0442\u043e\u0442\u044b \u0434\u044b\u0445\u0430\u043d\u0438\u044f", section_more: "\u0414\u0440\u0443\u0433\u0438\u0435 \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f",
     target: "\u0426\u0435\u043b\u044c", approaching: "\u041f\u0440\u0438\u0431\u043b\u0438\u0436\u0430\u0435\u0442\u0441\u044f", moving_away: "\u0423\u0434\u0430\u043b\u044f\u0435\u0442\u0441\u044f", zone: "\u0417\u043e\u043d\u0430", filter: "\u0444\u0438\u043b\u044c\u0442\u0440", section_plan: "\u0412\u0438\u0434 \u0441\u0432\u0435\u0440\u0445\u0443", show_plan: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043a\u0430\u0436\u0434\u0443\u044e \u0446\u0435\u043b\u044c \u043d\u0430 \u0435\u0451 \u043c\u0435\u0441\u0442\u0435 (\u0432\u0438\u0434 \u0441\u0432\u0435\u0440\u0445\u0443)", show_targets: "\u041e\u0434\u043d\u0430 \u0441\u0442\u0440\u043e\u043a\u0430 \u043d\u0430 \u0446\u0435\u043b\u044c", flip_x: "\u041f\u043e\u043c\u0435\u043d\u044f\u0442\u044c \u043b\u0435\u0432\u043e\u0435 \u0438 \u043f\u0440\u0430\u0432\u043e\u0435", zone_type_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0442\u0438\u043f\u0430 \u0437\u043e\u043d\u044b", zone_name: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0437\u043e\u043d\u044b {n}", plan_targets: "\u0426\u0435\u043b\u0438", plan_zones: "\u0417\u043e\u043d\u044b", plan_hint: "\u041f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u0438 \u0437\u043e\u043d\u044b \u0431\u0435\u0440\u0443\u0442\u0441\u044f \u0438\u0437 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439 \u0434\u0430\u0442\u0447\u0438\u043a\u0430 (HLK-LD2450 \u0432 ESPHome) \u0438 \u0437\u0430\u043f\u043e\u043b\u043d\u044f\u044e\u0442\u0441\u044f \u043f\u0440\u0438 \u0432\u044b\u0431\u043e\u0440\u0435 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u043f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044f. \u0426\u0435\u043b\u0438 \u0438 \u0437\u043e\u043d\u044b \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u0443\u044e\u0442\u0441\u044f \u0432 YAML.",
+    group_appearance: "\u0412\u043d\u0435\u0448\u043d\u0438\u0439 \u0432\u0438\u0434", compact_mode: "\u041a\u043e\u043c\u043f\u0430\u043a\u0442\u043d\u044b\u0439 \u0440\u0435\u0436\u0438\u043c", compact_off: "\u0412\u044b\u043a\u043b.", compact_hide: "\u0411\u0435\u0437 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_side: "\u0420\u0438\u0441\u0443\u043d\u043e\u043a \u0441\u0431\u043e\u043a\u0443", illustration_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", font_scale: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0442\u0435\u043a\u0441\u0442\u0430", show_name: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", show_state: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435", transparent: "\u041f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u044b\u0439 \u0444\u043e\u043d", fill_height: "\u0417\u0430\u043d\u0438\u043c\u0430\u0442\u044c \u0432\u0441\u044e \u0432\u044b\u0441\u043e\u0442\u0443 \u044f\u0447\u0435\u0439\u043a\u0438",
   },
   zh: {
     occupied: "\u6709\u4eba", moving: "\u79fb\u52a8\u4e2d", still: "\u9759\u6b62", clear: "\u65e0\u4eba", offline: "\u79bb\u7ebf",
@@ -177,11 +189,12 @@ const T = {
     distance_entity: "\u76ee\u6807\u8ddd\u79bb\u5b9e\u4f53", range_entity: "\u68c0\u6d4b\u8303\u56f4\u5b9e\u4f53",
     detection_range: "\u65e0\u5b9e\u4f53\u65f6\u7684\u68c0\u6d4b\u8303\u56f4\uff08\u7c73\uff09", illuminance_entity: "\u7167\u5ea6\u5b9e\u4f53",
     battery_entity: "\u7535\u6c60\u5b9e\u4f53", name: "\u540d\u79f0", card_language: "\u5361\u7247\u8bed\u8a00", lang_auto: "\u4e0e Home Assistant \u76f8\u540c",
-    compact: "\u7d27\u51d1\u6a21\u5f0f\uff08\u56fe\u6807\u4ee3\u66ff\u63d2\u56fe\uff09", show_since: "\u663e\u793a\u6709\u4eba\u6216\u65e0\u4eba\u6301\u7eed\u7684\u65f6\u95f4",
+    show_since: "\u663e\u793a\u6709\u4eba\u6216\u65e0\u4eba\u6301\u7eed\u7684\u65f6\u95f4",
     show_scale: "\u5728\u8303\u56f4\u5f27\u4e0a\u663e\u793a\u8ddd\u79bb", section_readings: "\u8bfb\u6570",
     autofill_hint: "\u9009\u62e9\u5b58\u5728\u5b9e\u4f53\u540e\uff0c\u5176\u4ed6\u5b57\u6bb5\u4f1a\u4ece\u540c\u4e00\u8bbe\u5907\u81ea\u52a8\u586b\u5199\u3002",
     people: "\u4eba\u6570", temperature: "\u6e29\u5ea6", humidity: "\u6e7f\u5ea6", heart_rate: "\u5fc3\u7387", breath_rate: "\u547c\u5438", dim: "\u6697", bright: "\u4eae", target_count_entity: "\u4eba\u6570\u5b9e\u4f53", temperature_entity: "\u6e29\u5ea6\u5b9e\u4f53", humidity_entity: "\u6e7f\u5ea6\u5b9e\u4f53", heart_rate_entity: "\u5fc3\u7387\u5b9e\u4f53", breath_rate_entity: "\u547c\u5438\u9891\u7387\u5b9e\u4f53", section_more: "\u66f4\u591a\u8bfb\u6570",
     target: "\u76ee\u6807", approaching: "\u9760\u8fd1", moving_away: "\u8fdc\u79bb", zone: "\u533a\u57df", filter: "\u8fc7\u6ee4", section_plan: "\u5e73\u9762\u89c6\u56fe", show_plan: "\u5728\u5404\u81ea\u4f4d\u7f6e\u663e\u793a\u6bcf\u4e2a\u76ee\u6807\uff08\u5e73\u9762\u89c6\u56fe\uff09", show_targets: "\u6bcf\u4e2a\u76ee\u6807\u4e00\u884c", flip_x: "\u5de6\u53f3\u4e92\u6362", zone_type_entity: "\u533a\u57df\u7c7b\u578b\u5b9e\u4f53", zone_name: "\u533a\u57df {n} \u540d\u79f0", plan_targets: "\u76ee\u6807", plan_zones: "\u533a\u57df", plan_hint: "\u4f4d\u7f6e\u548c\u533a\u57df\u6765\u81ea\u4f20\u611f\u5668\u81ea\u8eab\u7684\u5b9e\u4f53\uff08ESPHome \u4e2d\u7684 HLK-LD2450\uff09\uff0c\u9009\u62e9\u5360\u7528\u5b9e\u4f53\u65f6\u81ea\u52a8\u586b\u5199\u3002\u76ee\u6807\u548c\u533a\u57df\u5728 YAML \u4e2d\u7f16\u8f91\u3002",
+    group_appearance: "\u5916\u89c2", compact_mode: "\u7d27\u51d1\u6a21\u5f0f", compact_off: "\u5173\u95ed", compact_hide: "\u4e0d\u663e\u793a\u56fe\u793a", compact_side: "\u56fe\u793a\u5728\u4fa7\u8fb9", illustration_size: "\u56fe\u793a\u5927\u5c0f", font_scale: "\u6587\u5b57\u5927\u5c0f", show_name: "\u663e\u793a\u540d\u79f0", show_state: "\u663e\u793a\u72b6\u6001", transparent: "\u900f\u660e\u80cc\u666f", fill_height: "\u586b\u6ee1\u6240\u5728\u4f4d\u7f6e\u7684\u9ad8\u5ea6",
   },
   cs: {
     occupied: "Obsazeno", moving: "V pohybu", still: "Bez pohybu", clear: "Volno", offline: "Offline",
@@ -190,11 +203,12 @@ const T = {
     distance_entity: "Entita vzd\u00e1lenosti c\u00edle", range_entity: "Entita dosahu detekce",
     detection_range: "Dosah detekce bez entity (m)", illuminance_entity: "Entita osv\u011btlen\u00ed",
     battery_entity: "Entita baterie", name: "N\u00e1zev", card_language: "Jazyk karty", lang_auto: "Jako Home Assistant",
-    compact: "Kompaktn\u00ed re\u017eim (ikona m\u00edsto ilustrace)", show_since: "Zobrazit, jak dlouho je obsazeno nebo volno",
+    show_since: "Zobrazit, jak dlouho je obsazeno nebo volno",
     show_scale: "Zobrazit vzd\u00e1lenosti na oblouc\u00edch dosahu", section_readings: "M\u011b\u0159en\u00ed",
     autofill_hint: "Ostatn\u00ed pole se vypln\u00ed ze stejn\u00e9ho za\u0159\u00edzen\u00ed po v\u00fdb\u011bru entity p\u0159\u00edtomnosti.",
     people: "Osoby", temperature: "Teplota", humidity: "Vlhkost", heart_rate: "Tep", breath_rate: "Dech", dim: "Tma", bright: "Sv\u011btlo", target_count_entity: "Entita po\u010dtu osob", temperature_entity: "Entita teploty", humidity_entity: "Entita vlhkosti", heart_rate_entity: "Entita tepu", breath_rate_entity: "Entita dechov\u00e9 frekvence", section_more: "Dal\u0161\u00ed m\u011b\u0159en\u00ed",
     target: "C\u00edl", approaching: "P\u0159ibli\u017euje se", moving_away: "Vzdaluje se", zone: "Z\u00f3na", filter: "filtr", section_plan: "P\u016fdorys", show_plan: "Zobrazit ka\u017ed\u00fd c\u00edl na jeho m\u00edst\u011b (p\u016fdorys)", show_targets: "Jeden \u0159\u00e1dek na c\u00edl", flip_x: "Prohodit levou a pravou stranu", zone_type_entity: "Entita typu z\u00f3ny", zone_name: "N\u00e1zev z\u00f3ny {n}", plan_targets: "C\u00edle", plan_zones: "Z\u00f3ny", plan_hint: "Polohy a z\u00f3ny poch\u00e1zej\u00ed z entit senzoru (HLK-LD2450 v ESPHome) a vypln\u00ed se p\u0159i v\u00fdb\u011bru entity obsazenosti. C\u00edle a z\u00f3ny se upravuj\u00ed v YAML.",
+    group_appearance: "Vzhled", compact_mode: "Kompaktn\u00ed re\u017eim", compact_off: "Vypnuto", compact_hide: "Bez kresby", compact_side: "Kresba po stran\u011b", illustration_size: "Velikost kresby", font_scale: "Velikost textu", show_name: "Zobrazit n\u00e1zev", show_state: "Zobrazit stav", transparent: "Pr\u016fhledn\u00e9 pozad\u00ed", fill_height: "Vyplnit celou v\u00fd\u0161ku m\u00edsta",
   },
 };
 
@@ -680,6 +694,39 @@ function formatScale(hass, m) {
 }
 
 // ---------------------------------------------------------------------------
+// Appearance -- the same settings as ha-appliance-card. compact: true (or
+// "hide") shows a coloured icon instead of the drawing; "side" draws it small
+// on the left, with the name and the state beside it and the lines under
+// them across the card. The drawing and the text each have a size of their
+// own, the name and the state can be hidden, the card's background removed
+// for a wall tablet, and fill_height makes it take its slot's full height.
+// ---------------------------------------------------------------------------
+
+function compactModeOf(v) {
+  const s = String(v === undefined || v === null ? "" : v).trim().toLowerCase();
+  if (s === "side") return "side";
+  return v === true || s === "true" || s === "hide" ? "hide" : "";
+}
+
+// The drawing's size, 0.3 to 1.2 times its own, the text left as it is.
+function illustrationSizeOf(v) {
+  const n = parseFloat(v);
+  if (!Number.isFinite(n) || n <= 0) return 1;
+  return Math.round(Math.min(1.2, Math.max(0.3, n)) * 100) / 100;
+}
+
+// The text's size, 0.7 to 1.4 times its own, the drawing left as it is.
+function fontScaleOf(v) {
+  const n = parseFloat(v);
+  if (!Number.isFinite(n) || n <= 0) return 1;
+  return Math.round(Math.min(1.4, Math.max(0.7, n)) * 100) / 100;
+}
+
+// The drawing's width in pixels: 240 on the card, 96 on its side.
+const ILLU_PX = 240;
+const SIDE_PX = 96;
+
+// ---------------------------------------------------------------------------
 // Card
 // ---------------------------------------------------------------------------
 
@@ -722,7 +769,8 @@ class PresenceSensorCard extends HTMLElement {
   }
 
   getCardSize() {
-    return this._config && this._config.compact ? 2 : 4;
+    const mode = compactModeOf(this._config && this._config.compact);
+    return mode === "hide" ? 2 : mode === "side" ? 3 : 4;
   }
 
   set hass(hass) {
@@ -909,8 +957,13 @@ class PresenceSensorCard extends HTMLElement {
     const hass = withLanguage(this._hass, cfg && cfg.language);
     if (!hass || !cfg) return;
     const m = this._model(hass);
-    const showScale = cfg.show_scale !== false;
-    const signature = JSON.stringify([m, lang(hass), cfg.compact, showScale]);
+    const cmode = compactModeOf(cfg.compact);
+    // Too small on the side for the distances to be read.
+    const showScale = cfg.show_scale !== false && cmode !== "side";
+    const size = illustrationSizeOf(cfg.illustration_size);
+    const font = fontScaleOf(cfg.font_scale);
+    const look = [cmode, size, font, cfg.show_name !== false, cfg.show_state !== false, !!cfg.transparent, !!cfg.fill_height];
+    const signature = JSON.stringify([m, lang(hass), look, showScale]);
     if (signature === this._signature) return;
     this._signature = signature;
 
@@ -919,12 +972,22 @@ class PresenceSensorCard extends HTMLElement {
             <ha-icon icon="${escapeHtml(l.icon)}"${l.color ? ` style="color:${l.color}"` : ""}></ha-icon><span class="label">${l.label ? escapeHtml(l.label) : t(hass, l.key)}</span><span class="value">${l.valueKey ? t(hass, l.valueKey) : escapeHtml(l.value)}</span>
           </div>`).join("");
 
+    const illu = `<div class="illu">${presenceSvg(hass, m.mode, m.ratio, m.range, showScale, m.people, m.plan)}</div>`;
+    const head = cfg.show_name === false && cfg.show_state === false ? "" : `<div class="head">${
+      cfg.show_name === false ? "" : `<div class="name">${escapeHtml(m.name)}</div>`}${
+      cfg.show_state === false ? "" : `<div class="state">${t(hass, m.mode)}</div>`}</div>`;
+
     this._root.innerHTML = `
       <style>
-:host { --pr-color: ${MODE_COLORS[m.mode]}; --pr-breath: ${m.breath || 3.6}s; }
+:host { --pr-color: ${MODE_COLORS[m.mode]}; --pr-breath: ${m.breath || 3.6}s; font-size:${Math.round(16 * font * 100) / 100}px; }
 ha-card { position:relative; display:flex; flex-direction:column; gap:10px; padding:16px; cursor:pointer; }
 ha-card.compact { flex-direction:row; flex-wrap:wrap; align-items:center; gap:12px 16px; padding:10px 16px; }
-.illu { width:240px; max-width:86%; margin:0 auto; }
+ha-card.clear { background:none; box-shadow:none; border:none; --ha-card-border-width:0; }
+ha-card.fill { height:100%; box-sizing:border-box; }
+.illu { width:${Math.round(ILLU_PX * size)}px; max-width:${size > 1 ? 100 : 86}%; margin:0 auto; }
+.top { display:flex; align-items:center; gap:12px; }
+.top .illu { flex:none; width:${Math.round(SIDE_PX * size)}px; max-width:none; margin:0; }
+.top .head { flex:1 1 auto; }
 .illu svg { display:block; width:100%; overflow:visible; }
 .pr-wall { stroke:var(--secondary-text-color); stroke-width:2; stroke-linecap:round; opacity:.35; }
 .pr-fan { fill:url(#pr-fan-g); }
@@ -978,27 +1041,26 @@ ha-card.compact { flex-direction:row; flex-wrap:wrap; align-items:center; gap:12
 .badge ha-icon { --mdc-icon-size:26px; }
 .head { min-width:0; overflow-wrap:anywhere; }
 ha-card.compact .head { flex:1 1 120px; }
-.name { font-size:15px; font-weight:500; color:var(--primary-text-color); }
-.state { font-size:13.5px; font-weight:500; color:var(--pr-color); }
+.name { font-size:.9375em; font-weight:500; color:var(--primary-text-color); }
+.state { font-size:.84375em; font-weight:500; color:var(--pr-color); }
 .m-clear .state { color:var(--secondary-text-color); }
 .lines { display:flex; flex-direction:column; gap:2px; }
 ha-card.compact .lines { flex:1 1 100%; }
-.line { display:flex; align-items:center; gap:8px; padding:3px 0; font-size:13px; color:var(--secondary-text-color); }
+.line { display:flex; align-items:center; gap:8px; padding:3px 0; font-size:.8125em; color:var(--secondary-text-color); }
 .line ha-icon { --mdc-icon-size:18px; flex:none; }
 .line .label { flex:1; min-width:0; }
 .line .value { color:var(--primary-text-color); font-variant-numeric:tabular-nums; white-space:nowrap; }
 .line.caution, .line.caution .value { color:var(--error-color, #f44336); }
       </style>
-      <ha-card class="m-${m.mode}${cfg.compact ? " compact" : ""}">
-        ${cfg.compact
-          ? `<div class="badge"><ha-icon icon="${MODE_ICONS[m.mode]}"></ha-icon></div>`
-          : `<div class="illu">${presenceSvg(hass, m.mode, m.ratio, m.range, showScale, m.people, m.plan)}</div>`}
-        <div class="head">
-          <div class="name">${escapeHtml(m.name)}</div>
-          <div class="state">${t(hass, m.mode)}</div>
-        </div>
+      <ha-card class="m-${m.mode}${cmode === "hide" ? " compact" : cmode === "side" ? " side" : ""}${cfg.transparent ? " clear" : ""}${cfg.fill_height ? " fill" : ""}">
+        ${cmode === "side" ? `<div class="top">${illu}${head}</div>` : `${cmode === "hide"
+          ? `<div class="badge"><ha-icon icon="${MODE_ICONS[m.mode]}"></ha-icon></div>` : illu}${head}`}
         ${lines ? `<div class="lines">${lines}</div>` : ""}
       </ha-card>`;
+    if (this.style && typeof this.style.setProperty === "function") {
+      if (cfg.fill_height) this.style.setProperty("height", "100%");
+      else this.style.removeProperty("height");
+    }
 
     this._root.querySelector("ha-card").addEventListener("click", () => this._moreInfo(cfg.entity));
     this._root.querySelectorAll(".line[data-entity]").forEach((el) => {
@@ -1120,8 +1182,11 @@ const EDITOR_PICKERS = [
   { field: "breath_rate_entity", domains: ["sensor"], more: true },
 ];
 
+// What the Appearance panel sets: it opens on its own once one is set.
+const APPEARANCE_FIELDS = ["compact", "illustration_size", "font_scale", "show_name", "show_state", "transparent", "fill_height"];
+
 // Toggles that default to true: the key is only stored when switched off.
-const DEFAULT_ON = ["show_since", "show_scale", "show_plan", "show_targets"];
+const DEFAULT_ON = ["show_since", "show_scale", "show_plan", "show_targets", "show_name", "show_state"];
 
 class PresenceSensorCardEditor extends HTMLElement {
   setConfig(config) {
@@ -1207,11 +1272,17 @@ class PresenceSensorCardEditor extends HTMLElement {
       const on = DEFAULT_ON.includes(field) ? cfg[field] !== false : !!cfg[field];
       return `<div class="row row-inline"><label><input type="checkbox" data-field="${field}" ${on ? "checked" : ""}/> ${t(hass, field)}</label></div>`;
     };
+    const range = (field, min, max, value) => `<div class="row">
+              <label>${t(hass, field)} <output data-out="${field}">${value}</output></label>
+              <input type="range" min="${min}" max="${max}" step="0.05" data-range="${field}" value="${value}" />
+            </div>`;
     this._root.innerHTML = `
       <style>
 .form { display:flex; flex-direction:column; gap:14px; padding:4px 0; }
 .row label { display:block; font-size:13px; margin-bottom:4px; color:var(--secondary-text-color); }
 .row input[type="text"], .row input[type="number"], .row select { width:100%; box-sizing:border-box; padding:8px; border-radius:6px; border:1px solid var(--divider-color); background:var(--card-background-color); color:var(--primary-text-color); font:inherit; }
+.row input[type="range"] { width:100%; }
+.row output { float:right; font-variant-numeric:tabular-nums; }
 .row-inline label { display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--primary-text-color); }
 .hint { font-size:12px; color:var(--secondary-text-color); margin-top:-8px; }
 .note { font-size:12px; color:var(--secondary-text-color); }
@@ -1264,9 +1335,25 @@ details .form { padding-top:10px; }
             ${LANGUAGE_NAMES.map(([c, n]) => `<option value="${c}" ${cfg.language === c ? "selected" : ""}>${n}</option>`).join("")}
           </select>
         </div>
-        ${check("compact")}
         ${check("show_since")}
         ${check("show_scale")}
+        <details ${APPEARANCE_FIELDS.some((f) => cfg[f] !== undefined) ? "open" : ""}>
+          <summary>${t(hass, "group_appearance")}</summary>
+          <div class="form">
+            <div class="row">
+              <label>${t(hass, "compact_mode")}</label>
+              <select data-field="compact">
+                ${["off", "hide", "side"].map((v) => `<option value="${v}" ${(compactModeOf(cfg.compact) || "off") === v ? "selected" : ""}>${t(hass, `compact_${v}`)}</option>`).join("")}
+              </select>
+            </div>
+            ${range("illustration_size", 0.3, 1.2, illustrationSizeOf(cfg.illustration_size))}
+            ${range("font_scale", 0.7, 1.4, fontScaleOf(cfg.font_scale))}
+            ${check("show_name")}
+            ${check("show_state")}
+            ${check("transparent")}
+            ${check("fill_height")}
+          </div>
+        </details>
       </div>`;
 
     for (const { field, domains } of EDITOR_PICKERS) {
@@ -1296,6 +1383,26 @@ details .form { padding-top:10px; }
       const v = parseFloat(ev.target.value);
       this._set("detection_range", Number.isFinite(v) && v > 0 ? v : undefined);
       this._emit();
+    });
+    const compactSel = this._root.querySelector('select[data-field="compact"]');
+    if (compactSel) compactSel.addEventListener("change", (ev) => {
+      const v = ev.target.value;
+      this._set("compact", v === "hide" ? true : v === "side" ? "side" : undefined);
+      this._emit();
+    });
+    this._root.querySelectorAll("input[data-range]").forEach((input) => {
+      const field = input.dataset.range;
+      const norm = field === "font_scale" ? fontScaleOf : illustrationSizeOf;
+      input.addEventListener("input", (ev) => {
+        const out = this._root.querySelector(`output[data-out="${field}"]`);
+        if (out) out.textContent = String(norm(ev.target.value));
+      });
+      input.addEventListener("change", (ev) => {
+        const n = norm(ev.target.value);
+        // One is the default: the key is only kept when it says something.
+        this._set(field, n === 1 ? undefined : n);
+        this._emit();
+      });
     });
     const langSel = this._root.querySelector('select[data-field="language"]');
     if (langSel) langSel.addEventListener("change", (ev) => {

@@ -33,7 +33,7 @@ Les capteurs mmWave disent bien plus qu'*occupé* : à quelle distance est la ci
 - **Toutes les unités** : les distances en m, cm, mm, ft ou in sont ramenées en mètres, et une portée donnée en numéro de « gate » LD2410 aussi.
 - **Éditeur visuel** qui remplit distance, portée, mouvement, luminosité et batterie depuis le **même appareil** dès que l'entité de présence est choisie.
 - **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la carte.
-- **Mode compact** : une icône colorée à la place du dessin.
+- **Apparence** : mode compact (une icône colorée à la place du dessin, ou le dessin en petit sur le côté), la taille du dessin et celle du texte chacune de son côté, le nom ou l'état masqués, un fond transparent pour une tablette murale, et toute la hauteur de sa case. Les mêmes réglages que ha-appliance-card.
 
 ## Capteurs pris en charge
 
@@ -84,7 +84,12 @@ Copiez `dist/ha-presence-sensor-card.js` dans `config/www/`, puis ajoutez `/loca
 | `entities` | N'importe quelle autre entité, une ligne chacune : un id, ou `{ entity, name, icon }`. |
 | `name` | Titre. Par défaut le nom de l'entité. |
 | `language` | Afficher la carte dans une autre langue que Home Assistant : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh` ou `cs`. L'éditeur garde votre langue. |
-| `compact` | Icône colorée au lieu du dessin. Par défaut `false`. |
+| `compact` | `true` (ou `hide`) affiche une icône colorée au lieu du dessin. `side` dessine en petit (96 px) à gauche, avec le nom et l'état à côté et les lignes dessous sur toute la largeur. Par défaut `false`. |
+| `illustration_size` | La taille du dessin, de `0.3` à `1.2` fois la sienne (par défaut `1`), dans tous les modes. Le texte garde sa taille. Un curseur dans l'éditeur. |
+| `font_scale` | La taille du texte, de `0.7` à `1.4` fois la sienne (par défaut `1`). Le dessin garde sa taille. Un curseur dans l'éditeur. |
+| `show_name` / `show_state` | `false` masque le nom, ou la ligne d'état. Les deux sont affichés par défaut. |
+| `transparent` | `true` retire le fond, la bordure et l'ombre de la carte, pour une carte posée sur le fond d'une tablette murale. |
+| `fill_height` | `true` fait prendre à la carte toute la hauteur de sa case : deux cartes côte à côte ont alors la même hauteur. |
 | `show_since` | Ligne *Occupé depuis* / *Libre depuis*. Par défaut `true`. |
 | `show_scale` | Distances sur les arcs de portée. Par défaut `true`. |
 | `targets` | Vue en plan : jusqu'à trois cibles, chacune `{ x, y, direction, speed }` (identifiants d'entités ; x et y dans n'importe quelle unité de longueur). Remplies par l'éditeur depuis le même appareil. |

@@ -85,9 +85,9 @@
     return cfg;
   }
   const cards = [
-    [{ entity: "binary_sensor.office", name: "Office (Linptech ES1)", distance_entity: "sensor.office_d", range_entity: "number.office_r", illuminance_entity: "sensor.office_lx" },
+    [{ entity: "binary_sensor.office", name: "Office (Linptech ES1)", show_history: true, distance_entity: "sensor.office_d", range_entity: "number.office_r", illuminance_entity: "sensor.office_lx" },
       { "binary_sensor.office": s("on", OCC), "sensor.office_d": s(302, { unit_of_measurement: "cm" }), "number.office_r": s(450, { unit_of_measurement: "cm" }), "sensor.office_lx": s(116, { unit_of_measurement: "lx" }) }],
-    [{ entity: "binary_sensor.living", name: "Living room (Aqara FP1E)", movement_entity: "sensor.living_mv", distance_entity: "sensor.living_d", range_entity: "number.living_r" },
+    [{ entity: "binary_sensor.living", name: "Living room (Aqara FP1E)", show_history: true, movement_entity: "sensor.living_mv", distance_entity: "sensor.living_d", range_entity: "number.living_r" },
       { "binary_sensor.living": s("on", OCC, 4), "sensor.living_mv": s("movement"), "sensor.living_d": s(2.4, { unit_of_measurement: "m" }), "number.living_r": s(6, { unit_of_measurement: "m" }) }],
     [{ entity: "binary_sensor.desk", name: "Desk (Aqara FP1E)", movement_entity: "sensor.desk_mv", distance_entity: "sensor.desk_d", range_entity: "number.desk_r" },
       { "binary_sensor.desk": s("on", OCC, 48), "sensor.desk_mv": s("no_movement"), "sensor.desk_d": s(1.2, { unit_of_measurement: "m" }), "number.desk_r": s(6, { unit_of_measurement: "m" }) }],
@@ -103,7 +103,7 @@
       { "binary_sensor.nursery": s("on", OCC, 130), "sensor.nursery_mv": s("Motionless"), "sensor.nursery_d": s(1.6, { unit_of_measurement: "m" }), "sensor.nursery_hr": s(72, { unit_of_measurement: "bpm" }), "sensor.nursery_br": s(14, { unit_of_measurement: "/min" }) }],
     [{ entity: "binary_sensor.stairs", name: "Stairs (Hue)", illuminance_entity: "sensor.stairs_lx", temperature_entity: "sensor.stairs_t", battery_entity: "sensor.stairs_bat" },
       { "binary_sensor.stairs": s("on", { device_class: "motion" }, 1), "sensor.stairs_lx": s(240, { unit_of_measurement: "lx" }), "sensor.stairs_t": s(19.8, { unit_of_measurement: "\u00b0C" }), "sensor.stairs_bat": s(64, { unit_of_measurement: "%" }) }],
-    [{ entity: "binary_sensor.office2", name: "Office (drawing on the side)", compact: "side", distance_entity: "sensor.office2_d", range_entity: "number.office2_r", illuminance_entity: "sensor.office2_lx" },
+    [{ entity: "binary_sensor.office2", name: "Office (drawing on the side)", compact: "side", show_history: true, distance_entity: "sensor.office2_d", range_entity: "number.office2_r", illuminance_entity: "sensor.office2_lx" },
       { "binary_sensor.office2": s("on", OCC, 6), "sensor.office2_d": s(250, { unit_of_measurement: "cm" }), "number.office2_r": s(450, { unit_of_measurement: "cm" }), "sensor.office2_lx": s(320, { unit_of_measurement: "lx" }) }],
     [{ entity: "binary_sensor.porch", name: "Porch (side, offline)", compact: "side", battery_entity: "sensor.porch_bat" },
       { "binary_sensor.porch": s("unavailable"), "sensor.porch_bat": s(8, { unit_of_measurement: "%" }) }],
@@ -111,15 +111,38 @@
       { "binary_sensor.wc": s("on", OCC, 3), "sensor.wc_illumination": s("dim") }],
     [{ entity: "binary_sensor.bed", name: "Bedroom", compact: true, movement_entity: "sensor.bed_mv", illuminance_entity: "sensor.bed_lx" },
       { "binary_sensor.bed": s("on", OCC, 95), "sensor.bed_mv": s("no_movement"), "sensor.bed_lx": s(3, { unit_of_measurement: "lx" }) }],
-    [{ entity: "binary_sensor.bath", name: "Bathroom", compact: true },
+    [{ entity: "binary_sensor.bath", name: "Bathroom", compact: true, show_history: true },
       { "binary_sensor.bath": s("off", OCC, 12) }],
   ];
+  // A day of a room, made up the same way on every load: a few visits,
+  // some of them still, and the time the sensor was away. Answers the
+  // card's history request the way Home Assistant does.
+  function fakeHistory(msg) {
+    const end = Date.parse(msg.end_time), start = Date.parse(msg.start_time);
+    let seed = [...msg.entity_ids[0]].reduce((a, c) => a + c.charCodeAt(0), 0);
+    const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+    const main = [{ s: "off", lu: start / 1000 }], move = [{ s: "no_movement", lu: start / 1000 }];
+    for (let t = start + rnd() * 3 * 3600000; t < end - 40 * 60000;) {
+      const len = (10 + rnd() * 120) * 60000;
+      if (rnd() < 0.08) main.push({ s: "unavailable", lu: t / 1000 });
+      else {
+        main.push({ s: "on", lu: t / 1000 });
+        move.push({ s: rnd() < 0.5 ? "movement" : "no_movement", lu: t / 1000 });
+        move.push({ s: "no_movement", lu: (t + len / 2) / 1000 });
+      }
+      main.push({ s: "off", lu: (t + len) / 1000 });
+      t += len + (20 + rnd() * 180) * 60000;
+    }
+    const res = { [msg.entity_ids[0]]: main };
+    if (msg.entity_ids[1]) res[msg.entity_ids[1]] = move;
+    return Promise.resolve(res);
+  }
   const grid = document.getElementById("grid");
   for (const [cfg, states] of cards) {
     const el = document.createElement("ha-presence-sensor-card");
     const { __states, ...config } = cfg;
     el.setConfig(config);
-    el.hass = { language: demoLang, states: __states || states, callService() {} };
+    el.hass = { language: demoLang, states: __states || states, callService() {}, callWS: fakeHistory };
     grid.appendChild(el);
   }
   // A third LD2450 card where someone walks around the room: the trail, the

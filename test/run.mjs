@@ -501,7 +501,7 @@ function ld(targets, { type = 'Detection', occ, zones = ZONES, counts = true } =
   }
   return st;
 }
-const pts = html => [...String(html).matchAll(/<g class="pr-pt t-([a-z]+) pr-p\d" data-n="(\d)" transform="translate\(([\d.-]+) ([\d.-]+)\)">/g)]
+const pts = html => [...String(html).matchAll(/<g class="pr-pt t-([a-z]+) pr-p\d" data-n="(\d)"(?: data-entity="[^"]*")? transform="translate\(([\d.-]+) ([\d.-]+)\)">/g)]
   .map(m => ({ state: m[1], n: Number(m[2]), x: Number(m[3]), y: Number(m[4]) }));
 const zonesOf = html => [...String(html).matchAll(/<g class="pr-zone pr-zone-([a-z]+)( pr-zone-on)?"/g)].map(m => m[1] + (m[2] ? '+' : ''));
 const SITTING = { x: -1350, y: 1700, dir: 'Stationary' };
@@ -665,6 +665,121 @@ check('LD2450 : en français', line(render(LD50, ld([COMING]), 'fr'), 'Cible 1')
   check('éditeur : Apparence ouverte quand un réglage est posé', /<details open>\s*<summary>Appearance/.test(em), true);
   check('éditeur : Apparence fermée sinon', /<details open>\s*<summary>Appearance/.test(markup(ed4)), false);
   check('éditeur : nom affiché par défaut', /data-field="show_name" checked/.test(markup(ed4)), true);
+}
+
+// ── Tap: Home Assistant's action config, a person and a zone ─────────────────
+
+{
+  const tap = (action, extra = {}) => {
+    const c = new Card();
+    const calls = [];
+    c.setConfig({ entity: 'binary_sensor.p', ...(action ? { tap_action: action } : {}), ...extra });
+    c.hass = { language: 'en', states: { 'binary_sensor.p': s('on') }, callService: (...a) => calls.push(a) };
+    c.events.length = 0;
+    c._tap();
+    return { ev: c.events.at(-1), n: c.events.length, calls };
+  };
+  check('tap : ouvre le capteur par défaut', tap().ev?.detail?.entityId, 'binary_sensor.p');
+  check('tap : more-info vers une autre entité', tap({ action: 'more-info', entity: 'sensor.x' }).ev?.detail?.entityId, 'sensor.x');
+  check('tap : none ne fait rien', tap({ action: 'none' }).n, 0);
+  check('tap : navigate', tap({ action: 'navigate', navigation_path: '/lovelace/1' }).ev?.type, 'location-changed');
+  check('tap : fire-dom-event pour browser_mod', tap({ action: 'fire-dom-event', browser_mod: {} }).ev?.type, 'll-custom');
+  check('tap : toggle', JSON.stringify(tap({ action: 'toggle' }).calls[0]), JSON.stringify(['homeassistant', 'toggle', { entity_id: 'binary_sensor.p' }]));
+  check('tap : perform-action', JSON.stringify(tap({ action: 'perform-action', perform_action: 'light.turn_on', target: { entity_id: 'light.a' } }).calls[0]),
+    JSON.stringify(['light', 'turn_on', {}, { entity_id: 'light.a' }]));
+  check('tap : call-service (ancien nom)', tap({ action: 'call-service', service: 'script.go', service_data: { a: 1 } }).calls[0]?.[2]?.a, 1);
+  check('tap : action inconnue → ouvre le capteur', tap({ action: 'wat' }).ev?.type, 'hass-more-info');
+  const html = render(LD50, ld([SITTING]));
+  contains('plan : la cible ouvre son capteur', html, 'data-n="1" data-entity="sensor.salon_target_1_x"');
+  contains('plan : la zone ouvre son compte', html, 'pr-zone-on" data-entity="sensor.salon_zone_1_target_count"');
+  contains('plan : sans compte, la zone ouvre son premier coin',
+    render({ ...LD50, zones: LD50.zones.map(({ count, ...z }) => z) }, ld([SITTING], { counts: false })), 'data-entity="number.salon_zone_1_x1"');
+}
+
+// ── History band ─────────────────────────────────────────────────────────────
+
+{
+  const H = 3600000;
+  const NOW = Date.now();
+  const sec = ms => ms / 1000;
+  const cfgH = { entity: 'binary_sensor.p', show_history: true };
+  async function band(cfg, rows, states, { ws = true } = {}) {
+    const c = new Card();
+    const asked = [];
+    c.setConfig(cfg);
+    const hass = { language: 'en', states, callService() {} };
+    if (ws) hass.callWS = (msg) => { asked.push(msg); return Promise.resolve(rows); };
+    c.hass = hass;
+    await new Promise(r => setTimeout(r, 0));
+    return { html: markup(c), asked, c, hass };
+  }
+  const rects = html => [...String(html).matchAll(/<rect class="h-([a-z]+)" x="([\d.]+)" y="0" width="([\d.]+)"/g)].filter(m => m[1] !== 'bg').map(m => `${m[1]}@${m[2]}+${m[3]}`);
+  const legend = html => (String(html).match(/<div class="hist-legend"><span>[^<]*<\/span><span>([^<]*)<\/span>/) || [])[1];
+  const P = {
+    'binary_sensor.p': [{ s: 'off', lu: sec(NOW - 24 * H) }, { s: 'on', lu: sec(NOW - 6 * H) }, { s: 'off', lu: sec(NOW - 3 * H) }],
+  };
+  {
+    const { html, asked } = await band(cfgH, P, { 'binary_sensor.p': s('on', OCC, 25) });
+    check('bande : une seule lecture de l’historique', asked.length, 1);
+    check('bande : 24 h par défaut', asked[0]?.start_time, new Date(NOW - 24 * H).toISOString());
+    check('bande : lit le capteur seul', JSON.stringify(asked[0]?.entity_ids), JSON.stringify(['binary_sensor.p']));
+    check('bande : libre, occupé 3 h, libre, puis l’état en direct',
+      rects(html).join(' '), 'clear@0+750 occupied@750+125 clear@875+107.6 occupied@982.6+17.4');
+    check('bande : temps occupé sur la période', legend(html), `Occupied · 3${NB}hr 25${NB}min`);
+    contains('bande : de −24 h à maintenant', html, `<span>−24${NB}h</span>`);
+    contains('bande : ouvre le capteur', html, '<div class="hist" data-entity="binary_sensor.p">');
+  }
+  {
+    const { html, asked } = await band({ ...cfgH, movement_entity: 'sensor.p_motion' }, {
+      'binary_sensor.p': [{ s: 'on', lu: sec(NOW - 24 * H) }],
+      'sensor.p_motion': [{ s: 'moving', lu: sec(NOW - 24 * H) }, { s: 'still', lu: sec(NOW - 12 * H) }],
+    }, { 'binary_sensor.p': s('on', OCC, 24 * 60), 'sensor.p_motion': s('still', {}, 12 * 60) });
+    check('bande : lit aussi le mouvement', JSON.stringify(asked[0]?.entity_ids), JSON.stringify(['binary_sensor.p', 'sensor.p_motion']));
+    check('bande : en mouvement puis immobile', rects(html).join(' '), 'moving@0+500 still@500+500');
+    check('bande : immobile compte comme occupé', legend(html), `Occupied · 1${NB}day`);
+  }
+  {
+    const { html } = await band(cfgH, { 'binary_sensor.p': [{ s: 'off', lu: sec(NOW - 24 * H) }, { s: 'unavailable', lu: sec(NOW - 2 * H) }] },
+      { 'binary_sensor.p': s('unavailable', OCC, 120) });
+    check('bande : hors ligne en rouge, jamais pris pour libre', rects(html).join(' '), 'clear@0+916.7 offline@916.7+83.3');
+    check('bande : jamais occupé', legend(html), 'Clear');
+  }
+  {
+    const { html } = await band(cfgH, { 'binary_sensor.p': [{ s: 'on', lu: sec(NOW - 2 * H) }] }, { 'binary_sensor.p': s('on', OCC, 120) });
+    check('bande : avant le premier relevé, rien de dessiné', rects(html).join(' '), 'occupied@916.7+83.3');
+  }
+  {
+    const { asked } = await band({ ...cfgH, history_hours: 500 }, P, { 'binary_sensor.p': s('off', OCC) });
+    check('bande : 168 h au plus', asked[0]?.start_time, new Date(NOW - 168 * H).toISOString());
+    const one = await band({ ...cfgH, history_hours: 0 }, P, { 'binary_sensor.p': s('off', OCC) });
+    check('bande : 1 h au moins', one.asked[0]?.start_time, new Date(NOW - H).toISOString());
+  }
+  {
+    const off = await band({ entity: 'binary_sensor.p' }, P, { 'binary_sensor.p': s('on', OCC) });
+    check('bande : désactivée par défaut, rien n’est lu', off.asked.length, 0);
+    check('bande : désactivée, pas de bande', off.html.includes('class="hist"'), false);
+    const nows = await band(cfgH, P, { 'binary_sensor.p': s('on', OCC) }, { ws: false });
+    check('bande : sans callWS, pas de bande', nows.html.includes('class="hist"'), false);
+  }
+  {
+    const { c, hass, asked } = await band(cfgH, P, { 'binary_sensor.p': s('on', OCC) });
+    c.hass = { ...hass, states: { 'binary_sensor.p': s('off', OCC, 1) } };
+    check('bande : pas relue à chaque état', asked.length, 1);
+    check('bande : suit l’état en direct entre deux lectures', rects(markup(c)).join(' '), 'clear@0+750 occupied@750+125 clear@875+125');
+    freezeClock(new Date(NOW + 6 * 60000).toISOString());
+    c.hass = { ...hass };
+    check('bande : relue après cinq minutes', asked.length, 2);
+    freezeClock(new Date(NOW).toISOString());
+  }
+  {
+    const ed = new Editor();
+    ed.setConfig({ ...cfgH, history_hours: 48 });
+    ed.hass = { language: 'fr', states: {} };
+    const em = markup(ed);
+    contains('éditeur : case de la bande cochée', em, 'data-field="show_history" checked');
+    contains('éditeur : heures de la bande', em, 'data-field="history_hours" placeholder="24" value="48"');
+    contains('éditeur : traduit', em, 'Heures de la bande');
+  }
 }
 
 report();

@@ -27,7 +27,7 @@ Les capteurs mmWave disent bien plus qu'*occupé* : à quelle distance est la ci
 - **La cible à sa distance** : la silhouette se tient là où le radar la voit, à l'échelle de la portée de détection (une entité, une valeur de votre choix, ou 6 m). Un PIR, qui n'a pas de distance, la place au milieu.
 - **En mouvement ou immobile** : d'après une entité de mouvement (Aqara FP1E `movement` / `no_movement`, Tuya `motion_state` ou `presence_state`, Seeed `Motionless` / `Active`, le capteur binaire *moving* ou *still target* d'un LD2410…) ou d'après l'état lui-même. La silhouette marche, ou respire lentement.
 - **Plusieurs personnes** : un nombre de personnes (LD2450, MR60BHA2, le compteur de personnes d'une caméra) place jusqu'à trois silhouettes dans l'éventail, et dit combien.
-- **Vue en plan** pour les capteurs qui donnent la position de chaque cible (HLK-LD2450) : chacun se tient là où il est, en x et en y, avec une flèche quand il s'approche ou s'éloigne et une traînée de ses derniers pas. Les zones du capteur sont dessinées au sol, plus vives quand quelqu'un s'y trouve, hachurées pour les zones filtre, avec une ligne par zone et une par cible.
+- **Vue en plan** pour les capteurs qui donnent la position de chaque cible (HLK-LD2450, Everything Presence Lite) : chacun se tient là où il est, en x et en y, avec une flèche quand il s'approche ou s'éloigne et une traînée de ses derniers pas. Les zones du capteur sont dessinées au sol, plus vives quand quelqu'un s'y trouve, hachurées pour les zones filtre et d'exclusion, en pointillés pour les zones d'entrée, avec une ligne par zone et une par cible. Les zones en polygone de l'Everything Presence Lite sont dessinées telles quelles, et son éventail tourne avec son angle d'installation.
 - **Ligne d'état** : *Occupé*, *En mouvement*, *Immobile*, *Libre* ou *Hors ligne*, d'après un capteur binaire d'occupation, de présence ou de mouvement, ou un capteur texte. *Hors ligne* est dessiné en rouge : un capteur qui ne répond plus ne ressemble jamais à une pièce vide.
 - **Lignes d'info** : distance, personnes, luminosité (en lux, ou *Sombre* / *Lumineux* pour un Sonoff SNZB-06P), température, humidité, rythme cardiaque et respiration (la silhouette respire au rythme mesuré), *Occupé depuis 25 min* ou *Libre depuis 1 h 10 min*, et la batterie, en rouge sous 15 %. N'importe quelle autre entité s'ajoute avec `entities`. Un appui sur une ligne ouvre le détail de son entité, un appui sur la carte celui du capteur (ou votre propre `tap_action`). En vue en plan, un appui sur une personne ou une zone ouvre son entité.
 - **Les dernières 24 heures** (`show_history`) : une bande sous les lignes, colorée là où la pièce était occupée, en mouvement ou immobile, rouge là où le capteur était hors ligne, avec le temps d'occupation sur la période. Lue une fois dans l'historique de Home Assistant, puis tenue à jour avec l'état en direct.
@@ -48,8 +48,9 @@ Tout capteur dont l'intégration donne à Home Assistant une entité d'occupatio
 | Linptech ES1 | Zigbee2MQTT | occupation, distance, portée, luminosité |
 | Sonoff SNZB-06P | Zigbee2MQTT, ZHA | occupation, luminosité (sombre / lumineux) |
 | Tuya ZG-204ZM, ZG-204ZV, ZY-M100, MTG075 | Zigbee2MQTT, ZHA, Tuya | présence, état de mouvement, distance, portée, luminosité, température, humidité, batterie |
-| HLK-LD2410, LD2412 (Apollo, Screek, Everything Presence…) | ESPHome | cible, cible mobile / immobile, distance, portée en gates |
+| HLK-LD2410, LD2412 (Apollo, Screek, Everything Presence One…) | ESPHome | cible, cible mobile / immobile, distance, portée en gates |
 | HLK-LD2450 | ESPHome | nombre de cibles, x / y, direction et vitesse de chaque cible, les trois zones et leur compte (vue en plan) |
+| Everything Presence Lite | ESPHome | occupation, x / y et vitesse de chaque cible, quatre zones en polygone et leur compte, deux exclusions, deux entrées, angle d'installation, distance max (vue en plan) |
 | Seeed MR24HPC1, MR60BHA2 | ESPHome | état de mouvement, distance, personnes, rythme cardiaque, respiration |
 | Capteurs d'occupation Matter, caméras (nombre de personnes) | Matter, Frigate, UniFi Protect… | occupation, ou un nombre de personnes |
 
@@ -96,13 +97,14 @@ Copiez `dist/ha-presence-sensor-card.js` dans `config/www/`, puis ajoutez `/loca
 | `show_history` / `history_hours` | `true` ajoute une bande des dernières heures sous les lignes : occupé, en mouvement ou immobile dans leur couleur, libre en gris, hors ligne en rouge, et le temps d'occupation de la pièce. Lue dans l'historique de Home Assistant (l'entité d'occupation, et celle du mouvement si elle est renseignée), puis relue toutes les cinq minutes. `history_hours` : 24 par défaut, de 1 à 168. Désactivée par défaut. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (par défaut, l'entité d'occupation), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event` (pour les cartes popup basées sur browser_mod). En YAML uniquement. |
 | `targets` | Vue en plan : jusqu'à trois cibles, chacune `{ x, y, direction, speed }` (identifiants d'entités ; x et y dans n'importe quelle unité de longueur). Remplies par l'éditeur depuis le même appareil. |
-| `zones` | Vue en plan : jusqu'à trois zones, chacune `{ x1, y1, x2, y2, count, name, type }`. `count` est le nombre de personnes de la zone, `type` vaut `detection` ou `filter` quand une zone diffère des autres. |
+| `zones` | Vue en plan : jusqu'à huit zones, chacune `{ x1, y1, x2, y2, count, name, type }`, ou `{ points, count, name, type }` où `points` est une entité texte qui contient un polygone `x:y;x:y;…` en mm (Everything Presence Lite). `count` est le nombre de personnes de la zone, `type` vaut `detection`, `filter` (exclusion) ou `entry` (entrée). |
 | `zone_type_entity` | Le select du type de zone du capteur (`Disabled`, `Detection`, `Filter`). |
 | `show_plan` | Vue en plan quand les cibles sont renseignées. Par défaut `true` ; `false` garde le dessin sur l'axe. |
 | `show_targets` | Une ligne par cible dans la vue en plan. Par défaut `true`. |
 | `flip_x` | Inverse gauche et droite dans la vue en plan. Par défaut `false`. |
+| `angle_entity` / `installation_angle` | De combien le capteur est tourné par rapport au mur, en degrés : une entité (l'Installation Angle de l'Everything Presence Lite) ou un nombre fixe. Seul l'éventail tourne : le capteur donne déjà ses positions dans l'axe de la pièce. |
 
-Les couleurs suivent votre thème : `--pr-occupied-color` (bleu par défaut), `--pr-still-color` (indigo par défaut), `--pr-offline-color` (par défaut la couleur d'erreur du thème) et `--pr-zone1-color` à `--pr-zone3-color` se règlent avec card-mod ou un thème.
+Les couleurs suivent votre thème : `--pr-occupied-color` (bleu par défaut), `--pr-still-color` (indigo par défaut), `--pr-offline-color` (par défaut la couleur d'erreur du thème) et `--pr-zone1-color` à `--pr-zone4-color` et `--pr-entry-color` se règlent avec card-mod ou un thème.
 
 ### Exemples
 
@@ -164,6 +166,22 @@ targets:
 zones:
   - { x1: number.salon_zone_1_x1, y1: number.salon_zone_1_y1, x2: number.salon_zone_1_x2, y2: number.salon_zone_1_y2, count: sensor.salon_zone_1_target_count, name: Bureau }
   - { x1: number.salon_zone_2_x1, y1: number.salon_zone_2_y1, x2: number.salon_zone_2_x2, y2: number.salon_zone_2_y2, name: Canapé }
+```
+
+Everything Presence Lite (ESPHome) : zones en polygone, une exclusion, une entrée, et le capteur tourné dans un coin. L'éditeur remplit cela aussi.
+
+```yaml
+type: custom:ha-presence-sensor-card
+entity: binary_sensor.bureau_occupancy
+range_entity: number.bureau_max_distance
+angle_entity: number.bureau_installation_angle
+targets:
+  - { x: sensor.bureau_target_1_x, y: sensor.bureau_target_1_y, speed: sensor.bureau_target_1_speed }
+  - { x: sensor.bureau_target_2_x, y: sensor.bureau_target_2_y, speed: sensor.bureau_target_2_speed }
+zones:
+  - { points: text.bureau_polygon_zone_1, count: sensor.bureau_zone_1_target_count, name: Bureau }
+  - { points: text.bureau_polygon_exclusion_1, type: filter }
+  - { points: text.bureau_polygon_entry_1, type: entry, name: Porte }
 ```
 
 Aqara P1 (PIR simple) : mouvement, luminosité et batterie.

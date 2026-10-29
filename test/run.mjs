@@ -782,4 +782,100 @@ check('LD2450 : en français', line(render(LD50, ld([COMING]), 'fr'), 'Cible 1')
   }
 }
 
+// ── Everything Presence Lite (ESPHome): polygon zones ────────────────────────
+// Its zones are text entities "x:y;x:y;..." in mm: four detection zones, two
+// exclusions and two entries. Its positions already come out square to the
+// room, so only the fan turns with the Installation Angle.
+{
+  const EPL = {
+    entity: 'binary_sensor.epl_occupancy',
+    range_entity: 'number.epl_max_distance',
+    targets: [1, 2, 3].map(n => ({ x: `sensor.epl_target_${n}_x`, y: `sensor.epl_target_${n}_y`, speed: `sensor.epl_target_${n}_speed` })),
+    zones: [
+      ...[1, 2, 3, 4].map(n => ({ points: `text.epl_polygon_zone_${n}`, count: `sensor.epl_zone_${n}_target_count` })),
+      { points: 'text.epl_polygon_exclusion_1', type: 'filter' }, { points: 'text.epl_polygon_exclusion_2', type: 'filter' },
+      { points: 'text.epl_polygon_entry_1', type: 'entry' }, { points: 'text.epl_polygon_entry_2', type: 'entry' },
+    ],
+    angle_entity: 'number.epl_installation_angle',
+  };
+  const SQUARE = '-1000:500;1000:500;1000:2500;-1000:2500';
+  // An L: its notch (x > 0, y > 1.5 m) is outside.
+  const ELL = '-2000:3000;2000:3000;2000:3500;0:3500;0:5000;-2000:5000';
+  const epl = (targets, { polys = {}, angle = 0, counts = true } = {}) => {
+    const p = { zone_1: SQUARE, zone_2: ELL, zone_3: '', zone_4: '2500:500;2900:500;2900:900;2500:900',
+      exclusion_1: '-2900:500;-2500:500;-2700:1200', exclusion_2: '', entry_1: '-300:5300;300:5300;300:5800;-300:5800', entry_2: 'x', ...polys };
+    const st = {
+      'binary_sensor.epl_occupancy': s(targets.length ? 'on' : 'off', OCC),
+      'number.epl_max_distance': s(600, { unit_of_measurement: 'cm' }),
+      'number.epl_installation_angle': s(angle, { unit_of_measurement: 'º' }),
+    };
+    for (const [k, v] of Object.entries(p)) st[`text.epl_polygon_${k}`] = s(v);
+    for (let n = 1; n <= 3; n++) {
+      const tg = targets[n - 1] || { x: 0, y: 0 };
+      st[`sensor.epl_target_${n}_x`] = s(tg.x, MM);
+      st[`sensor.epl_target_${n}_y`] = s(tg.y, MM);
+      st[`sensor.epl_target_${n}_speed`] = s(tg.speed || 0, { unit_of_measurement: 'm/s' });
+    }
+    if (counts) for (let n = 1; n <= 4; n++) st[`sensor.epl_zone_${n}_target_count`] = s(n === 1 ? targets.filter(t => Math.abs(t.x) <= 1000 && t.y >= 500 && t.y <= 2500).length : 0);
+    return st;
+  };
+  const IN_SQUARE = { x: 200, y: 1500 };
+  const html = render(EPL, epl([IN_SQUARE]));
+  check('EP Lite : zones dessinées (vide et illisible sautées)', zonesOf(html).join(','), 'detection+,detection,detection,filter,entry');
+  contains('EP Lite : polygone à sa place (mm sur Max Distance en cm)', html, 'points="83.3,24.3 116.7,24.3 116.7,57.7 83.3,57.7"');
+  contains('EP Lite : nom au milieu', html, '<text class="pr-zone-mid" x="100" y="43">Zone 1</text>');
+  contains('EP Lite : quatrième zone', html, 'var(--pr-zone4-color, #d4609c)');
+  contains('EP Lite : exclusion nommée', html, '>Exclusion 1</text>');
+  check('EP Lite : exclusion sans « filter » en plus', html.includes('Exclusion 1 · filter'), false);
+  contains('EP Lite : entrée nommée et colorée', html, 'class="pr-zone pr-zone-entry" data-entity="text.epl_polygon_entry_1" style="--pr-zc:var(--pr-entry-color, #f9a825)"');
+  check('EP Lite : une ligne par zone de détection', line(html, 'Zone 1'), '1');
+  check('EP Lite : zone vide sans ligne', line(html, 'Zone 3'), null);
+  check('EP Lite : pas de ligne pour l’entrée', line(html, 'Entry 1'), null);
+  check('EP Lite : sans angle, le cône ne tourne pas', html.includes('pr-turn'), false);
+  contains('EP Lite : angle, le cône tourne', render(EPL, epl([IN_SQUARE], { angle: 30 })), '<g class="pr-turn" transform="rotate(-30 100 16)">');
+  contains('EP Lite : angle et gauche/droite inversés', render({ ...EPL, flip_x: true }, epl([IN_SQUARE], { angle: 30 })), 'transform="rotate(30 100 16)"');
+  contains('EP Lite : angle fixe sans entité', render({ ...EPL, angle_entity: undefined, installation_angle: -20 }, epl([IN_SQUARE])), 'rotate(20 100 16)');
+  check('EP Lite : la cible ne tourne pas avec le cône', JSON.stringify(pts(render(EPL, epl([IN_SQUARE], { angle: 30 })))[0]),
+    JSON.stringify(pts(html)[0]));
+  {
+    const noCount = { ...EPL, zones: EPL.zones.map(({ count, ...z }) => z) };
+    check('EP Lite : compté sur les positions dans le L', line(render(noCount, epl([{ x: -1000, y: 4000 }], { counts: false })), 'Zone 2'), '1');
+    check('EP Lite : encoche du L hors zone', line(render(noCount, epl([{ x: 1000, y: 4000 }], { counts: false })), 'Zone 2'), 'Clear');
+  }
+  check('EP Lite : deux sommets ne font pas une zone', zonesOf(render(EPL, epl([], { polys: { zone_1: '0:500;1000:500' } }))).length, 4);
+  check('EP Lite : deux sommets, pas de ligne de zone', line(render(EPL, epl([IN_SQUARE], { polys: { zone_1: '0:500;1000:500' } })), 'Zone 1'), null);
+  check('EP Lite : lu jusqu’au premier sommet illisible', zonesOf(render(EPL, epl([], { polys: { zone_1: '0:500;1000:500;oops;1000:1500' } }))).length, 4);
+  check('EP Lite : zone écrasée hors du dessin ignorée', zonesOf(render(EPL, epl([], { polys: { zone_1: '0:500;0:900;0:1500' } }))).length, 4);
+  contains('EP Lite : tap sur la zone ouvre son compteur', html, 'data-entity="sensor.epl_zone_1_target_count"');
+  {
+    const dev = { 'binary_sensor.epl_occupancy': OCC, 'number.epl_max_distance': {}, 'number.epl_installation_angle': {},
+      'switch.epl_upside_down_mounting': {}, 'sensor.epl_occupancy_mask_1_target_count': {}, 'text.epl_entry_exit_last_decision': {} };
+    for (const n of [1, 2, 3]) for (const k of ['x', 'y', 'speed', 'angle', 'distance', 'resolution']) dev[`sensor.epl_target_${n}_${k}`] = {};
+    for (const n of [1, 2, 3]) dev[`binary_sensor.epl_target_${n}_active`] = {};
+    for (const n of [1, 2, 3, 4]) {
+      dev[`text.epl_polygon_zone_${n}`] = {};
+      dev[`sensor.epl_zone_${n}_target_count`] = {};
+      dev[`binary_sensor.epl_zone_${n}_occupancy`] = {};
+    }
+    for (const n of [1, 2]) { dev[`text.epl_polygon_exclusion_${n}`] = {}; dev[`text.epl_polygon_entry_${n}`] = {}; }
+    const stub = Card.getStubConfig(deviceHass({ epl: dev }));
+    check('EP Lite : huit zones devinées', stub.zones.length, 8);
+    check('EP Lite : zone 4 et son compteur', JSON.stringify(stub.zones[3]), JSON.stringify({ points: 'text.epl_polygon_zone_4', count: 'sensor.epl_zone_4_target_count' }));
+    check('EP Lite : exclusion devinée', JSON.stringify(stub.zones[5]), JSON.stringify({ points: 'text.epl_polygon_exclusion_2', type: 'filter' }));
+    check('EP Lite : entrée devinée', JSON.stringify(stub.zones[6]), JSON.stringify({ points: 'text.epl_polygon_entry_1', type: 'entry' }));
+    check('EP Lite : angle deviné', stub.angle_entity, 'number.epl_installation_angle');
+    check('EP Lite : Max Distance comme portée', stub.range_entity, 'number.epl_max_distance');
+    check('EP Lite : un compteur de zone n’est pas le nombre de personnes', stub.target_count_entity, undefined);
+    check('EP Lite : trois cibles', stub.targets.length, 3);
+    const ed = new Editor();
+    ed.setConfig(stub);
+    ed.hass = { language: 'fr', states: {} };
+    const em = markup(ed);
+    contains('éditeur EP Lite : angle', em, 'data-picker="angle_entity"');
+    contains('éditeur EP Lite : nom de l’exclusion', em, 'Nom (Exclusion 2)');
+    contains('éditeur EP Lite : nom de l’entrée', em, 'placeholder="Entrée 1"');
+    contains('éditeur EP Lite : nom de la zone 4', em, 'Nom de la zone 4');
+  }
+}
+
 report();

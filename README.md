@@ -27,7 +27,7 @@ mmWave sensors report much more than *occupied*: how far the target is, whether 
 - **The target at its distance**: the silhouette stands where the radar sees it, scaled on the detection range (an entity, a number of your own, or 6 m). A PIR, which has no distance, puts it in the middle.
 - **Moving or still**: from a movement entity (Aqara FP1E `movement` / `no_movement`, Tuya `motion_state` or `presence_state`, Seeed `Motionless` / `Active`, an LD2410 *moving* or *still target* binary sensor…) or from the state itself. The silhouette walks, or breathes slowly.
 - **Several people**: a people count (LD2450, MR60BHA2, a camera's person count) puts up to three silhouettes in the fan, and says how many.
-- **Plan view** for sensors that give each target's position (HLK-LD2450): everyone stands where they are, x and y, with an arrow when they come closer or walk away and a trail of their last steps. The sensor's zones are drawn on the floor, brighter while someone is in them, filter zones hatched, with one line per zone and one per target.
+- **Plan view** for sensors that give each target's position (HLK-LD2450, Everything Presence Lite): everyone stands where they are, x and y, with an arrow when they come closer or walk away and a trail of their last steps. The sensor's zones are drawn on the floor, brighter while someone is in them, filter and exclusion zones hatched, entry zones dashed, with one line per zone and one per target. The Everything Presence Lite's polygon zones are drawn as they are, and its fan turns with its installation angle.
 - **State line**: *Occupied*, *Moving*, *Still*, *Clear* or *Offline*, from an occupancy, presence or motion binary sensor, or a text sensor. *Offline* is drawn in red, so a sensor that stopped answering never looks like an empty room.
 - **Info lines**: distance, people, light (in lux, or *Dim* / *Bright* for a Sonoff SNZB-06P), temperature, humidity, heart rate and breathing (the silhouette breathes at the measured rate), *Occupied for 25 min* or *Clear for 1 h 10 min*, and the battery, in red below 15 %. Any other entity can be added with `entities`. Tap a line for that entity's details, tap the card for the sensor's (or set your own `tap_action`). In the plan view, tap a person or a zone to open its entity.
 - **The last 24 hours** (`show_history`): a band under the lines, coloured where the room was occupied, moving or still, red where the sensor was offline, with the time occupied over the period. Read once from Home Assistant's history, then kept going with the live state.
@@ -48,8 +48,9 @@ Any sensor whose integration gives Home Assistant an occupancy, presence or moti
 | Linptech ES1 | Zigbee2MQTT | occupancy, distance, range, light |
 | Sonoff SNZB-06P | Zigbee2MQTT, ZHA | occupancy, light (dim / bright) |
 | Tuya ZG-204ZM, ZG-204ZV, ZY-M100, MTG075 | Zigbee2MQTT, ZHA, Tuya | presence, motion state, distance, range, light, temperature, humidity, battery |
-| HLK-LD2410, LD2412 (Apollo, Screek, Everything Presence…) | ESPHome | has target, moving / still target, distance, range in gates |
+| HLK-LD2410, LD2412 (Apollo, Screek, Everything Presence One…) | ESPHome | has target, moving / still target, distance, range in gates |
 | HLK-LD2450 | ESPHome | target count, each target's x / y, direction and speed, the three zones and their counts (plan view) |
+| Everything Presence Lite | ESPHome | occupancy, each target's x / y and speed, four polygon zones and their counts, two exclusions, two entries, installation angle, max distance (plan view) |
 | Seeed MR24HPC1, MR60BHA2 | ESPHome | motion status, distance, people, heart rate, breathing |
 | Matter occupancy sensors, cameras (person count) | Matter, Frigate, UniFi Protect… | occupancy, or a count of people |
 
@@ -96,13 +97,14 @@ Copy `dist/ha-presence-sensor-card.js` to `config/www/`, then add `/local/ha-pre
 | `show_history` / `history_hours` | `true` adds a band of the last hours under the lines: occupied, moving or still in their colour, clear in grey, offline in red, and how long the room was occupied. Read from Home Assistant's history (the occupancy entity, and the movement entity when set), again every five minutes. `history_hours`: 24 by default, 1 to 168. Off by default. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default, the occupancy entity), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event` (for the popup cards built on browser_mod). In YAML only. |
 | `targets` | Plan view: up to three targets, each `{ x, y, direction, speed }` (entity ids; x and y in any length unit). Filled in by the editor from the same device. |
-| `zones` | Plan view: up to three zones, each `{ x1, y1, x2, y2, count, name, type }`. `count` is the zone's people count, `type` is `detection` or `filter` when one zone differs from the others. |
+| `zones` | Plan view: up to eight zones, each `{ x1, y1, x2, y2, count, name, type }`, or `{ points, count, name, type }` where `points` is a text entity holding a polygon as `x:y;x:y;…` in mm (Everything Presence Lite). `count` is the zone's people count, `type` is `detection`, `filter` (exclusion) or `entry`. |
 | `zone_type_entity` | The sensor's zone type select (`Disabled`, `Detection`, `Filter`). |
 | `show_plan` | Plan view when the targets are set. Default `true`; `false` keeps the drawing on the axis. |
 | `show_targets` | One line per target in the plan view. Default `true`. |
 | `flip_x` | Swap left and right in the plan view. Default `false`. |
+| `angle_entity` / `installation_angle` | How far the sensor is turned from the wall, in degrees: an entity (the Everything Presence Lite's Installation Angle) or a fixed number. Only the fan turns: the sensor already gives its positions square to the room. |
 
-The colours follow your theme: `--pr-occupied-color` (default blue), `--pr-still-color` (default indigo), `--pr-offline-color` (default the theme's error colour) and `--pr-zone1-color` to `--pr-zone3-color` can be set with card-mod or a theme.
+The colours follow your theme: `--pr-occupied-color` (default blue), `--pr-still-color` (default indigo), `--pr-offline-color` (default the theme's error colour) and `--pr-zone1-color` to `--pr-zone4-color` and `--pr-entry-color` can be set with card-mod or a theme.
 
 ### Examples
 
@@ -164,6 +166,22 @@ targets:
 zones:
   - { x1: number.lounge_zone_1_x1, y1: number.lounge_zone_1_y1, x2: number.lounge_zone_1_x2, y2: number.lounge_zone_1_y2, count: sensor.lounge_zone_1_target_count, name: Desk }
   - { x1: number.lounge_zone_2_x1, y1: number.lounge_zone_2_y1, x2: number.lounge_zone_2_x2, y2: number.lounge_zone_2_y2, name: Sofa }
+```
+
+Everything Presence Lite (ESPHome): polygon zones, an exclusion, an entry, and the sensor turned in a corner. The editor fills this in too.
+
+```yaml
+type: custom:ha-presence-sensor-card
+entity: binary_sensor.den_occupancy
+range_entity: number.den_max_distance
+angle_entity: number.den_installation_angle
+targets:
+  - { x: sensor.den_target_1_x, y: sensor.den_target_1_y, speed: sensor.den_target_1_speed }
+  - { x: sensor.den_target_2_x, y: sensor.den_target_2_y, speed: sensor.den_target_2_speed }
+zones:
+  - { points: text.den_polygon_zone_1, count: sensor.den_zone_1_target_count, name: Desk }
+  - { points: text.den_polygon_exclusion_1, type: filter }
+  - { points: text.den_polygon_entry_1, type: entry, name: Door }
 ```
 
 Aqara P1 (plain PIR): motion, light and battery.

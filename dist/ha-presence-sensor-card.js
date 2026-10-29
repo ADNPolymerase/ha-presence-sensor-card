@@ -1,4 +1,4 @@
-const CARD_VERSION = "0.4.0";
+const CARD_VERSION = "0.5.0";
 
 console.info(
   "%c HA-PRESENCE-SENSOR-CARD %c v" + CARD_VERSION + " ",
@@ -25,7 +25,7 @@ const T = {
     show_scale: "Show the distances on the range arcs", section_readings: "Readings",
     autofill_hint: "The other fields are filled in from the same device when the occupancy entity is picked.",
     people: "People", temperature: "Temperature", humidity: "Humidity", heart_rate: "Heart rate", breath_rate: "Breathing", dim: "Dim", bright: "Bright", target_count_entity: "People count entity", temperature_entity: "Temperature entity", humidity_entity: "Humidity entity", heart_rate_entity: "Heart rate entity", breath_rate_entity: "Breathing rate entity", section_more: "More readings",
-    target: "Target", approaching: "Approaching", moving_away: "Moving away", zone: "Zone", filter: "filter", section_plan: "Plan view", show_plan: "Show each target where it stands (plan view)", show_targets: "One line per target", flip_x: "Swap left and right", zone_type_entity: "Zone type entity", zone_name: "Name of zone {n}", plan_targets: "Targets", plan_zones: "Zones", plan_hint: "Positions and zones come from the sensor's own entities (HLK-LD2450 in ESPHome), filled in when the occupancy entity is picked. Targets and zones are edited in YAML.",
+    target: "Target", approaching: "Approaching", moving_away: "Moving away", zone: "Zone", filter: "filter", section_plan: "Plan view", show_plan: "Show each target where it stands (plan view)", show_targets: "One line per target", flip_x: "Swap left and right", zone_type_entity: "Zone type entity", angle_entity: "Installation angle entity", exclusion: "Exclusion", entry: "Entry", zone_name: "Name of zone {n}", plan_targets: "Targets", plan_zones: "Zones", plan_hint: "Positions and zones come from the sensor's own entities (HLK-LD2450, Everything Presence Lite in ESPHome), filled in when the occupancy entity is picked. Targets and zones are edited in YAML.",
     group_appearance: "Appearance", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", illustration_size: "Drawing size", font_scale: "Text size", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", fill_height: "Fill the height of its slot",
     now: "Now", show_history: "Show the last hours as a band", history_hours: "Hours in the band",
   },
@@ -40,7 +40,7 @@ const T = {
     show_scale: "Afficher les distances sur les arcs de port\u00e9e", section_readings: "Mesures",
     autofill_hint: "Les autres champs se remplissent depuis le m\u00eame appareil quand l'entit\u00e9 de pr\u00e9sence est choisie.",
     people: "Personnes", temperature: "Temp\u00e9rature", humidity: "Humidit\u00e9", heart_rate: "Rythme cardiaque", breath_rate: "Respiration", dim: "Sombre", bright: "Lumineux", target_count_entity: "Entit\u00e9 nombre de personnes", temperature_entity: "Entit\u00e9 temp\u00e9rature", humidity_entity: "Entit\u00e9 humidit\u00e9", heart_rate_entity: "Entit\u00e9 rythme cardiaque", breath_rate_entity: "Entit\u00e9 rythme respiratoire", section_more: "Autres mesures",
-    target: "Cible", approaching: "S'approche", moving_away: "S'\u00e9loigne", zone: "Zone", filter: "filtre", section_plan: "Vue en plan", show_plan: "Montrer chaque cible \u00e0 sa position (vue en plan)", show_targets: "Une ligne par cible", flip_x: "Inverser gauche et droite", zone_type_entity: "Entit\u00e9 type de zone", zone_name: "Nom de la zone {n}", plan_targets: "Cibles", plan_zones: "Zones", plan_hint: "Les positions et les zones viennent des entit\u00e9s du capteur (HLK-LD2450 sous ESPHome), remplies au choix de l'entit\u00e9 d'occupation. Cibles et zones se modifient en YAML.",
+    target: "Cible", approaching: "S'approche", moving_away: "S'\u00e9loigne", zone: "Zone", filter: "filtre", section_plan: "Vue en plan", show_plan: "Montrer chaque cible \u00e0 sa position (vue en plan)", show_targets: "Une ligne par cible", flip_x: "Inverser gauche et droite", zone_type_entity: "Entit\u00e9 type de zone", angle_entity: "Entit\u00e9 angle d'installation", exclusion: "Exclusion", entry: "Entr\u00e9e", zone_name: "Nom de la zone {n}", plan_targets: "Cibles", plan_zones: "Zones", plan_hint: "Les positions et les zones viennent des entit\u00e9s du capteur (HLK-LD2450, Everything Presence Lite sous ESPHome), remplies au choix de l'entit\u00e9 d'occupation. Cibles et zones se modifient en YAML.",
     group_appearance: "Apparence", compact_mode: "Mode compact", compact_off: "D\u00e9sactiv\u00e9", compact_hide: "Sans dessin", compact_side: "Dessin sur le c\u00f4t\u00e9", illustration_size: "Taille du dessin", font_scale: "Taille du texte", show_name: "Afficher le nom", show_state: "Afficher l'\u00e9tat", transparent: "Fond transparent", fill_height: "Occuper toute la hauteur de sa case",
     now: "Maintenant", show_history: "Afficher les derni\u00e8res heures en bande", history_hours: "Heures de la bande",
   },
@@ -55,7 +55,7 @@ const T = {
     show_scale: "Abst\u00e4nde an den Reichweitenb\u00f6gen anzeigen", section_readings: "Messwerte",
     autofill_hint: "Die \u00fcbrigen Felder werden vom selben Ger\u00e4t ausgef\u00fcllt, sobald die Belegungs-Entit\u00e4t gew\u00e4hlt ist.",
     people: "Personen", temperature: "Temperatur", humidity: "Luftfeuchtigkeit", heart_rate: "Herzfrequenz", breath_rate: "Atmung", dim: "Dunkel", bright: "Hell", target_count_entity: "Entit\u00e4t Personenzahl", temperature_entity: "Temperatur-Entit\u00e4t", humidity_entity: "Luftfeuchtigkeits-Entit\u00e4t", heart_rate_entity: "Entit\u00e4t Herzfrequenz", breath_rate_entity: "Entit\u00e4t Atemfrequenz", section_more: "Weitere Messwerte",
-    target: "Ziel", approaching: "N\u00e4hert sich", moving_away: "Entfernt sich", zone: "Zone", filter: "Filter", section_plan: "Grundriss", show_plan: "Jedes Ziel an seiner Position zeigen (Grundriss)", show_targets: "Eine Zeile pro Ziel", flip_x: "Links und rechts tauschen", zone_type_entity: "Entit\u00e4t Zonentyp", zone_name: "Name der Zone {n}", plan_targets: "Ziele", plan_zones: "Zonen", plan_hint: "Positionen und Zonen stammen aus den Entit\u00e4ten des Sensors (HLK-LD2450 in ESPHome) und werden bei der Wahl der Belegungsentit\u00e4t ausgef\u00fcllt. Ziele und Zonen werden in YAML bearbeitet.",
+    target: "Ziel", approaching: "N\u00e4hert sich", moving_away: "Entfernt sich", zone: "Zone", filter: "Filter", section_plan: "Grundriss", show_plan: "Jedes Ziel an seiner Position zeigen (Grundriss)", show_targets: "Eine Zeile pro Ziel", flip_x: "Links und rechts tauschen", zone_type_entity: "Entit\u00e4t Zonentyp", angle_entity: "Entit\u00e4t Montagewinkel", exclusion: "Ausschluss", entry: "Eingang", zone_name: "Name der Zone {n}", plan_targets: "Ziele", plan_zones: "Zonen", plan_hint: "Positionen und Zonen stammen aus den Entit\u00e4ten des Sensors (HLK-LD2450, Everything Presence Lite in ESPHome) und werden bei der Wahl der Belegungsentit\u00e4t ausgef\u00fcllt. Ziele und Zonen werden in YAML bearbeitet.",
     group_appearance: "Darstellung", compact_mode: "Kompaktmodus", compact_off: "Aus", compact_hide: "Ohne Zeichnung", compact_side: "Zeichnung seitlich", illustration_size: "Zeichnungsgr\u00f6\u00dfe", font_scale: "Textgr\u00f6\u00dfe", show_name: "Namen anzeigen", show_state: "Status anzeigen", transparent: "Transparenter Hintergrund", fill_height: "Ganze H\u00f6he des Platzes f\u00fcllen",
     now: "Jetzt", show_history: "Die letzten Stunden als Band anzeigen", history_hours: "Stunden im Band",
   },
@@ -70,7 +70,7 @@ const T = {
     show_scale: "Mostrar las distancias en los arcos de alcance", section_readings: "Mediciones",
     autofill_hint: "Los dem\u00e1s campos se rellenan desde el mismo dispositivo al elegir la entidad de ocupaci\u00f3n.",
     people: "Personas", temperature: "Temperatura", humidity: "Humedad", heart_rate: "Ritmo card\u00edaco", breath_rate: "Respiraci\u00f3n", dim: "Oscuro", bright: "Luminoso", target_count_entity: "Entidad n\u00famero de personas", temperature_entity: "Entidad de temperatura", humidity_entity: "Entidad de humedad", heart_rate_entity: "Entidad ritmo card\u00edaco", breath_rate_entity: "Entidad ritmo respiratorio", section_more: "Otras mediciones",
-    target: "Objetivo", approaching: "Se acerca", moving_away: "Se aleja", zone: "Zona", filter: "filtro", section_plan: "Vista en planta", show_plan: "Mostrar cada objetivo en su posici\u00f3n (vista en planta)", show_targets: "Una l\u00ednea por objetivo", flip_x: "Invertir izquierda y derecha", zone_type_entity: "Entidad del tipo de zona", zone_name: "Nombre de la zona {n}", plan_targets: "Objetivos", plan_zones: "Zonas", plan_hint: "Las posiciones y las zonas vienen de las entidades del sensor (HLK-LD2450 en ESPHome) y se rellenan al elegir la entidad de ocupaci\u00f3n. Objetivos y zonas se editan en YAML.",
+    target: "Objetivo", approaching: "Se acerca", moving_away: "Se aleja", zone: "Zona", filter: "filtro", section_plan: "Vista en planta", show_plan: "Mostrar cada objetivo en su posici\u00f3n (vista en planta)", show_targets: "Una l\u00ednea por objetivo", flip_x: "Invertir izquierda y derecha", zone_type_entity: "Entidad del tipo de zona", angle_entity: "Entidad del \u00e1ngulo de instalaci\u00f3n", exclusion: "Exclusi\u00f3n", entry: "Entrada", zone_name: "Nombre de la zona {n}", plan_targets: "Objetivos", plan_zones: "Zonas", plan_hint: "Las posiciones y las zonas vienen de las entidades del sensor (HLK-LD2450, Everything Presence Lite en ESPHome) y se rellenan al elegir la entidad de ocupaci\u00f3n. Objetivos y zonas se editan en YAML.",
     group_appearance: "Apariencia", compact_mode: "Modo compacto", compact_off: "Desactivado", compact_hide: "Sin dibujo", compact_side: "Dibujo al lado", illustration_size: "Tama\u00f1o del dibujo", font_scale: "Tama\u00f1o del texto", show_name: "Mostrar el nombre", show_state: "Mostrar el estado", transparent: "Fondo transparente", fill_height: "Ocupar toda la altura de su hueco",
     now: "Ahora", show_history: "Mostrar las \u00faltimas horas en una banda", history_hours: "Horas de la banda",
   },
@@ -85,7 +85,7 @@ const T = {
     show_scale: "Mostra le distanze sugli archi di portata", section_readings: "Misure",
     autofill_hint: "Gli altri campi si compilano dallo stesso dispositivo quando si sceglie l'entit\u00e0 di occupazione.",
     people: "Persone", temperature: "Temperatura", humidity: "Umidit\u00e0", heart_rate: "Frequenza cardiaca", breath_rate: "Respirazione", dim: "Buio", bright: "Luminoso", target_count_entity: "Entit\u00e0 numero di persone", temperature_entity: "Entit\u00e0 temperatura", humidity_entity: "Entit\u00e0 umidit\u00e0", heart_rate_entity: "Entit\u00e0 frequenza cardiaca", breath_rate_entity: "Entit\u00e0 frequenza respiratoria", section_more: "Altre misure",
-    target: "Bersaglio", approaching: "Si avvicina", moving_away: "Si allontana", zone: "Zona", filter: "filtro", section_plan: "Vista in pianta", show_plan: "Mostra ogni bersaglio nella sua posizione (vista in pianta)", show_targets: "Una riga per bersaglio", flip_x: "Inverti sinistra e destra", zone_type_entity: "Entit\u00e0 tipo di zona", zone_name: "Nome della zona {n}", plan_targets: "Bersagli", plan_zones: "Zone", plan_hint: "Posizioni e zone provengono dalle entit\u00e0 del sensore (HLK-LD2450 in ESPHome) e vengono compilate alla scelta dell'entit\u00e0 di occupazione. Bersagli e zone si modificano in YAML.",
+    target: "Bersaglio", approaching: "Si avvicina", moving_away: "Si allontana", zone: "Zona", filter: "filtro", section_plan: "Vista in pianta", show_plan: "Mostra ogni bersaglio nella sua posizione (vista in pianta)", show_targets: "Una riga per bersaglio", flip_x: "Inverti sinistra e destra", zone_type_entity: "Entit\u00e0 tipo di zona", angle_entity: "Entit\u00e0 angolo di installazione", exclusion: "Esclusione", entry: "Ingresso", zone_name: "Nome della zona {n}", plan_targets: "Bersagli", plan_zones: "Zone", plan_hint: "Posizioni e zone provengono dalle entit\u00e0 del sensore (HLK-LD2450, Everything Presence Lite in ESPHome) e vengono compilate alla scelta dell'entit\u00e0 di occupazione. Bersagli e zone si modificano in YAML.",
     group_appearance: "Aspetto", compact_mode: "Modalit\u00e0 compatta", compact_off: "Disattivata", compact_hide: "Senza disegno", compact_side: "Disegno di lato", illustration_size: "Dimensione del disegno", font_scale: "Dimensione del testo", show_name: "Mostra il nome", show_state: "Mostra lo stato", transparent: "Sfondo trasparente", fill_height: "Occupare tutta l'altezza dello spazio",
     now: "Ora", show_history: "Mostra le ultime ore in una banda", history_hours: "Ore della banda",
   },
@@ -100,7 +100,7 @@ const T = {
     show_scale: "Afstanden op de bereikbogen tonen", section_readings: "Metingen",
     autofill_hint: "De overige velden worden vanuit hetzelfde apparaat ingevuld zodra de bezettingsentiteit gekozen is.",
     people: "Personen", temperature: "Temperatuur", humidity: "Luchtvochtigheid", heart_rate: "Hartslag", breath_rate: "Ademhaling", dim: "Donker", bright: "Licht", target_count_entity: "Entiteit aantal personen", temperature_entity: "Temperatuurentiteit", humidity_entity: "Vochtigheidsentiteit", heart_rate_entity: "Entiteit hartslag", breath_rate_entity: "Entiteit ademhalingsfrequentie", section_more: "Meer metingen",
-    target: "Doel", approaching: "Komt dichterbij", moving_away: "Gaat weg", zone: "Zone", filter: "filter", section_plan: "Plattegrond", show_plan: "Elk doel op zijn positie tonen (plattegrond)", show_targets: "E\u00e9n regel per doel", flip_x: "Links en rechts omwisselen", zone_type_entity: "Entiteit zonetype", zone_name: "Naam van zone {n}", plan_targets: "Doelen", plan_zones: "Zones", plan_hint: "Posities en zones komen uit de entiteiten van de sensor (HLK-LD2450 in ESPHome) en worden ingevuld bij het kiezen van de bezettingsentiteit. Doelen en zones bewerk je in YAML.",
+    target: "Doel", approaching: "Komt dichterbij", moving_away: "Gaat weg", zone: "Zone", filter: "filter", section_plan: "Plattegrond", show_plan: "Elk doel op zijn positie tonen (plattegrond)", show_targets: "E\u00e9n regel per doel", flip_x: "Links en rechts omwisselen", zone_type_entity: "Entiteit zonetype", angle_entity: "Entiteit montagehoek", exclusion: "Uitsluiting", entry: "Ingang", zone_name: "Naam van zone {n}", plan_targets: "Doelen", plan_zones: "Zones", plan_hint: "Posities en zones komen uit de entiteiten van de sensor (HLK-LD2450, Everything Presence Lite in ESPHome) en worden ingevuld bij het kiezen van de bezettingsentiteit. Doelen en zones bewerk je in YAML.",
     group_appearance: "Weergave", compact_mode: "Compacte modus", compact_off: "Uit", compact_hide: "Zonder tekening", compact_side: "Tekening opzij", illustration_size: "Grootte van de tekening", font_scale: "Tekstgrootte", show_name: "Naam tonen", show_state: "Status tonen", transparent: "Transparante achtergrond", fill_height: "De volledige hoogte van het vak vullen",
     now: "Nu", show_history: "De laatste uren als balk tonen", history_hours: "Uren in de balk",
   },
@@ -115,7 +115,7 @@ const T = {
     show_scale: "Mostrar as dist\u00e2ncias nos arcos de alcance", section_readings: "Medi\u00e7\u00f5es",
     autofill_hint: "Os outros campos s\u00e3o preenchidos a partir do mesmo dispositivo ao escolher a entidade de ocupa\u00e7\u00e3o.",
     people: "Pessoas", temperature: "Temperatura", humidity: "Humidade", heart_rate: "Frequ\u00eancia card\u00edaca", breath_rate: "Respira\u00e7\u00e3o", dim: "Escuro", bright: "Claro", target_count_entity: "Entidade n\u00famero de pessoas", temperature_entity: "Entidade de temperatura", humidity_entity: "Entidade de humidade", heart_rate_entity: "Entidade frequ\u00eancia card\u00edaca", breath_rate_entity: "Entidade frequ\u00eancia respirat\u00f3ria", section_more: "Outras medi\u00e7\u00f5es",
-    target: "Alvo", approaching: "Aproxima-se", moving_away: "Afasta-se", zone: "Zona", filter: "filtro", section_plan: "Vista em planta", show_plan: "Mostrar cada alvo na sua posi\u00e7\u00e3o (vista em planta)", show_targets: "Uma linha por alvo", flip_x: "Trocar esquerda e direita", zone_type_entity: "Entidade do tipo de zona", zone_name: "Nome da zona {n}", plan_targets: "Alvos", plan_zones: "Zonas", plan_hint: "As posi\u00e7\u00f5es e as zonas v\u00eam das entidades do sensor (HLK-LD2450 no ESPHome), preenchidas ao escolher a entidade de ocupa\u00e7\u00e3o. Alvos e zonas editam-se em YAML.",
+    target: "Alvo", approaching: "Aproxima-se", moving_away: "Afasta-se", zone: "Zona", filter: "filtro", section_plan: "Vista em planta", show_plan: "Mostrar cada alvo na sua posi\u00e7\u00e3o (vista em planta)", show_targets: "Uma linha por alvo", flip_x: "Trocar esquerda e direita", zone_type_entity: "Entidade do tipo de zona", angle_entity: "Entidade do \u00e2ngulo de instala\u00e7\u00e3o", exclusion: "Exclus\u00e3o", entry: "Entrada", zone_name: "Nome da zona {n}", plan_targets: "Alvos", plan_zones: "Zonas", plan_hint: "As posi\u00e7\u00f5es e as zonas v\u00eam das entidades do sensor (HLK-LD2450, Everything Presence Lite no ESPHome), preenchidas ao escolher a entidade de ocupa\u00e7\u00e3o. Alvos e zonas editam-se em YAML.",
     group_appearance: "Apar\u00eancia", compact_mode: "Modo compacto", compact_off: "Desligado", compact_hide: "Sem desenho", compact_side: "Desenho ao lado", illustration_size: "Tamanho do desenho", font_scale: "Tamanho do texto", show_name: "Mostrar o nome", show_state: "Mostrar o estado", transparent: "Fundo transparente", fill_height: "Ocupar toda a altura do espa\u00e7o",
     now: "Agora", show_history: "Mostrar as \u00faltimas horas numa faixa", history_hours: "Horas da faixa",
   },
@@ -130,7 +130,7 @@ const T = {
     show_scale: "Visa avst\u00e5nden p\u00e5 r\u00e4ckviddsb\u00e5garna", section_readings: "M\u00e4tv\u00e4rden",
     autofill_hint: "\u00d6vriga f\u00e4lt fylls i fr\u00e5n samma enhet n\u00e4r n\u00e4rvaroentiteten v\u00e4ljs.",
     people: "Personer", temperature: "Temperatur", humidity: "Luftfuktighet", heart_rate: "Puls", breath_rate: "Andning", dim: "M\u00f6rkt", bright: "Ljust", target_count_entity: "Entitet antal personer", temperature_entity: "Temperaturentitet", humidity_entity: "Fuktighetsentitet", heart_rate_entity: "Entitet puls", breath_rate_entity: "Entitet andningsfrekvens", section_more: "Fler m\u00e4tv\u00e4rden",
-    target: "M\u00e5l", approaching: "N\u00e4rmar sig", moving_away: "Avl\u00e4gsnar sig", zone: "Zon", filter: "filter", section_plan: "Planvy", show_plan: "Visa varje m\u00e5l p\u00e5 sin plats (planvy)", show_targets: "En rad per m\u00e5l", flip_x: "Byt v\u00e4nster och h\u00f6ger", zone_type_entity: "Entitet zontyp", zone_name: "Namn p\u00e5 zon {n}", plan_targets: "M\u00e5l", plan_zones: "Zoner", plan_hint: "Positioner och zoner kommer fr\u00e5n sensorns egna entiteter (HLK-LD2450 i ESPHome) och fylls i n\u00e4r n\u00e4rvaroentiteten v\u00e4ljs. M\u00e5l och zoner redigeras i YAML.",
+    target: "M\u00e5l", approaching: "N\u00e4rmar sig", moving_away: "Avl\u00e4gsnar sig", zone: "Zon", filter: "filter", section_plan: "Planvy", show_plan: "Visa varje m\u00e5l p\u00e5 sin plats (planvy)", show_targets: "En rad per m\u00e5l", flip_x: "Byt v\u00e4nster och h\u00f6ger", zone_type_entity: "Entitet zontyp", angle_entity: "Entitet monteringsvinkel", exclusion: "Undantag", entry: "Ing\u00e5ng", zone_name: "Namn p\u00e5 zon {n}", plan_targets: "M\u00e5l", plan_zones: "Zoner", plan_hint: "Positioner och zoner kommer fr\u00e5n sensorns egna entiteter (HLK-LD2450, Everything Presence Lite i ESPHome) och fylls i n\u00e4r n\u00e4rvaroentiteten v\u00e4ljs. M\u00e5l och zoner redigeras i YAML.",
     group_appearance: "Utseende", compact_mode: "Kompakt l\u00e4ge", compact_off: "Av", compact_hide: "Utan teckning", compact_side: "Teckning vid sidan", illustration_size: "Teckningens storlek", font_scale: "Textstorlek", show_name: "Visa namnet", show_state: "Visa status", transparent: "Genomskinlig bakgrund", fill_height: "Fyll hela platsens h\u00f6jd",
     now: "Nu", show_history: "Visa de senaste timmarna som ett band", history_hours: "Timmar i bandet",
   },
@@ -145,7 +145,7 @@ const T = {
     show_scale: "Vis avstandene p\u00e5 rekkeviddebuene", section_readings: "M\u00e5linger",
     autofill_hint: "De andre feltene fylles ut fra samme enhet n\u00e5r tilstedev\u00e6relsesentiteten velges.",
     people: "Personer", temperature: "Temperatur", humidity: "Luftfuktighet", heart_rate: "Puls", breath_rate: "Pust", dim: "M\u00f8rkt", bright: "Lyst", target_count_entity: "Entitet antall personer", temperature_entity: "Temperaturentitet", humidity_entity: "Fuktighetsentitet", heart_rate_entity: "Entitet puls", breath_rate_entity: "Entitet pustefrekvens", section_more: "Flere m\u00e5linger",
-    target: "M\u00e5l", approaching: "N\u00e6rmer seg", moving_away: "Fjerner seg", zone: "Sone", filter: "filter", section_plan: "Planvisning", show_plan: "Vis hvert m\u00e5l p\u00e5 sin plass (planvisning)", show_targets: "\u00c9n linje per m\u00e5l", flip_x: "Bytt venstre og h\u00f8yre", zone_type_entity: "Entitet sonetype", zone_name: "Navn p\u00e5 sone {n}", plan_targets: "M\u00e5l", plan_zones: "Soner", plan_hint: "Posisjoner og soner kommer fra sensorens egne entiteter (HLK-LD2450 i ESPHome) og fylles inn n\u00e5r tilstedev\u00e6relsesentiteten velges. M\u00e5l og soner redigeres i YAML.",
+    target: "M\u00e5l", approaching: "N\u00e6rmer seg", moving_away: "Fjerner seg", zone: "Sone", filter: "filter", section_plan: "Planvisning", show_plan: "Vis hvert m\u00e5l p\u00e5 sin plass (planvisning)", show_targets: "\u00c9n linje per m\u00e5l", flip_x: "Bytt venstre og h\u00f8yre", zone_type_entity: "Entitet sonetype", angle_entity: "Entitet monteringsvinkel", exclusion: "Utelukkelse", entry: "Inngang", zone_name: "Navn p\u00e5 sone {n}", plan_targets: "M\u00e5l", plan_zones: "Soner", plan_hint: "Posisjoner og soner kommer fra sensorens egne entiteter (HLK-LD2450, Everything Presence Lite i ESPHome) og fylles inn n\u00e5r tilstedev\u00e6relsesentiteten velges. M\u00e5l og soner redigeres i YAML.",
     group_appearance: "Utseende", compact_mode: "Kompakt modus", compact_off: "Av", compact_hide: "Uten tegning", compact_side: "Tegning p\u00e5 siden", illustration_size: "Tegningens st\u00f8rrelse", font_scale: "Tekstst\u00f8rrelse", show_name: "Vis navnet", show_state: "Vis status", transparent: "Gjennomsiktig bakgrunn", fill_height: "Fyll hele h\u00f8yden p\u00e5 plassen",
     now: "N\u00e5", show_history: "Vis de siste timene som et b\u00e5nd", history_hours: "Timer i b\u00e5ndet",
   },
@@ -160,7 +160,7 @@ const T = {
     show_scale: "Vis afstandene p\u00e5 r\u00e6kkeviddebuerne", section_readings: "M\u00e5linger",
     autofill_hint: "De \u00f8vrige felter udfyldes fra samme enhed, n\u00e5r tilstedev\u00e6relsesentiteten v\u00e6lges.",
     people: "Personer", temperature: "Temperatur", humidity: "Luftfugtighed", heart_rate: "Puls", breath_rate: "Vejrtr\u00e6kning", dim: "M\u00f8rkt", bright: "Lyst", target_count_entity: "Entitet antal personer", temperature_entity: "Temperaturentitet", humidity_entity: "Fugtighedsentitet", heart_rate_entity: "Entitet puls", breath_rate_entity: "Entitet vejrtr\u00e6kningsfrekvens", section_more: "Flere m\u00e5linger",
-    target: "M\u00e5l", approaching: "N\u00e6rmer sig", moving_away: "Fjerner sig", zone: "Zone", filter: "filter", section_plan: "Planvisning", show_plan: "Vis hvert m\u00e5l p\u00e5 sin plads (planvisning)", show_targets: "\u00c9n linje pr. m\u00e5l", flip_x: "Byt venstre og h\u00f8jre", zone_type_entity: "Entitet zonetype", zone_name: "Navn p\u00e5 zone {n}", plan_targets: "M\u00e5l", plan_zones: "Zoner", plan_hint: "Positioner og zoner kommer fra sensorens egne entiteter (HLK-LD2450 i ESPHome) og udfyldes, n\u00e5r tilstedev\u00e6relsesentiteten v\u00e6lges. M\u00e5l og zoner redigeres i YAML.",
+    target: "M\u00e5l", approaching: "N\u00e6rmer sig", moving_away: "Fjerner sig", zone: "Zone", filter: "filter", section_plan: "Planvisning", show_plan: "Vis hvert m\u00e5l p\u00e5 sin plads (planvisning)", show_targets: "\u00c9n linje pr. m\u00e5l", flip_x: "Byt venstre og h\u00f8jre", zone_type_entity: "Entitet zonetype", angle_entity: "Entitet monteringsvinkel", exclusion: "Udelukkelse", entry: "Indgang", zone_name: "Navn p\u00e5 zone {n}", plan_targets: "M\u00e5l", plan_zones: "Zoner", plan_hint: "Positioner og zoner kommer fra sensorens egne entiteter (HLK-LD2450, Everything Presence Lite i ESPHome) og udfyldes, n\u00e5r tilstedev\u00e6relsesentiteten v\u00e6lges. M\u00e5l og zoner redigeres i YAML.",
     group_appearance: "Udseende", compact_mode: "Kompakt tilstand", compact_off: "Fra", compact_hide: "Uden tegning", compact_side: "Tegning i siden", illustration_size: "Tegningens st\u00f8rrelse", font_scale: "Tekstst\u00f8rrelse", show_name: "Vis navnet", show_state: "Vis status", transparent: "Gennemsigtig baggrund", fill_height: "Fyld hele pladsens h\u00f8jde",
     now: "Nu", show_history: "Vis de seneste timer som et b\u00e5nd", history_hours: "Timer i b\u00e5ndet",
   },
@@ -175,7 +175,7 @@ const T = {
     show_scale: "Poka\u017c odleg\u0142o\u015bci na \u0142ukach zasi\u0119gu", section_readings: "Pomiary",
     autofill_hint: "Pozosta\u0142e pola wype\u0142niaj\u0105 si\u0119 z tego samego urz\u0105dzenia po wybraniu encji obecno\u015bci.",
     people: "Osoby", temperature: "Temperatura", humidity: "Wilgotno\u015b\u0107", heart_rate: "T\u0119tno", breath_rate: "Oddech", dim: "Ciemno", bright: "Jasno", target_count_entity: "Encja liczby os\u00f3b", temperature_entity: "Encja temperatury", humidity_entity: "Encja wilgotno\u015bci", heart_rate_entity: "Encja t\u0119tna", breath_rate_entity: "Encja cz\u0119sto\u015bci oddechu", section_more: "Inne pomiary",
-    target: "Cel", approaching: "Zbli\u017ca si\u0119", moving_away: "Oddala si\u0119", zone: "Strefa", filter: "filtr", section_plan: "Widok z g\u00f3ry", show_plan: "Poka\u017c ka\u017cdy cel w jego po\u0142o\u017ceniu (widok z g\u00f3ry)", show_targets: "Jeden wiersz na cel", flip_x: "Zamie\u0144 lewo i prawo", zone_type_entity: "Encja typu strefy", zone_name: "Nazwa strefy {n}", plan_targets: "Cele", plan_zones: "Strefy", plan_hint: "Po\u0142o\u017cenia i strefy pochodz\u0105 z encji czujnika (HLK-LD2450 w ESPHome) i s\u0105 uzupe\u0142niane po wybraniu encji obecno\u015bci. Cele i strefy edytuje si\u0119 w YAML.",
+    target: "Cel", approaching: "Zbli\u017ca si\u0119", moving_away: "Oddala si\u0119", zone: "Strefa", filter: "filtr", section_plan: "Widok z g\u00f3ry", show_plan: "Poka\u017c ka\u017cdy cel w jego po\u0142o\u017ceniu (widok z g\u00f3ry)", show_targets: "Jeden wiersz na cel", flip_x: "Zamie\u0144 lewo i prawo", zone_type_entity: "Encja typu strefy", angle_entity: "Encja k\u0105ta monta\u017cu", exclusion: "Wykluczenie", entry: "Wej\u015bcie", zone_name: "Nazwa strefy {n}", plan_targets: "Cele", plan_zones: "Strefy", plan_hint: "Po\u0142o\u017cenia i strefy pochodz\u0105 z encji czujnika (HLK-LD2450, Everything Presence Lite w ESPHome) i s\u0105 uzupe\u0142niane po wybraniu encji obecno\u015bci. Cele i strefy edytuje si\u0119 w YAML.",
     group_appearance: "Wygl\u0105d", compact_mode: "Tryb kompaktowy", compact_off: "Wy\u0142\u0105czony", compact_hide: "Bez rysunku", compact_side: "Rysunek z boku", illustration_size: "Rozmiar rysunku", font_scale: "Rozmiar tekstu", show_name: "Poka\u017c nazw\u0119", show_state: "Poka\u017c stan", transparent: "Przezroczyste t\u0142o", fill_height: "Wype\u0142nij ca\u0142\u0105 wysoko\u015b\u0107 miejsca",
     now: "Teraz", show_history: "Poka\u017c ostatnie godziny jako pasek", history_hours: "Godziny na pasku",
   },
@@ -190,7 +190,7 @@ const T = {
     show_scale: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0440\u0430\u0441\u0441\u0442\u043e\u044f\u043d\u0438\u044f \u043d\u0430 \u0434\u0443\u0433\u0430\u0445 \u0434\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u0438", section_readings: "\u0418\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f",
     autofill_hint: "\u041e\u0441\u0442\u0430\u043b\u044c\u043d\u044b\u0435 \u043f\u043e\u043b\u044f \u0437\u0430\u043f\u043e\u043b\u043d\u044f\u044e\u0442\u0441\u044f \u0441 \u0442\u043e\u0433\u043e \u0436\u0435 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430 \u043f\u0440\u0438 \u0432\u044b\u0431\u043e\u0440\u0435 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u043f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044f.",
     people: "\u041b\u044e\u0434\u0438", temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430", humidity: "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c", heart_rate: "\u041f\u0443\u043b\u044c\u0441", breath_rate: "\u0414\u044b\u0445\u0430\u043d\u0438\u0435", dim: "\u0422\u0435\u043c\u043d\u043e", bright: "\u0421\u0432\u0435\u0442\u043b\u043e", target_count_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0447\u0438\u0441\u043b\u0430 \u043b\u044e\u0434\u0435\u0439", temperature_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b", humidity_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u0438", heart_rate_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u043f\u0443\u043b\u044c\u0441\u0430", breath_rate_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0447\u0430\u0441\u0442\u043e\u0442\u044b \u0434\u044b\u0445\u0430\u043d\u0438\u044f", section_more: "\u0414\u0440\u0443\u0433\u0438\u0435 \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f",
-    target: "\u0426\u0435\u043b\u044c", approaching: "\u041f\u0440\u0438\u0431\u043b\u0438\u0436\u0430\u0435\u0442\u0441\u044f", moving_away: "\u0423\u0434\u0430\u043b\u044f\u0435\u0442\u0441\u044f", zone: "\u0417\u043e\u043d\u0430", filter: "\u0444\u0438\u043b\u044c\u0442\u0440", section_plan: "\u0412\u0438\u0434 \u0441\u0432\u0435\u0440\u0445\u0443", show_plan: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043a\u0430\u0436\u0434\u0443\u044e \u0446\u0435\u043b\u044c \u043d\u0430 \u0435\u0451 \u043c\u0435\u0441\u0442\u0435 (\u0432\u0438\u0434 \u0441\u0432\u0435\u0440\u0445\u0443)", show_targets: "\u041e\u0434\u043d\u0430 \u0441\u0442\u0440\u043e\u043a\u0430 \u043d\u0430 \u0446\u0435\u043b\u044c", flip_x: "\u041f\u043e\u043c\u0435\u043d\u044f\u0442\u044c \u043b\u0435\u0432\u043e\u0435 \u0438 \u043f\u0440\u0430\u0432\u043e\u0435", zone_type_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0442\u0438\u043f\u0430 \u0437\u043e\u043d\u044b", zone_name: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0437\u043e\u043d\u044b {n}", plan_targets: "\u0426\u0435\u043b\u0438", plan_zones: "\u0417\u043e\u043d\u044b", plan_hint: "\u041f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u0438 \u0437\u043e\u043d\u044b \u0431\u0435\u0440\u0443\u0442\u0441\u044f \u0438\u0437 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439 \u0434\u0430\u0442\u0447\u0438\u043a\u0430 (HLK-LD2450 \u0432 ESPHome) \u0438 \u0437\u0430\u043f\u043e\u043b\u043d\u044f\u044e\u0442\u0441\u044f \u043f\u0440\u0438 \u0432\u044b\u0431\u043e\u0440\u0435 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u043f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044f. \u0426\u0435\u043b\u0438 \u0438 \u0437\u043e\u043d\u044b \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u0443\u044e\u0442\u0441\u044f \u0432 YAML.",
+    target: "\u0426\u0435\u043b\u044c", approaching: "\u041f\u0440\u0438\u0431\u043b\u0438\u0436\u0430\u0435\u0442\u0441\u044f", moving_away: "\u0423\u0434\u0430\u043b\u044f\u0435\u0442\u0441\u044f", zone: "\u0417\u043e\u043d\u0430", filter: "\u0444\u0438\u043b\u044c\u0442\u0440", section_plan: "\u0412\u0438\u0434 \u0441\u0432\u0435\u0440\u0445\u0443", show_plan: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043a\u0430\u0436\u0434\u0443\u044e \u0446\u0435\u043b\u044c \u043d\u0430 \u0435\u0451 \u043c\u0435\u0441\u0442\u0435 (\u0432\u0438\u0434 \u0441\u0432\u0435\u0440\u0445\u0443)", show_targets: "\u041e\u0434\u043d\u0430 \u0441\u0442\u0440\u043e\u043a\u0430 \u043d\u0430 \u0446\u0435\u043b\u044c", flip_x: "\u041f\u043e\u043c\u0435\u043d\u044f\u0442\u044c \u043b\u0435\u0432\u043e\u0435 \u0438 \u043f\u0440\u0430\u0432\u043e\u0435", zone_type_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0442\u0438\u043f\u0430 \u0437\u043e\u043d\u044b", angle_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0443\u0433\u043b\u0430 \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0438", exclusion: "\u0418\u0441\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435", entry: "\u0412\u0445\u043e\u0434", zone_name: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0437\u043e\u043d\u044b {n}", plan_targets: "\u0426\u0435\u043b\u0438", plan_zones: "\u0417\u043e\u043d\u044b", plan_hint: "\u041f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u0438 \u0437\u043e\u043d\u044b \u0431\u0435\u0440\u0443\u0442\u0441\u044f \u0438\u0437 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439 \u0434\u0430\u0442\u0447\u0438\u043a\u0430 (HLK-LD2450, Everything Presence Lite \u0432 ESPHome) \u0438 \u0437\u0430\u043f\u043e\u043b\u043d\u044f\u044e\u0442\u0441\u044f \u043f\u0440\u0438 \u0432\u044b\u0431\u043e\u0440\u0435 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u043f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044f. \u0426\u0435\u043b\u0438 \u0438 \u0437\u043e\u043d\u044b \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u0443\u044e\u0442\u0441\u044f \u0432 YAML.",
     group_appearance: "\u0412\u043d\u0435\u0448\u043d\u0438\u0439 \u0432\u0438\u0434", compact_mode: "\u041a\u043e\u043c\u043f\u0430\u043a\u0442\u043d\u044b\u0439 \u0440\u0435\u0436\u0438\u043c", compact_off: "\u0412\u044b\u043a\u043b.", compact_hide: "\u0411\u0435\u0437 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_side: "\u0420\u0438\u0441\u0443\u043d\u043e\u043a \u0441\u0431\u043e\u043a\u0443", illustration_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", font_scale: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0442\u0435\u043a\u0441\u0442\u0430", show_name: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", show_state: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435", transparent: "\u041f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u044b\u0439 \u0444\u043e\u043d", fill_height: "\u0417\u0430\u043d\u0438\u043c\u0430\u0442\u044c \u0432\u0441\u044e \u0432\u044b\u0441\u043e\u0442\u0443 \u044f\u0447\u0435\u0439\u043a\u0438",
     now: "\u0421\u0435\u0439\u0447\u0430\u0441", show_history: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 \u0447\u0430\u0441\u044b \u043f\u043e\u043b\u043e\u0441\u043e\u0439", history_hours: "\u0427\u0430\u0441\u043e\u0432 \u0432 \u043f\u043e\u043b\u043e\u0441\u0435",
   },
@@ -205,7 +205,7 @@ const T = {
     show_scale: "\u5728\u8303\u56f4\u5f27\u4e0a\u663e\u793a\u8ddd\u79bb", section_readings: "\u8bfb\u6570",
     autofill_hint: "\u9009\u62e9\u5b58\u5728\u5b9e\u4f53\u540e\uff0c\u5176\u4ed6\u5b57\u6bb5\u4f1a\u4ece\u540c\u4e00\u8bbe\u5907\u81ea\u52a8\u586b\u5199\u3002",
     people: "\u4eba\u6570", temperature: "\u6e29\u5ea6", humidity: "\u6e7f\u5ea6", heart_rate: "\u5fc3\u7387", breath_rate: "\u547c\u5438", dim: "\u6697", bright: "\u4eae", target_count_entity: "\u4eba\u6570\u5b9e\u4f53", temperature_entity: "\u6e29\u5ea6\u5b9e\u4f53", humidity_entity: "\u6e7f\u5ea6\u5b9e\u4f53", heart_rate_entity: "\u5fc3\u7387\u5b9e\u4f53", breath_rate_entity: "\u547c\u5438\u9891\u7387\u5b9e\u4f53", section_more: "\u66f4\u591a\u8bfb\u6570",
-    target: "\u76ee\u6807", approaching: "\u9760\u8fd1", moving_away: "\u8fdc\u79bb", zone: "\u533a\u57df", filter: "\u8fc7\u6ee4", section_plan: "\u5e73\u9762\u89c6\u56fe", show_plan: "\u5728\u5404\u81ea\u4f4d\u7f6e\u663e\u793a\u6bcf\u4e2a\u76ee\u6807\uff08\u5e73\u9762\u89c6\u56fe\uff09", show_targets: "\u6bcf\u4e2a\u76ee\u6807\u4e00\u884c", flip_x: "\u5de6\u53f3\u4e92\u6362", zone_type_entity: "\u533a\u57df\u7c7b\u578b\u5b9e\u4f53", zone_name: "\u533a\u57df {n} \u540d\u79f0", plan_targets: "\u76ee\u6807", plan_zones: "\u533a\u57df", plan_hint: "\u4f4d\u7f6e\u548c\u533a\u57df\u6765\u81ea\u4f20\u611f\u5668\u81ea\u8eab\u7684\u5b9e\u4f53\uff08ESPHome \u4e2d\u7684 HLK-LD2450\uff09\uff0c\u9009\u62e9\u5360\u7528\u5b9e\u4f53\u65f6\u81ea\u52a8\u586b\u5199\u3002\u76ee\u6807\u548c\u533a\u57df\u5728 YAML \u4e2d\u7f16\u8f91\u3002",
+    target: "\u76ee\u6807", approaching: "\u9760\u8fd1", moving_away: "\u8fdc\u79bb", zone: "\u533a\u57df", filter: "\u8fc7\u6ee4", section_plan: "\u5e73\u9762\u89c6\u56fe", show_plan: "\u5728\u5404\u81ea\u4f4d\u7f6e\u663e\u793a\u6bcf\u4e2a\u76ee\u6807\uff08\u5e73\u9762\u89c6\u56fe\uff09", show_targets: "\u6bcf\u4e2a\u76ee\u6807\u4e00\u884c", flip_x: "\u5de6\u53f3\u4e92\u6362", zone_type_entity: "\u533a\u57df\u7c7b\u578b\u5b9e\u4f53", angle_entity: "\u5b89\u88c5\u89d2\u5ea6\u5b9e\u4f53", exclusion: "\u6392\u9664", entry: "\u5165\u53e3", zone_name: "\u533a\u57df {n} \u540d\u79f0", plan_targets: "\u76ee\u6807", plan_zones: "\u533a\u57df", plan_hint: "\u4f4d\u7f6e\u548c\u533a\u57df\u6765\u81ea\u4f20\u611f\u5668\u81ea\u8eab\u7684\u5b9e\u4f53\uff08ESPHome \u4e2d\u7684 HLK-LD2450, Everything Presence Lite\uff09\uff0c\u9009\u62e9\u5360\u7528\u5b9e\u4f53\u65f6\u81ea\u52a8\u586b\u5199\u3002\u76ee\u6807\u548c\u533a\u57df\u5728 YAML \u4e2d\u7f16\u8f91\u3002",
     group_appearance: "\u5916\u89c2", compact_mode: "\u7d27\u51d1\u6a21\u5f0f", compact_off: "\u5173\u95ed", compact_hide: "\u4e0d\u663e\u793a\u56fe\u793a", compact_side: "\u56fe\u793a\u5728\u4fa7\u8fb9", illustration_size: "\u56fe\u793a\u5927\u5c0f", font_scale: "\u6587\u5b57\u5927\u5c0f", show_name: "\u663e\u793a\u540d\u79f0", show_state: "\u663e\u793a\u72b6\u6001", transparent: "\u900f\u660e\u80cc\u666f", fill_height: "\u586b\u6ee1\u6240\u5728\u4f4d\u7f6e\u7684\u9ad8\u5ea6",
     now: "\u73b0\u5728", show_history: "\u4ee5\u8272\u5e26\u663e\u793a\u6700\u8fd1\u51e0\u5c0f\u65f6", history_hours: "\u8272\u5e26\u5c0f\u65f6\u6570",
   },
@@ -220,7 +220,7 @@ const T = {
     show_scale: "Zobrazit vzd\u00e1lenosti na oblouc\u00edch dosahu", section_readings: "M\u011b\u0159en\u00ed",
     autofill_hint: "Ostatn\u00ed pole se vypln\u00ed ze stejn\u00e9ho za\u0159\u00edzen\u00ed po v\u00fdb\u011bru entity p\u0159\u00edtomnosti.",
     people: "Osoby", temperature: "Teplota", humidity: "Vlhkost", heart_rate: "Tep", breath_rate: "Dech", dim: "Tma", bright: "Sv\u011btlo", target_count_entity: "Entita po\u010dtu osob", temperature_entity: "Entita teploty", humidity_entity: "Entita vlhkosti", heart_rate_entity: "Entita tepu", breath_rate_entity: "Entita dechov\u00e9 frekvence", section_more: "Dal\u0161\u00ed m\u011b\u0159en\u00ed",
-    target: "C\u00edl", approaching: "P\u0159ibli\u017euje se", moving_away: "Vzdaluje se", zone: "Z\u00f3na", filter: "filtr", section_plan: "P\u016fdorys", show_plan: "Zobrazit ka\u017ed\u00fd c\u00edl na jeho m\u00edst\u011b (p\u016fdorys)", show_targets: "Jeden \u0159\u00e1dek na c\u00edl", flip_x: "Prohodit levou a pravou stranu", zone_type_entity: "Entita typu z\u00f3ny", zone_name: "N\u00e1zev z\u00f3ny {n}", plan_targets: "C\u00edle", plan_zones: "Z\u00f3ny", plan_hint: "Polohy a z\u00f3ny poch\u00e1zej\u00ed z entit senzoru (HLK-LD2450 v ESPHome) a vypln\u00ed se p\u0159i v\u00fdb\u011bru entity obsazenosti. C\u00edle a z\u00f3ny se upravuj\u00ed v YAML.",
+    target: "C\u00edl", approaching: "P\u0159ibli\u017euje se", moving_away: "Vzdaluje se", zone: "Z\u00f3na", filter: "filtr", section_plan: "P\u016fdorys", show_plan: "Zobrazit ka\u017ed\u00fd c\u00edl na jeho m\u00edst\u011b (p\u016fdorys)", show_targets: "Jeden \u0159\u00e1dek na c\u00edl", flip_x: "Prohodit levou a pravou stranu", zone_type_entity: "Entita typu z\u00f3ny", angle_entity: "Entita \u00fahlu mont\u00e1\u017ee", exclusion: "Vylou\u010den\u00ed", entry: "Vstup", zone_name: "N\u00e1zev z\u00f3ny {n}", plan_targets: "C\u00edle", plan_zones: "Z\u00f3ny", plan_hint: "Polohy a z\u00f3ny poch\u00e1zej\u00ed z entit senzoru (HLK-LD2450, Everything Presence Lite v ESPHome) a vypln\u00ed se p\u0159i v\u00fdb\u011bru entity obsazenosti. C\u00edle a z\u00f3ny se upravuj\u00ed v YAML.",
     group_appearance: "Vzhled", compact_mode: "Kompaktn\u00ed re\u017eim", compact_off: "Vypnuto", compact_hide: "Bez kresby", compact_side: "Kresba po stran\u011b", illustration_size: "Velikost kresby", font_scale: "Velikost textu", show_name: "Zobrazit n\u00e1zev", show_state: "Zobrazit stav", transparent: "Pr\u016fhledn\u00e9 pozad\u00ed", fill_height: "Vyplnit celou v\u00fd\u0161ku m\u00edsta",
     now: "Te\u010f", show_history: "Zobrazit posledn\u00ed hodiny jako pruh", history_hours: "Hodin v pruhu",
   },
@@ -500,7 +500,10 @@ const PEOPLE_X = { 1: [0], 2: [-13, 13], 3: [-24, 0, 24] };
 // the sensor ignores whoever stands there. An arrow on the floor says whether
 // a moving target comes closer or walks away, and its last positions leave a
 // trail. x runs across the fan, y away from the wall; flip_x mirrors the
-// drawing when left and right come out swapped.
+// drawing when left and right come out swapped. The Everything Presence Lite
+// keeps its zones as polygons in text entities, adds exclusions (hatched like
+// a filter) and entries (dashed), and may be turned in a corner: its fan
+// turns with it.
 // ---------------------------------------------------------------------------
 
 const MAX_TARGETS = 3;
@@ -510,7 +513,12 @@ const TRAIL_STEP_M = 0.15;
 // Feet closer to the wall than this would put the head on the sensor.
 const PLAN_NEAR = 26;
 const PLAN_SCALE = 0.8;
-const ZONE_COLORS = ["var(--pr-zone1-color, #26a69a)", "var(--pr-zone2-color, #ef8f2f)", "var(--pr-zone3-color, #8e7cc3)"];
+const ZONE_COLORS = ["var(--pr-zone1-color, #26a69a)", "var(--pr-zone2-color, #ef8f2f)", "var(--pr-zone3-color, #8e7cc3)", "var(--pr-zone4-color, #d4609c)"];
+const ENTRY_COLOR = "var(--pr-entry-color, #f9a825)";
+// Four detection zones, two exclusions and two entries on the Everything
+// Presence Lite.
+const MAX_ZONES = 8;
+const ZONE_CORNERS = ["x1", "y1", "x2", "y2"];
 
 function planTargets(cfg) {
   return (Array.isArray(cfg.targets) ? cfg.targets : []).slice(0, MAX_TARGETS)
@@ -518,8 +526,53 @@ function planTargets(cfg) {
 }
 
 function planZones(cfg) {
-  return (Array.isArray(cfg.zones) ? cfg.zones : []).slice(0, ZONE_COLORS.length)
-    .filter((z) => z && ["x1", "y1", "x2", "y2"].every((k) => typeof z[k] === "string"));
+  return (Array.isArray(cfg.zones) ? cfg.zones : []).slice(0, MAX_ZONES)
+    .filter((z) => z && (typeof z.points === "string" || ZONE_CORNERS.every((k) => typeof z[k] === "string")));
+}
+
+// A zone's name when none is given: Zone N, or Exclusion N and Entry N for
+// the Everything Presence Lite's polygons, counted among their own kind.
+function zoneLabel(hass, zones, i) {
+  const z = zones[i];
+  const kind = z.points && (z.type === "filter" || z.type === "entry") ? z.type : null;
+  if (!kind) return `${t(hass, "zone")} ${i + 1}`;
+  const k = zones.slice(0, i + 1).filter((o) => o.points && o.type === kind).length;
+  return `${t(hass, kind === "filter" ? "exclusion" : "entry")} ${k}`;
+}
+
+// A polygon zone as the Everything Presence Lite keeps it in a text entity:
+// "x:y;x:y;..." in millimetres, read up to the first corner that is not one,
+// as the sensor does. Fewer than three corners make no zone.
+function polygonOf(hass, entityId) {
+  const st = stateObj(hass, entityId);
+  if (!st || isMeaningless(st.state)) return null;
+  const pts = [];
+  for (const part of String(st.state).split(";")) {
+    const m = part.trim().match(/^(-?\d+(?:\.\d+)?)\s*:\s*(-?\d+(?:\.\d+)?)$/);
+    if (!m) break;
+    pts.push({ x: Number(m[1]) / 1000, y: Number(m[2]) / 1000 });
+  }
+  return pts.length >= 3 ? pts : null;
+}
+
+// The same even-odd test as the sensor's firmware.
+function insidePolygon(p, pts) {
+  let inside = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const a = pts[i];
+    const b = pts[j];
+    if ((a.y > p.y) !== (b.y > p.y) && p.x < ((b.x - a.x) * (p.y - a.y)) / (b.y - a.y) + a.x) inside = !inside;
+  }
+  return inside;
+}
+
+// How far the sensor is turned from the wall, in degrees: the Everything
+// Presence Lite's Installation Angle, or a fixed one. Its positions and zones
+// already come out square to the room, so only the fan turns.
+function installationAngle(hass, cfg) {
+  const v = numericState(hass, cfg.angle_entity);
+  const a = v !== null ? v : parseFloat(cfg.installation_angle);
+  return Number.isFinite(a) ? clamp(Math.round(a), -90, 90) : 0;
 }
 
 // Where a target stands, in metres, or null when the sensor has none there:
@@ -561,7 +614,7 @@ function zoneTypeOf(hass, cfg, zone) {
   const raw = st && !isMeaningless(st.state) ? stripAccents(String(st.state).toLowerCase()) : "";
   if (/disab|^off$|^none$/.test(raw)) return null;
   const own = zone.type ? String(zone.type).toLowerCase() : null;
-  if (own === "filter" || own === "detection") return own;
+  if (own === "filter" || own === "detection" || own === "entry") return own;
   return /filter|exclu|ignor/.test(raw) ? "filter" : "detection";
 }
 
@@ -573,8 +626,35 @@ function planPoint(plan, range, x, y) {
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const round1 = (v) => Math.round(v * 10) / 10;
 
+function zoneText(hass, z) {
+  const name = z.name || z.label || `${t(hass, "zone")} ${z.n}`;
+  return z.type === "filter" && !z.points ? `${name} \u00b7 ${t(hass, "filter")}` : name;
+}
+
+function zoneOpen(z) {
+  const ent = z.entity ? ` data-entity="${escapeHtml(z.entity)}"` : "";
+  const color = z.type === "entry" ? ENTRY_COLOR : ZONE_COLORS[(z.n - 1) % ZONE_COLORS.length];
+  return `<g class="pr-zone pr-zone-${z.type}${z.occupied ? " pr-zone-on" : ""}"${ent} style="--pr-zc:${color}">`;
+}
+
+// A polygon, its corners kept on the drawing, its name in its middle.
+function polygonSvg(hass, plan, range, z) {
+  const pts = z.points.map((p) => {
+    const [px, py] = planPoint(plan, range, p.x, p.y);
+    return [round1(clamp(px, 2, 198)), round1(clamp(py, SENSOR.y, SENSOR.y + FAN_R))];
+  });
+  let area = 0;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) area += pts[j][0] * pts[i][1] - pts[i][0] * pts[j][1];
+  if (Math.abs(area) < 2) return "";
+  const cx = round1(pts.reduce((a, p) => a + p[0], 0) / pts.length);
+  const cy = round1(pts.reduce((a, p) => a + p[1], 0) / pts.length);
+  return zoneOpen(z) + `<polygon points="${pts.map((p) => p.join(",")).join(" ")}"/>`
+    + `<text class="pr-zone-mid" x="${cx}" y="${round1(cy + 2)}">${escapeHtml(zoneText(hass, z))}</text></g>`;
+}
+
 function planZonesSvg(hass, plan, range) {
   return plan.zones.map((z) => {
+    if (z.points) return polygonSvg(hass, plan, range, z);
     const [ax, ay] = planPoint(plan, range, z.x1, z.y1);
     const [bx, by] = planPoint(plan, range, z.x2, z.y2);
     const x = clamp(Math.min(ax, bx), 2, 198);
@@ -582,11 +662,8 @@ function planZonesSvg(hass, plan, range) {
     const w = round1(clamp(Math.max(ax, bx), 2, 198) - x);
     const h = round1(clamp(Math.max(ay, by), SENSOR.y, SENSOR.y + FAN_R) - y);
     if (w <= 0 || h <= 0) return "";
-    const name = z.name || `${t(hass, "zone")} ${z.n}`;
-    const label = z.type === "filter" ? `${name} \u00b7 ${t(hass, "filter")}` : name;
-    const ent = z.entity ? ` data-entity="${escapeHtml(z.entity)}"` : "";
-    return `<g class="pr-zone pr-zone-${z.type}${z.occupied ? " pr-zone-on" : ""}"${ent} style="--pr-zc:${ZONE_COLORS[z.n - 1]}">`
-      + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3"/>`
+    const label = zoneText(hass, z);
+    return zoneOpen(z) + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3"/>`
       + `<text x="${round1(x + 2.5)}" y="${round1(y + h - 2.5)}">${escapeHtml(label)}</text></g>`;
   }).join("");
 }
@@ -633,6 +710,9 @@ function presenceSvg(hass, mode, ratio, range, showScale, people = 1, plan = nul
     return `<path class="pr-arc" d="M${ax} ${ay} A${r} ${r} 0 0 1 ${bx} ${by}"/>${label}`;
   }).join("");
   const present = PRESENT.includes(mode);
+  // A sensor turned by a degrees aims its fan at 90 - a degrees on the plan
+  // (the other way round when left and right are swapped).
+  const turn = plan && plan.angle ? (plan.flip ? plan.angle : -plan.angle) : 0;
   const feetY = Math.round((SENSOR.y + FAN_R * ratio) * 10) / 10;
   const n = Math.max(1, Math.min(3, Math.round(people) || 1));
   const person = plan && plan.targets.length ? planPeopleSvg(plan, range) : present
@@ -643,9 +723,9 @@ function presenceSvg(hass, mode, ratio, range, showScale, people = 1, plan = nul
   return `<svg viewBox="0 0 200 122" role="img" aria-hidden="true"${plan ? ' class="pr-plan"' : ""}>
 <defs><radialGradient id="pr-fan-g" cx="${SENSOR.x}" cy="${SENSOR.y}" r="${FAN_R}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="var(--pr-color)" stop-opacity=".42"/><stop offset="1" stop-color="var(--pr-color)" stop-opacity=".05"/></radialGradient>${plan ? HATCH : ""}</defs>
 <path class="pr-wall" d="M22 ${SENSOR.y - 6} H178"/>
-<path class="pr-fan" d="M${SENSOR.x} ${SENSOR.y} L${x1} ${y1} A${FAN_R} ${FAN_R} 0 0 1 ${x2} ${y2} Z"/>
-${arcs}${plan ? planZonesSvg(hass, plan, range) : ""}
-<line class="pr-sweep" x1="${SENSOR.x}" y1="${SENSOR.y}" x2="${SENSOR.x}" y2="${SENSOR.y + FAN_R}"/>
+${turn ? `<g class="pr-turn" transform="rotate(${turn} ${SENSOR.x} ${SENSOR.y})">` : ""}<path class="pr-fan" d="M${SENSOR.x} ${SENSOR.y} L${x1} ${y1} A${FAN_R} ${FAN_R} 0 0 1 ${x2} ${y2} Z"/>
+${arcs}${turn ? "</g>" : ""}${plan ? planZonesSvg(hass, plan, range) : ""}
+${turn ? `<g transform="rotate(${turn} ${SENSOR.x} ${SENSOR.y})">` : ""}<line class="pr-sweep" x1="${SENSOR.x}" y1="${SENSOR.y}" x2="${SENSOR.x}" y2="${SENSOR.y + FAN_R}"/>${turn ? "</g>" : ""}
 ${person}
 <rect class="pr-box" x="${SENSOR.x - 11}" y="${SENSOR.y - 9}" width="22" height="12" rx="4"/>
 <circle class="pr-led" cx="${SENSOR.x}" cy="${SENSOR.y - 3}" r="2"/>
@@ -1019,8 +1099,8 @@ class PresenceSensorCard extends HTMLElement {
       if (plan) {
         for (const z of plan.zones) {
           if (z.type !== "detection") continue;
-          lines.push({ label: z.name || `${t(hass, "zone")} ${z.n}`, icon: "mdi:selection-ellipse", entity: z.countEntity || cfg.entity,
-            color: ZONE_COLORS[z.n - 1], ...(z.count > 0 ? { value: formatNumber(hass, z.count, 0) } : { valueKey: "clear", value: "" }) });
+          lines.push({ label: z.name || z.label, icon: "mdi:selection-ellipse", entity: z.countEntity || cfg.entity,
+            color: ZONE_COLORS[(z.n - 1) % ZONE_COLORS.length], ...(z.count > 0 ? { value: formatNumber(hass, z.count, 0) } : { valueKey: "clear", value: "" }) });
         }
       }
       if (!plan && present && dist !== null && dist > 0) {
@@ -1066,7 +1146,7 @@ class PresenceSensorCard extends HTMLElement {
       people: present ? people : 0,
       // A breathing silhouette breathes at the rate the radar reads.
       breath: mode === "still" && rate !== null && rate > 0 ? Math.round(Math.max(1.5, Math.min(8, 60 / rate)) * 10) / 10 : null,
-      plan: plan && { flip: plan.flip, zones: plan.zones,
+      plan: plan && { flip: plan.flip, angle: plan.angle, zones: plan.zones,
         targets: present ? plan.targets.map(({ n, x, y, state, dir, trail, entity }) => ({ n, x, y, state, dir, trail, entity })) : [] },
       lines,
     };
@@ -1099,23 +1179,33 @@ class PresenceSensorCard extends HTMLElement {
       targets.push({ n, ...pos, state, dir: dir === "still" ? null : dir, speed, trail, entity: slot.x });
     });
     const zones = [];
-    planZones(cfg).forEach((z, i) => {
+    const all = planZones(cfg);
+    all.forEach((z, i) => {
       const type = zoneTypeOf(hass, cfg, z);
       if (!type) return;
-      const c = ["x1", "y1", "x2", "y2"].map((k) => meters(hass, z[k]));
-      if (c.some((v) => v === null) || c.every((v) => Math.abs(v) < 0.01)) return;
-      const box = { x1: c[0], y1: c[1], x2: c[2], y2: c[3] };
-      const inside = (tg) => tg.x >= Math.min(box.x1, box.x2) && tg.x <= Math.max(box.x1, box.x2)
-        && tg.y >= Math.min(box.y1, box.y2) && tg.y <= Math.max(box.y1, box.y2);
+      let shape;
+      let inside;
+      if (typeof z.points === "string") {
+        const points = polygonOf(hass, z.points);
+        if (!points) return;
+        shape = { points };
+        inside = (tg) => insidePolygon(tg, points);
+      } else {
+        const c = ZONE_CORNERS.map((k) => meters(hass, z[k]));
+        if (c.some((v) => v === null) || c.every((v) => Math.abs(v) < 0.01)) return;
+        shape = { x1: c[0], y1: c[1], x2: c[2], y2: c[3] };
+        inside = (tg) => tg.x >= Math.min(shape.x1, shape.x2) && tg.x <= Math.max(shape.x1, shape.x2)
+          && tg.y >= Math.min(shape.y1, shape.y2) && tg.y <= Math.max(shape.y1, shape.y2);
+      }
       const own = numericState(hass, z.count);
-      zones.push({ n: i + 1, type, name: z.name ? String(z.name) : null, ...box,
+      zones.push({ n: i + 1, type, name: z.name ? String(z.name) : null, label: zoneLabel(hass, all, i), ...shape,
         count: own !== null ? Math.max(0, Math.round(own)) : targets.filter(inside).length,
         countEntity: z.count || null,
-        // What a tap on the zone opens: its count, else its first corner.
-        entity: z.count || z.x1 || null,
+        // What a tap on the zone opens: its count, else its shape.
+        entity: z.count || z.points || z.x1 || null,
         occupied: type === "detection" && (own !== null ? own > 0 : targets.some(inside)) });
     });
-    return { flip: !!cfg.flip_x, targets, zones };
+    return { flip: !!cfg.flip_x, angle: installationAngle(hass, cfg), targets, zones };
   }
 
   // The last few places a target stood, newest first: a point is added once
@@ -1220,13 +1310,16 @@ ha-card.fill { height:100%; box-sizing:border-box; }
 .pr-plan .t-moving .pr-leg-l, .pr-plan .t-moving .pr-arm-r { animation:pr-swing .45s ease-in-out infinite alternate !important; }
 .pr-plan .t-moving .pr-leg-r, .pr-plan .t-moving .pr-arm-l { animation:pr-swing .45s ease-in-out infinite alternate-reverse !important; }
 .pr-plan .t-still .pr-person { animation:pr-breathe var(--pr-breath) ease-in-out infinite !important; }
-.pr-zone rect { fill:var(--pr-zc); fill-opacity:.13; stroke:var(--pr-zc); stroke-width:.9; stroke-opacity:.75; }
+.pr-zone rect, .pr-zone polygon { fill:var(--pr-zc); fill-opacity:.13; stroke:var(--pr-zc); stroke-width:.9; stroke-opacity:.75; stroke-linejoin:round; }
 .pr-zone text { font:600 6px sans-serif; fill:var(--pr-zc); }
-.pr-zone-on rect { fill-opacity:.26; stroke-opacity:1; }
-.pr-zone-filter rect { fill:url(#pr-hatch); fill-opacity:1; stroke:var(--secondary-text-color); stroke-dasharray:2 2; stroke-opacity:.7; }
+.pr-zone text.pr-zone-mid { text-anchor:middle; }
+.pr-zone-on rect, .pr-zone-on polygon { fill-opacity:.26; stroke-opacity:1; }
+.pr-zone-filter rect, .pr-zone-filter polygon { fill:url(#pr-hatch); fill-opacity:1; stroke:var(--secondary-text-color); stroke-dasharray:2 2; stroke-opacity:.7; }
 .pr-zone-filter text { fill:var(--secondary-text-color); font-weight:500; }
+.pr-zone-entry rect, .pr-zone-entry polygon { fill-opacity:.06; stroke-dasharray:4 2; }
+.pr-zone-entry text { font-weight:500; }
 .pr-hatch-line { stroke:var(--secondary-text-color); stroke-width:1; stroke-opacity:.35; }
-.m-clear .pr-zone rect, .m-offline .pr-zone rect { fill-opacity:.07; stroke-opacity:.45; }
+.m-clear .pr-zone rect, .m-offline .pr-zone rect, .m-clear .pr-zone polygon, .m-offline .pr-zone polygon { fill-opacity:.07; stroke-opacity:.45; }
 .pr-trail { fill:var(--pr-color); }
 .pr-heading { fill:none; stroke:var(--pr-color); stroke-width:1.3; stroke-linecap:round; stroke-linejoin:round; opacity:.85; }
 .m-offline .illu { opacity:.7; }
@@ -1295,7 +1388,7 @@ const SIBLING_RULES = [
   { field: "range_entity", domains: ["number", "input_number", "sensor"],
     re: [/detection_?range|maximum_?range|max_?range|motion_?detection_?distance|large_?motion_?detection_?distance|max_?distance/i,
       /static_?detection_?distance|detection_?distance|range/i, /max_?move_?distance_?gate/i], not: /min|sensitiv|shield|entry|indent/i },
-  { field: "target_count_entity", domains: ["sensor"], re: [/(^|_)target_?count$|num_?targets|presence_?target_?count|people_?count|person_?count|occupant/i] },
+  { field: "target_count_entity", domains: ["sensor"], re: [/(^|_)target_?count$|num_?targets|presence_?target_?count|people_?count|person_?count|occupant/i], not: /zone_?\d|mask/i },
   { field: "illuminance_entity", domains: ["sensor", "binary_sensor"], deviceClass: ["illuminance", "light"], re: [/illuminance|illumination|lux/i], not: /threshold|interval/i },
   { field: "temperature_entity", domains: ["sensor"], deviceClass: ["temperature"], re: [/temperature/i], not: /device_?temp|calibration|chip|cpu/i },
   { field: "humidity_entity", domains: ["sensor"], deviceClass: ["humidity"], re: [/humidity/i], not: /calibration/i },
@@ -1336,12 +1429,20 @@ const PLAN_RULES = {
   speed: { domains: ["sensor"], re: /target_?([1-3])_?speed$/i },
 };
 const ZONE_RULES = {
-  x1: { domains: ["number", "input_number"], re: /zone_?([1-3])_?x_?1$/i },
-  y1: { domains: ["number", "input_number"], re: /zone_?([1-3])_?y_?1$/i },
-  x2: { domains: ["number", "input_number"], re: /zone_?([1-3])_?x_?2$/i },
-  y2: { domains: ["number", "input_number"], re: /zone_?([1-3])_?y_?2$/i },
-  count: { domains: ["sensor"], re: /zone_?([1-3])_?(all_?)?target_?count$/i },
+  x1: { domains: ["number", "input_number"], re: /zone_?([1-4])_?x_?1$/i },
+  y1: { domains: ["number", "input_number"], re: /zone_?([1-4])_?y_?1$/i },
+  x2: { domains: ["number", "input_number"], re: /zone_?([1-4])_?x_?2$/i },
+  y2: { domains: ["number", "input_number"], re: /zone_?([1-4])_?y_?2$/i },
+  count: { domains: ["sensor"], re: /zone_?([1-4])_?(all_?)?target_?count$/i },
 };
+// The Everything Presence Lite's polygons: Polygon Zone 1-4 (text entities),
+// with Zone N Target Count, then Polygon Exclusion 1-2 and Polygon Entry 1-2.
+const POLYGON_RULES = {
+  points: { domains: ["text", "input_text"], re: /polygon_?zone_?([1-4])$/i },
+  count: ZONE_RULES.count,
+};
+const EXCLUSION_RULES = { points: { domains: ["text", "input_text"], re: /polygon_?exclusion_?([1-2])$/i } };
+const ENTRY_RULES = { points: { domains: ["text", "input_text"], re: /polygon_?entry_?([1-2])$/i } };
 
 function slotsFrom(siblings, rules) {
   const slots = {};
@@ -1362,8 +1463,15 @@ function guessPlan(hass, siblings) {
   const targets = slotsFrom(siblings, PLAN_RULES).filter((tg) => tg.x && tg.y).slice(0, MAX_TARGETS);
   if (!targets.length) return {};
   const out = { targets };
-  const zones = slotsFrom(siblings, ZONE_RULES).filter((z) => z.x1 && z.y1 && z.x2 && z.y2).slice(0, ZONE_COLORS.length);
+  const polygons = slotsFrom(siblings, POLYGON_RULES).filter((z) => z.points);
+  const zones = polygons.length
+    ? [...polygons,
+      ...slotsFrom(siblings, EXCLUSION_RULES).map((z) => ({ ...z, type: "filter" })),
+      ...slotsFrom(siblings, ENTRY_RULES).map((z) => ({ ...z, type: "entry" }))].slice(0, MAX_ZONES)
+    : slotsFrom(siblings, ZONE_RULES).filter((z) => z.x1 && z.y1 && z.x2 && z.y2).slice(0, ZONE_COLORS.length);
   if (zones.length) out.zones = zones;
+  const angle = siblings.find((e) => ["number", "input_number"].includes(domainOf(e)) && /installation_?angle$/i.test(e.split(".")[1]));
+  if (angle) out.angle_entity = angle;
   const zoneType = siblings.find((e) => domainOf(e) === "select" && /zone_?type$/i.test(e.split(".")[1]));
   if (zoneType) out.zone_type_entity = zoneType;
   return out;
@@ -1523,9 +1631,11 @@ details .form { padding-top:10px; }
             ${check("show_targets")}
             ${check("flip_x")}
             <div class="row" data-picker="zone_type_entity"></div>
-            ${planZones(cfg).map((z, i) => `<div class="row">
-              <label>${t(hass, "zone_name").replace("{n}", i + 1)}</label>
-              <input type="text" data-zone="${i}" placeholder="${t(hass, "zone")} ${i + 1}" value="${escapeHtml(z.name || "")}" />
+            <div class="row" data-picker="angle_entity"></div>
+            ${planZones(cfg).map((z, i, all) => `<div class="row">
+              <label>${z.points && (z.type === "filter" || z.type === "entry")
+                ? `${t(hass, "name")} (${escapeHtml(zoneLabel(hass, all, i))})` : t(hass, "zone_name").replace("{n}", i + 1)}</label>
+              <input type="text" data-zone="${i}" placeholder="${escapeHtml(zoneLabel(hass, all, i))}" value="${escapeHtml(z.name || "")}" />
             </div>`).join("")}
           </div>
         </details>` : ""}
@@ -1571,6 +1681,8 @@ details .form { padding-top:10px; }
     }
     const zoneTypeSlot = this._root.querySelector('[data-picker="zone_type_entity"]');
     if (zoneTypeSlot) this._mountPicker(zoneTypeSlot, "zone_type_entity", ["select", "input_select"]);
+    const angleSlot = this._root.querySelector('[data-picker="angle_entity"]');
+    if (angleSlot) this._mountPicker(angleSlot, "angle_entity", ["number", "input_number", "sensor"]);
     this._root.querySelectorAll("input[data-zone]").forEach((input) => {
       input.addEventListener("change", (ev) => {
         const i = Number(input.dataset.zone);

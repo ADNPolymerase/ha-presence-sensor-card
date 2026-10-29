@@ -27,7 +27,7 @@ Les capteurs mmWave disent bien plus qu'*occupé* : à quelle distance est la ci
 - **La cible à sa distance** : la silhouette se tient là où le radar la voit, à l'échelle de la portée de détection (une entité, une valeur de votre choix, ou 6 m). Un PIR, qui n'a pas de distance, la place au milieu.
 - **En mouvement ou immobile** : d'après une entité de mouvement (Aqara FP1E `movement` / `no_movement`, Tuya `motion_state` ou `presence_state`, Seeed `Motionless` / `Active`, le capteur binaire *moving* ou *still target* d'un LD2410…) ou d'après l'état lui-même. La silhouette marche, ou respire lentement.
 - **Plusieurs personnes** : un nombre de personnes (LD2450, MR60BHA2, le compteur de personnes d'une caméra) place jusqu'à trois silhouettes dans l'éventail, et dit combien.
-- **Vue en plan** pour les capteurs qui donnent la position de chaque cible (HLK-LD2450, Everything Presence Lite) : chacun se tient là où il est, en x et en y, avec une flèche quand il s'approche ou s'éloigne et une traînée de ses derniers pas. Les zones du capteur sont dessinées au sol, plus vives quand quelqu'un s'y trouve, hachurées pour les zones filtre et d'exclusion, en pointillés pour les zones d'entrée, avec une ligne par zone et une par cible. Les zones en polygone de l'Everything Presence Lite sont dessinées telles quelles, et son éventail tourne avec son angle d'installation.
+- **Vue en plan** pour les capteurs qui donnent la position de chaque cible (HLK-LD2450, Everything Presence Lite) : chacun se tient là où il est, en x et en y, avec une flèche quand il s'approche ou s'éloigne et une traînée de ses derniers pas. Les zones du capteur sont dessinées au sol, plus vives quand quelqu'un s'y trouve, hachurées pour les zones filtre et d'exclusion, en pointillés pour les zones d'entrée, avec une ligne par zone et une par cible. Les zones en polygone de l'Everything Presence Lite sont dessinées telles quelles, et son éventail tourne avec son angle d'installation. Les murs de la pièce peuvent être dessinés autour, et la dernière sortie de l'Everything Presence Lite s'affiche sur une ligne.
 - **Ligne d'état** : *Occupé*, *En mouvement*, *Immobile*, *Libre* ou *Hors ligne*, d'après un capteur binaire d'occupation, de présence ou de mouvement, ou un capteur texte. *Hors ligne* est dessiné en rouge : un capteur qui ne répond plus ne ressemble jamais à une pièce vide.
 - **Lignes d'info** : distance, personnes, luminosité (en lux, ou *Sombre* / *Lumineux* pour un Sonoff SNZB-06P), température, humidité, rythme cardiaque et respiration (la silhouette respire au rythme mesuré), *Occupé depuis 25 min* ou *Libre depuis 1 h 10 min*, et la batterie, en rouge sous 15 %. N'importe quelle autre entité s'ajoute avec `entities`. Un appui sur une ligne ouvre le détail de son entité, un appui sur la carte celui du capteur (ou votre propre `tap_action`). En vue en plan, un appui sur une personne ou une zone ouvre son entité.
 - **Les dernières 24 heures** (`show_history`) : une bande sous les lignes, colorée là où la pièce était occupée, en mouvement ou immobile, rouge là où le capteur était hors ligne, avec le temps d'occupation sur la période. Lue une fois dans l'historique de Home Assistant, puis tenue à jour avec l'état en direct.
@@ -102,6 +102,8 @@ Copiez `dist/ha-presence-sensor-card.js` dans `config/www/`, puis ajoutez `/loca
 | `show_plan` | Vue en plan quand les cibles sont renseignées. Par défaut `true` ; `false` garde le dessin sur l'axe. |
 | `show_targets` | Une ligne par cible dans la vue en plan. Par défaut `true`. |
 | `flip_x` | Inverse gauche et droite dans la vue en plan. Par défaut `false`. |
+| `room` | Vue en plan : les murs de la pièce en mètres, vus sur la carte, `{ left, right, depth }` : la distance du capteur au mur de gauche, au mur de droite et au mur d'en face. Chacune peut être omise ; un mur au-delà du dessin reste ouvert. Dans l'éditeur. |
+| `exit_entity` / `exit_zone_entity` | Le Entry Exit Last Decision et le Last Entry Zone de l'Everything Presence Lite : une ligne dit depuis quand quelqu'un est sorti, et par quelle zone d'entrée, ou que le capteur maintient la pièce occupée après la disparition d'une cible. Rempli par l'éditeur. |
 | `angle_entity` / `installation_angle` | De combien le capteur est tourné par rapport au mur, en degrés : une entité (l'Installation Angle de l'Everything Presence Lite) ou un nombre fixe. Seul l'éventail tourne : le capteur donne déjà ses positions dans l'axe de la pièce. |
 
 Les couleurs suivent votre thème : `--pr-occupied-color` (bleu par défaut), `--pr-still-color` (indigo par défaut), `--pr-offline-color` (par défaut la couleur d'erreur du thème) et `--pr-zone1-color` à `--pr-zone4-color` et `--pr-entry-color` se règlent avec card-mod ou un thème.
@@ -175,6 +177,9 @@ type: custom:ha-presence-sensor-card
 entity: binary_sensor.bureau_occupancy
 range_entity: number.bureau_max_distance
 angle_entity: number.bureau_installation_angle
+room: { left: 2.7, right: 3, depth: 6 }
+exit_entity: sensor.bureau_entry_exit_last_decision
+exit_zone_entity: sensor.bureau_entry_exit_last_entry_zone
 targets:
   - { x: sensor.bureau_target_1_x, y: sensor.bureau_target_1_y, speed: sensor.bureau_target_1_speed }
   - { x: sensor.bureau_target_2_x, y: sensor.bureau_target_2_y, speed: sensor.bureau_target_2_speed }

@@ -94,7 +94,8 @@
       zone_4: ["", null], exclusion_1: ["2000:600;2700:600;2700:1500;2000:1500", null], exclusion_2: ["", null],
       entry_1: ["-500:5300;500:5300;500:5900;-500:5900", "Door"], entry_2: ["", null] };
     const st = { [`binary_sensor.${id}_occupancy`]: s(targets.length ? "on" : "off", OCC, 12),
-      [`number.${id}_max_distance`]: s(600, { unit_of_measurement: "cm" }), [`number.${id}_installation_angle`]: s(20, { unit_of_measurement: "\u00ba" }) };
+      [`number.${id}_max_distance`]: s(600, { unit_of_measurement: "cm" }), [`number.${id}_installation_angle`]: s(20, { unit_of_measurement: "\u00ba" }),
+      [`sensor.${id}_entry_exit_last_decision`]: s("Valid Exit", {}, 4), [`sensor.${id}_entry_exit_last_entry_zone`]: s("Entry 1") };
     for (const [k, [v]] of Object.entries(polys)) st[`text.${id}_polygon_${k}`] = s(v);
     for (let n = 1; n <= 3; n++) {
       const tg = targets[n - 1] || { x: 0, y: 0 };
@@ -104,6 +105,8 @@
     }
     const types = { exclusion: "filter", entry: "entry" };
     return { entity: `binary_sensor.${id}_occupancy`, name, range_entity: `number.${id}_max_distance`, angle_entity: `number.${id}_installation_angle`,
+      room: { left: 2.7, right: 3, depth: 6 },
+      exit_entity: `sensor.${id}_entry_exit_last_decision`, exit_zone_entity: `sensor.${id}_entry_exit_last_entry_zone`,
       targets: [1, 2, 3].map((n) => ({ x: `sensor.${id}_target_${n}_x`, y: `sensor.${id}_target_${n}_y`, speed: `sensor.${id}_target_${n}_speed` })),
       zones: Object.entries(polys).map(([k, [, zname]]) => ({ points: `text.${id}_polygon_${k}`, ...(zname ? { name: zname } : {}),
         ...(types[k.split("_")[0]] ? { type: types[k.split("_")[0]] } : {}) })),

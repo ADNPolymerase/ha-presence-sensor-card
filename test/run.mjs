@@ -878,4 +878,61 @@ check('LD2450 : en français', line(render(LD50, ld([COMING]), 'fr'), 'Cible 1')
   }
 }
 
+// ── Room outline and the Everything Presence Lite's exits ───────────────────
+// The room's walls in metres as seen on the card, open where they run off
+// the drawing; and a line for the last exit, or a presence the sensor holds.
+{
+  const room = (r) => render({ ...LD50, room: r }, ld([SITTING]));
+  const walls = (h) => [...String(h).matchAll(/<path class="pr-(wall|room)" d="([^"]*)"/g)].map(m => m[1] + ':' + m[2]);
+  check('pièce : murs à leur place (6 m de portée)', walls(room({ left: 1.5, right: 3, depth: 4.5 })).join(' | '),
+    'wall:M75 10 H150 | room:M75 10 V91 M150 10 V91 M75 91 H150');
+  check('pièce : capteur dans un coin', walls(room({ left: 0, right: 3, depth: 4.5 }))[0], 'wall:M100 10 H150');
+  check('pièce : mur du fond hors du dessin laissé ouvert', walls(room({ left: 1.5, right: 3, depth: 8 })).join(' | '),
+    'wall:M75 10 H150 | room:M75 10 V121 M150 10 V121');
+  check('pièce : mur de droite hors du dessin laissé ouvert', walls(room({ left: 1.5, right: 7, depth: 4.5 })).join(' | '),
+    'wall:M75 10 H199 | room:M75 10 V91 M75 91 H199');
+  check('pièce : mur de gauche hors du dessin laissé ouvert', walls(room({ left: 7, right: 3, depth: 4.5 })).join(' | '),
+    'wall:M1 10 H150 | room:M150 10 V91 M1 91 H150');
+  check('pièce : à l’échelle de la portée (4 m)', walls(render({ ...LD50, detection_range: 4, room: { left: 1.5, right: 3, depth: 4 } }, ld([SITTING])))[1],
+    'room:M62.5 10 V116 M175 10 V116 M62.5 116 H175');
+  check('pièce : seulement la profondeur', walls(room({ depth: 3 })).join(' | '), 'wall:M22 10 H178 | room:M22 66 H178');
+  check('pièce : sans réglage, le mur habituel', walls(render(LD50, ld([SITTING]))).join(' | '), 'wall:M22 10 H178');
+  check('pièce : valeurs invalides ignorées', walls(room({ left: -1, depth: 'x' })).join(' | '), 'wall:M22 10 H178');
+  check('pièce : la cible ne bouge pas', JSON.stringify(pts(room({ left: 1.5, right: 3, depth: 4.5 }))), JSON.stringify(pts(render(LD50, ld([SITTING])))));
+  check('pièce : pas en vue axiale', render({ entity: 'binary_sensor.p', room: { depth: 3 } }, { 'binary_sensor.p': s('on', OCC) }).includes('class="pr-room"'), false);
+
+  const EX = { ...LD50, exit_entity: 'sensor.salon_entry_exit_last_decision', exit_zone_entity: 'sensor.salon_entry_exit_last_entry_zone',
+    zones: [...LD50.zones, { points: 'text.salon_entry_1', type: 'entry', name: 'Door' }, { points: 'text.salon_entry_2', type: 'entry' }] };
+  const ex = (decision, zone, ago = 3) => ({ ...ld([SITTING]), 'sensor.salon_entry_exit_last_decision': s(decision, {}, ago),
+    'sensor.salon_entry_exit_last_entry_zone': s(zone) });
+  check('sortie : par la porte, il y a 3 min', line(render(EX, ex('Valid Exit', 'Entry 1')), 'Last exit'), `Door · 3${NB}min`);
+  check('sortie : 2ᵉ entrée sans nom', line(render(EX, ex('Valid Exit', 'Entry 2')), 'Last exit'), `Entry 2 · 3${NB}min`);
+  check('sortie : par les deux', line(render(EX, ex('Valid Exit', 'Both')), 'Last exit'), `Door / Entry 2 · 3${NB}min`);
+  check('sortie : zone inconnue, seulement la durée', line(render(EX, ex('Valid Exit', 'Unknown')), 'Last exit'), `3${NB}min`);
+  check('présence maintenue', line(render(EX, ex('Hold Started', 'Unknown', 0.5)), 'Held present'), `&lt; 1${NB}min`);
+  check('sortie : au repos, rien', line(render(EX, ex('Idle', 'None')), 'Last exit'), null);
+  check('sortie : cible retrouvée, rien', line(render(EX, ex('Target Reacquired', 'None')), 'Held present'), null);
+  check('sortie : maintien expiré, rien', line(render(EX, ex('Hold Expired', 'None')), 'Held present'), null);
+  contains('sortie : tap ouvre la décision', render(EX, ex('Valid Exit', 'Entry 1')), 'data-entity="sensor.salon_entry_exit_last_decision"');
+  contains('sortie : traduit', render(EX, ex('Valid Exit', 'Entry 1'), 'fr'), 'Dernière sortie');
+  {
+    const dev = { 'binary_sensor.ep_occupancy': OCC, 'sensor.ep_entry_exit_last_decision': {}, 'sensor.ep_entry_exit_last_entry_zone': {} };
+    for (const n of [1, 2, 3]) for (const k of ['x', 'y', 'speed']) dev[`sensor.ep_target_${n}_${k}`] = {};
+    const stub = Card.getStubConfig(deviceHass({ ep: dev }));
+    check('EP Lite : décision devinée', stub.exit_entity, 'sensor.ep_entry_exit_last_decision');
+    check('EP Lite : zone de sortie devinée', stub.exit_zone_entity, 'sensor.ep_entry_exit_last_entry_zone');
+    check('EP Lite : la décision n’est pas le mouvement', stub.movement_entity, undefined);
+  }
+  {
+    const ed = new Editor();
+    ed.setConfig({ ...EX, room: { left: 1.5, depth: 4.5 } });
+    ed.hass = { language: 'fr', states: {} };
+    const em = markup(ed);
+    contains('éditeur : mur de gauche', em, 'data-room="left" value="1.5"');
+    contains('éditeur : mur de droite vide', em, 'data-room="right" value=""');
+    contains('éditeur : mur du fond traduit', em, "Distance au mur d'en face (m)");
+    contains('éditeur : entité de sortie', em, 'data-picker="exit_entity"');
+  }
+}
+
 report();

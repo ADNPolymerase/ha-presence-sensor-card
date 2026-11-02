@@ -65,6 +65,12 @@ Disponible directement dans HACS, sans dépôt personnalisé.
 3. Ajoutez une carte `custom:ha-presence-sensor-card` (YAML ou éditeur visuel).
 
 <details>
+<summary>Dépôt personnalisé (en secours)</summary>
+
+Si la carte n'apparaît pas dans la recherche, dans HACS ouvrez le menu ⋮ → **Dépôts personnalisés**, ajoutez `https://github.com/ADNPolymerase/ha-presence-sensor-card` en type **Dashboard**, puis installez-la comme ci-dessus.
+</details>
+
+<details>
 <summary>Installation manuelle</summary>
 
 Copiez `dist/ha-presence-sensor-card.js` dans `config/www/`, puis ajoutez `/local/ha-presence-sensor-card.js` comme **module JavaScript** dans *Paramètres → Tableaux de bord → Ressources*.

@@ -1,6 +1,6 @@
 # HA Presence Sensor Card
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-blue.svg)](https://github.com/hacs/default)
 [![GitHub Release](https://img.shields.io/github/v/release/ADNPolymerase/ha-presence-sensor-card?sort=semver)](https://github.com/ADNPolymerase/ha-presence-sensor-card/releases)
 [![HACS Action](https://github.com/ADNPolymerase/ha-presence-sensor-card/actions/workflows/hacs.yml/badge.svg)](https://github.com/ADNPolymerase/ha-presence-sensor-card/actions/workflows/hacs.yml)
 [![Tests](https://github.com/ADNPolymerase/ha-presence-sensor-card/actions/workflows/test.yml/badge.svg)](https://github.com/ADNPolymerase/ha-presence-sensor-card/actions/workflows/test.yml)
@@ -58,8 +58,10 @@ Something missing or misread? Open an issue with the entities and the states you
 
 ## Installation (HACS)
 
-1. In HACS, open the menu ⋮ → **Custom repositories**, add `https://github.com/ADNPolymerase/ha-presence-sensor-card` as a **Dashboard**. (Not needed once the card is in the HACS default store.)
-2. Search for **HA Presence Sensor Card** and install it.
+Available directly in HACS, no custom repository needed.
+
+1. Open **HACS**, search for **HA Presence Sensor Card** and install it.
+2. Hard-refresh your browser (Ctrl+Shift+R / Cmd+Shift+R).
 3. Add a `custom:ha-presence-sensor-card` card (YAML or visual editor).
 
 <details>

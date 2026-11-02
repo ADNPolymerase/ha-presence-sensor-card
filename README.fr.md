@@ -1,5 +1,7 @@
 # HA Presence Sensor Card
 
+<a href="https://github.com/ADNPolymerase/ha-presence-sensor-card/blob/main/README.md"><img src="https://raw.githubusercontent.com/ADNPolymerase/ha-presence-sensor-card/main/docs/lang-en.svg" alt="Read in English" height="60"></a>
+
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-blue.svg)](https://github.com/hacs/default)
 [![GitHub Release](https://img.shields.io/github/v/release/ADNPolymerase/ha-presence-sensor-card?sort=semver)](https://github.com/ADNPolymerase/ha-presence-sensor-card/releases)
 [![HACS Action](https://github.com/ADNPolymerase/ha-presence-sensor-card/actions/workflows/hacs.yml/badge.svg)](https://github.com/ADNPolymerase/ha-presence-sensor-card/actions/workflows/hacs.yml)
@@ -17,7 +19,7 @@ Les capteurs mmWave disent bien plus qu'*occupé* : à quelle distance est la ci
 
 **[Essayer la démo](https://adnpolymerase.github.io/ha-presence-sensor-card/docs/demo.html?lang=fr)** : tous les états dans votre navigateur, en clair ou en sombre, sans Home Assistant.
 
-> Retours et issues bienvenus. 🇬🇧 [Read in English](README.md)
+> Retours et issues bienvenus.
 
 [![Capture de HA Presence Sensor Card](https://raw.githubusercontent.com/ADNPolymerase/ha-presence-sensor-card/main/docs/screenshot.fr.png)](https://raw.githubusercontent.com/ADNPolymerase/ha-presence-sensor-card/main/docs/screenshot.fr.png)
 

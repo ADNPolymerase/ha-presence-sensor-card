@@ -104,6 +104,7 @@ Copiez `dist/ha-presence-sensor-card.js` dans `config/www/`, puis ajoutez `/loca
 | `fill_height` | `true` fait prendre à la carte toute la hauteur de sa case : deux cartes côte à côte ont alors la même hauteur. |
 | `show_since` | Ligne *Occupé depuis* / *Libre depuis*. Par défaut `true`. |
 | `show_scale` | Distances sur les arcs de portée. Par défaut `true`. |
+| `distance_unit` | `cm` affiche les distances (lignes et arcs de portée) en centimètres entiers, `m` en mètres (par défaut). Les vitesses restent en m/s. |
 | `show_history` / `history_hours` | `true` ajoute une bande des dernières heures sous les lignes : occupé, en mouvement ou immobile dans leur couleur, libre en gris, hors ligne en rouge, et le temps d'occupation de la pièce. Lue dans l'historique de Home Assistant (l'entité d'occupation, et celle du mouvement si elle est renseignée), puis relue toutes les cinq minutes. `history_hours` : 24 par défaut, de 1 à 168. Désactivée par défaut. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (par défaut, l'entité d'occupation), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event` (pour les cartes popup basées sur browser_mod). En YAML uniquement. |
 | `targets` | Vue en plan : jusqu'à trois cibles, chacune `{ x, y, direction, speed }` (identifiants d'entités ; x et y dans n'importe quelle unité de longueur). Remplies par l'éditeur depuis le même appareil. |

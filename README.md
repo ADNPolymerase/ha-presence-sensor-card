@@ -104,6 +104,7 @@ Copy `dist/ha-presence-sensor-card.js` to `config/www/`, then add `/local/ha-pre
 | `fill_height` | `true` makes the card take the full height of its slot, so two cards side by side have the same height. |
 | `show_since` | *Occupied for* / *Clear for* line. Default `true`. |
 | `show_scale` | Distances on the range arcs. Default `true`. |
+| `distance_unit` | `cm` shows the distances (lines and range arcs) in whole centimetres, `m` in metres (default). Speeds stay in m/s. |
 | `show_history` / `history_hours` | `true` adds a band of the last hours under the lines: occupied, moving or still in their colour, clear in grey, offline in red, and how long the room was occupied. Read from Home Assistant's history (the occupancy entity, and the movement entity when set), again every five minutes. `history_hours`: 24 by default, 1 to 168. Off by default. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default, the occupancy entity), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event` (for the popup cards built on browser_mod). In YAML only. |
 | `targets` | Plan view: up to three targets, each `{ x, y, direction, speed }` (entity ids; x and y in any length unit). Filled in by the editor from the same device. |

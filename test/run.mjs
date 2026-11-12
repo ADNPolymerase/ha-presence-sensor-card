@@ -101,6 +101,12 @@ check('ES1 : pas de distance quand libre', line(render(ES1, es1('off', 0)), 'Dis
 check('ES1 : pas de silhouette quand libre', feetY(render(ES1, es1('off', 0))), null);
 contains('ES1 : arcs gradués sur la portée (1.5 / 3 / 4.5 m)', render(ES1, es1('on', 180)), `>4.5${NB}m<`);
 check('ES1 : graduations masquables', render({ ...ES1, show_scale: false }, es1('on', 180)).includes('<text class="pr-scale"'), false);
+// distance_unit: cm (issue #1, eMotion Ultra): whole centimetres on the line
+// and on the arcs; metres stay the default.
+check('cm : distance en centimètres', line(render({ ...ES1, distance_unit: 'cm' }, es1('on', 183)), 'Distance'), `183${NB}cm`);
+contains('cm : arcs gradués en cm (150 / 300 / 450)', render({ ...ES1, distance_unit: 'cm' }, es1('on', 180)), `>450${NB}cm<`);
+check('cm : plus de mètres sur les arcs', render({ ...ES1, distance_unit: 'cm' }, es1('on', 180)).includes(`${NB}m<`), false);
+check('unité inconnue : mètres', line(render({ ...ES1, distance_unit: 'ft' }, es1('on', 180)), 'Distance'), `1.8${NB}m`);
 check('ES1 : rien que la pile hors ligne', line(render(ES1, es1('unavailable', 0)), 'Light'), null);
 
 // ── Aqara FP1E: presence, movement and a distance in metres ─────────────────
@@ -142,6 +148,7 @@ const p1 = (occ, bat = 100, ago = 70) => ({
 
 check('P1 : sans distance, silhouette au milieu', feetY(render(P1, p1('on'))), 16 + 100 * 0.55);
 check('P1 : pas de graduation sans distance', render(P1, p1('on')).includes('<text class="pr-scale"'), false);
+check('cm : FP1E en mètres converti et arrondi', line(render({ ...FP1E, distance_unit: 'cm' }, fp1e('on', 'movement', 2.346)), 'Distance'), `235${NB}cm`);
 check('P1 : libre depuis 1 h 10', line(render(P1, p1('off')), 'Clear for'), `1${NB}hr 10${NB}min`);
 check('P1 : pile', line(render(P1, p1('on')), 'Battery'), `100${NB}%`);
 check('P1 : pile faible signalée', render(P1, p1('on', 9)).includes('class="line caution"'), true);
@@ -324,6 +331,17 @@ ed4._set('show_since', undefined);
 check('option remise par défaut : clé retirée', 'show_since' in ed4._config, false);
 contains('éditeur : champ portée sans entité', markup(ed4), 'data-field="detection_range"');
 contains('éditeur : langue de la carte', markup(ed4), 'data-field="language"');
+contains('éditeur : unité des distances, mètres par défaut', markup(ed4), '<option value="m" selected>');
+{
+  const edc = new Editor();
+  edc.setConfig({ entity: 'binary_sensor.p', distance_unit: 'cm' });
+  edc.hass = { language: 'en', states: {} };
+  contains('éditeur : centimètres sélectionnés', markup(edc), '<option value="cm" selected>');
+}
+ed4._set('distance_unit', 'cm');
+check('éditeur : cm écrit dans la config', ed4._config.distance_unit, 'cm');
+ed4._set('distance_unit', '');
+check('éditeur : retour aux mètres, clé retirée', 'distance_unit' in ed4._config, false);
 
 // ── Multi-brand: what the other integrations write ──────────────────────────
 // Field names and states read from the Zigbee2MQTT device pages and from the
@@ -525,6 +543,7 @@ const COMING = { x: 1200, y: 3100, dir: 'Approaching', speed: -700 };
   }
   check('LD2450 : ligne de la cible immobile', line(html, 'Target 1'), `2.2${NB}m · Still`);
   check('LD2450 : ligne de la cible qui s’approche', line(html, 'Target 2'), `3.3${NB}m · Approaching · 0.7${NB}m/s`);
+  check('cm : ligne de cible en cm, vitesse en m/s', line(render({ ...LD50, distance_unit: 'cm' }, ld([COMING])), 'Target 1'), `332${NB}cm · Approaching · 0.7${NB}m/s`);
   check('LD2450 : pas de troisième ligne de cible', line(html, 'Target 3'), null);
   check('LD2450 : zones dessinées, filtre hachuré', zonesOf(html).join(','), 'detection+,detection+,filter');
   check('LD2450 : compte de la zone 1', line(html, 'Zone 1'), '1');

@@ -59,7 +59,7 @@ check('le fichier est en pur ASCII (\\uXXXX partout)', /[^\x00-\x7f]/.test(src),
 {
   const block = src.slice(src.indexOf('const T = {'), src.indexOf('\n};\n', src.indexOf('const T = {')));
   const langs = [...block.matchAll(/^  ([a-z]{2}): \{$/gm)].map(m => m[1]);
-  check('14 langues', langs.length, 14);
+  check('15 langues', langs.length, 15);
   const keysOf = code => {
     const start = block.indexOf(`  ${code}: {`);
     const end = block.indexOf('\n  },', start);
@@ -136,6 +136,9 @@ check('FP1E : occupé sans distance (0) → au milieu', feetY(render(FP1E, fp1e(
 check('FP1E : en français', stateLine(render(FP1E, fp1e('on', 'no_movement'), 'fr')), 'Immobile');
 check('FP1E : langue forcée sur la carte',
   stateLine(render({ ...FP1E, language: 'de' }, fp1e('on', 'movement'))), 'In Bewegung');
+check('FP1E : en slovaque', stateLine(render(FP1E, fp1e('on', 'movement'), 'sk')), 'V pohybe');
+check('FP1E : slovaque forcé sur la carte',
+  stateLine(render({ ...FP1E, language: 'sk' }, fp1e('on', 'no_movement'))), 'V pokoji');
 
 // ── Aqara P1: plain PIR, light and battery ───────────────────────────────────
 

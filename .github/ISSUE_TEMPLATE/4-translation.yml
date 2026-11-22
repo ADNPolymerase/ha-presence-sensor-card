@@ -19,6 +19,13 @@ body:
         - Nederlands
         - Polski
         - Português
+        - Svenska
+        - Norsk
+        - Dansk
+        - Русский
+        - 中文
+        - Čeština
+        - Slovenčina
         - Other / Autre
       label: "Language / Langue"
     validations:

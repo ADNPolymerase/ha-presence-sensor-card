@@ -35,7 +35,7 @@ mmWave sensors report much more than *occupied*: how far the target is, whether 
 - **The last 24 hours** (`show_history`): a band under the lines, coloured where the room was occupied, moving or still, red where the sensor was offline, with the time occupied over the period. Read once from Home Assistant's history, then kept going with the live state.
 - **Any unit**: distances in m, cm, mm, ft or in are all brought back to metres, and a range given as an LD2410 gate number becomes metres too.
 - **Visual editor** that fills the distance, range, movement, light and battery from the **same device** as soon as the occupancy entity is picked.
-- **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
+- **15 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS, SK), Home Assistant's or pinned on the card.
 - **Appearance**: compact mode (a coloured icon instead of the drawing, or the drawing small on the side), the drawing's size and the text's size on their own, the name or the state hidden, a transparent background for a wall tablet, and the full height of its slot. The same settings as ha-appliance-card.
 
 ## Supported sensors
@@ -95,7 +95,7 @@ Copy `dist/ha-presence-sensor-card.js` to `config/www/`, then add `/local/ha-pre
 | `battery_entity` | Battery %. Shown even while the sensor is offline. |
 | `entities` | Any other entity, one line each: an id, or `{ entity, name, icon }`. |
 | `name` | Title. Defaults to the entity's name. |
-| `language` | Show the card in another language than Home Assistant: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh` or `cs`. The editor keeps your own language. |
+| `language` | Show the card in another language than Home Assistant: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs` or `sk`. The editor keeps your own language. |
 | `compact` | `true` (or `hide`) shows a coloured icon instead of the drawing. `side` draws it small (96 px) on the left, with the name and the state beside it and the lines under them across the card. Default `false`. |
 | `illustration_size` | The drawing's size, from `0.3` to `1.2` times its own (default `1`), in every mode. The text keeps its size. A slider in the editor. |
 | `font_scale` | The text's size, from `0.7` to `1.4` times its own (default `1`). The drawing keeps its size. A slider in the editor. |

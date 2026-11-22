@@ -224,6 +224,21 @@ const T = {
     group_appearance: "Vzhled", compact_mode: "Kompaktn\u00ed re\u017eim", compact_off: "Vypnuto", compact_hide: "Bez kresby", compact_side: "Kresba po stran\u011b", illustration_size: "Velikost kresby", font_scale: "Velikost textu", show_name: "Zobrazit n\u00e1zev", show_state: "Zobrazit stav", transparent: "Pr\u016fhledn\u00e9 pozad\u00ed", fill_height: "Vyplnit celou v\u00fd\u0161ku m\u00edsta",
     now: "Te\u010f", show_history: "Zobrazit posledn\u00ed hodiny jako pruh", history_hours: "Hodin v pruhu", distance_unit: "Jednotka vzd\u00e1lenost\u00ed", unit_m: "Metry (m)", unit_cm: "Centimetry (cm)",
   },
+  sk: {
+    occupied: "Obsaden\u00e9", moving: "V pohybe", still: "V pokoji", clear: "Vo\u013en\u00e9", offline: "Offline",
+    distance: "Vzdialenos\u0165", light: "Osvetlenie", occupied_for: "Obsaden\u00e9 po dobu", clear_for: "Vo\u013en\u00e9 po dobu", battery: "Bat\u00e9ria",
+    entity: "Entita pr\u00edtomnosti (povinn\u00e9)", movement_entity: "Entita pohybu (v pohybe / v pokoji)",
+    distance_entity: "Entita vzdialenosti cie\u013ea", range_entity: "Entita detek\u010dn\u00e9ho dosahu",
+    detection_range: "Detek\u010dn\u00fd dosah bez entity (m)", illuminance_entity: "Entita osvetlenia",
+    battery_entity: "Entita bat\u00e9rie", name: "N\u00e1zov", card_language: "Jazyk karty", lang_auto: "Rovnak\u00fd ako Home Assistant",
+    show_since: "Zobrazi\u0165, ako dlho je priestor obsaden\u00fd alebo vo\u013en\u00fd",
+    show_scale: "Zobrazi\u0165 vzdialenosti na obl\u00fakoch dosahu", section_readings: "Nameran\u00e9 hodnoty",
+    autofill_hint: "Ostatn\u00e9 polia sa automaticky vyplnia z rovnak\u00e9ho zariadenia po v\u00fdbere entity pr\u00edtomnosti.",
+    people: "Osoby", temperature: "Teplota", humidity: "Vlhkos\u0165", heart_rate: "Srdcov\u00fd tep", breath_rate: "D\u00fdchanie", dim: "\u0160ero", bright: "Jasno", target_count_entity: "Entita po\u010dtu os\u00f4b", temperature_entity: "Entita teploty", humidity_entity: "Entita vlhkosti", heart_rate_entity: "Entita srdcov\u00e9ho tepu", breath_rate_entity: "Entita dychovej frekvencie", section_more: "\u010eal\u0161ie hodnoty",
+    target: "Cie\u013e", approaching: "Pribli\u017euje sa", moving_away: "Vz\u010fa\u013euje sa", zone: "Z\u00f3na", filter: "filter", section_plan: "P\u00f4dorysn\u00e9 zobrazenie", show_plan: "Zobrazi\u0165 polohu ka\u017ed\u00e9ho cie\u013ea v priestore (p\u00f4dorys)", show_targets: "Jeden riadok na cie\u013e", flip_x: "Prehodi\u0165 \u013eav\u00fa a prav\u00fa stranu", zone_type_entity: "Entita typu z\u00f3ny", angle_entity: "Entita uhla in\u0161tal\u00e1cie", exclusion: "Vyl\u00fa\u010den\u00e1 z\u00f3na", entry: "Vstupn\u00e1 z\u00f3na", room_left: "Vzdialenos\u0165 k \u013eavej stene (m)", room_right: "Vzdialenos\u0165 k pravej stene (m)", room_depth: "Vzdialenos\u0165 k proti\u013eahlej stene (m)", exit_entity: "Entita vyhodnotenia vstupu / odchodu", exit_zone_entity: "Entita vstupnej / v\u00fdstupnej z\u00f3ny", last_exit: "Posledn\u00fd odchod", assumed_present: "Udr\u017eiavan\u00e1 pr\u00edtomnos\u0165", zone_name: "N\u00e1zov z\u00f3ny {n}", plan_targets: "Ciele", plan_zones: "Z\u00f3ny", plan_hint: "Polohy a z\u00f3ny poch\u00e1dzaj\u00fa z vlastn\u00fdch ent\u00edt senzora (HLK-LD2450, Everything Presence Lite v ESPHome) a vyplnia sa po v\u00fdbere entity pr\u00edtomnosti. Ciele a z\u00f3ny sa upravuj\u00fa v YAML.",
+    group_appearance: "Vzh\u013ead", compact_mode: "Kompaktn\u00fd re\u017eim", compact_off: "Vypnut\u00fd", compact_hide: "Bez kresby", compact_side: "Kresba na boku", illustration_size: "Ve\u013ekos\u0165 kresby", font_scale: "Ve\u013ekos\u0165 textu", show_name: "Zobrazi\u0165 n\u00e1zov", show_state: "Zobrazi\u0165 stav", transparent: "Prieh\u013eadn\u00e9 pozadie", fill_height: "Vyplni\u0165 v\u00fd\u0161ku svojho po\u013ea",
+    now: "Teraz", show_history: "Zobrazi\u0165 posledn\u00e9 hodiny ako \u010dasov\u00fa os", history_hours: "Po\u010det hod\u00edn na \u010dasovej osi", distance_unit: "Jednotka vzdialenosti", unit_m: "Metre (m)", unit_cm: "Centimetre (cm)",
+  },
 };
 
 function lang(hass) {
@@ -249,6 +264,7 @@ const LANGUAGE_NAMES = [
   ["ru", "\u0420\u0443\u0441\u0441\u043a\u0438\u0439"],
   ["zh", "\u4e2d\u6587"],
   ["cs", "\u010cesky"],
+  ["sk", "Sloven\u010dina"],
 ];
 
 function withLanguage(hass, language) {

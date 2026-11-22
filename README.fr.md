@@ -35,7 +35,7 @@ Les capteurs mmWave disent bien plus qu'*occupé* : à quelle distance est la ci
 - **Les dernières 24 heures** (`show_history`) : une bande sous les lignes, colorée là où la pièce était occupée, en mouvement ou immobile, rouge là où le capteur était hors ligne, avec le temps d'occupation sur la période. Lue une fois dans l'historique de Home Assistant, puis tenue à jour avec l'état en direct.
 - **Toutes les unités** : les distances en m, cm, mm, ft ou in sont ramenées en mètres, et une portée donnée en numéro de « gate » LD2410 aussi.
 - **Éditeur visuel** qui remplit distance, portée, mouvement, luminosité et batterie depuis le **même appareil** dès que l'entité de présence est choisie.
-- **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la carte.
+- **15 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS, SK), celle de Home Assistant ou fixée sur la carte.
 - **Apparence** : mode compact (une icône colorée à la place du dessin, ou le dessin en petit sur le côté), la taille du dessin et celle du texte chacune de son côté, le nom ou l'état masqués, un fond transparent pour une tablette murale, et toute la hauteur de sa case. Les mêmes réglages que ha-appliance-card.
 
 ## Capteurs pris en charge
@@ -95,7 +95,7 @@ Copiez `dist/ha-presence-sensor-card.js` dans `config/www/`, puis ajoutez `/loca
 | `battery_entity` | Batterie en %. Affichée même quand le capteur est hors ligne. |
 | `entities` | N'importe quelle autre entité, une ligne chacune : un id, ou `{ entity, name, icon }`. |
 | `name` | Titre. Par défaut le nom de l'entité. |
-| `language` | Afficher la carte dans une autre langue que Home Assistant : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh` ou `cs`. L'éditeur garde votre langue. |
+| `language` | Afficher la carte dans une autre langue que Home Assistant : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs` ou `sk`. L'éditeur garde votre langue. |
 | `compact` | `true` (ou `hide`) affiche une icône colorée au lieu du dessin. `side` dessine en petit (96 px) à gauche, avec le nom et l'état à côté et les lignes dessous sur toute la largeur. Par défaut `false`. |
 | `illustration_size` | La taille du dessin, de `0.3` à `1.2` fois la sienne (par défaut `1`), dans tous les modes. Le texte garde sa taille. Un curseur dans l'éditeur. |
 | `font_scale` | La taille du texte, de `0.7` à `1.4` fois la sienne (par défaut `1`). Le dessin garde sa taille. Un curseur dans l'éditeur. |

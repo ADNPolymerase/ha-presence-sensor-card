@@ -1,4 +1,4 @@
-const CARD_VERSION = "0.7.0";
+const CARD_VERSION = "0.8.0";
 
 console.info(
   "%c HA-PRESENCE-SENSOR-CARD %c v" + CARD_VERSION + " ",
